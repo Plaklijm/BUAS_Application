@@ -1,8 +1,8 @@
-#include "include/game.h"
+#include "game.h"
 
 #include <bitset>
 
-#include "include/surface.h"
+#include "surface.h"
 #include <cstdio> //printf
 #include <string>
 

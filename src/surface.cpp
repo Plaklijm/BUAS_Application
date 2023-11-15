@@ -1,8 +1,8 @@
 // Template, BUAS version https://www.buas.nl/games
 // IGAD/BUAS(NHTV)/UU - Jacco Bikker - 2006-2020
 
-#include "include/surface.h"
-#include "include/template.h"
+#include "surface.h"
+#include "template.h"
 #include <cassert>
 #include <cstring>
 #include "FreeImage.h"
