@@ -12,6 +12,8 @@ namespace Tmpl8
 
     private:
         vec2 position = vec2();
+        vec2 vel;
+        vec2 damp;
     };
     
 }

@@ -299,6 +299,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\phys\forces\ForceRegistration.cpp" />
+    <ClCompile Include="src\phys\forces\ForceRegistry.cpp" />
     <ClCompile Include="src\phys\primitives\AABB.cpp" />
     <ClCompile Include="src\phys\primitives\Circle.cpp" />
     <ClCompile Include="src\phys\primitives\Collider.cpp" />
@@ -509,6 +511,9 @@
   <ItemGroup>
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\phys\forces\ForceGenerator.h" />
+    <ClInclude Include="src\phys\forces\ForceRegistration.h" />
+    <ClInclude Include="src\phys\forces\ForceRegistry.h" />
     <ClInclude Include="src\phys\primitives\AABB.h" />
     <ClInclude Include="src\phys\primitives\Circle.h" />
     <ClInclude Include="src\phys\primitives\Collider.h" />

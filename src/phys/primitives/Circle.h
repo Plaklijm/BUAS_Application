@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "../../template.h"
+#include "../rigidbody/Rigidbody2D.h"
 
 namespace Tmpl8
 {
@@ -13,12 +14,14 @@ namespace Tmpl8
         Circle(float radius);
 
         float GetRadius() const;
-
         vec2 GetCenter() const;
+
+        void SetRadius(float r);
+        void SetRigidBody(Rigidbody2D rb);
     
     private:
         float radius;
-        std::unique_ptr<Rigidbody2D> rb = nullptr;
+        Rigidbody2D rb;
     };
     
 }
