@@ -4,9 +4,16 @@
 
 enum anims
 {
-    IDLE,
-    WALK,
-    CROUCH
+    A_Idle,
+    A_Walk,
+    A_Jump
+};
+
+enum playerState
+{
+    S_Idle,
+    S_Walk,
+    S_Jump,
 };
 
 class Player : public PhysEntity
@@ -17,12 +24,16 @@ private:
     float animationTime{};
     float animationSpeed = .1f;
 private:
-    Tmpl8::Sprite* sprite;
+    Sprite* sprite;
 
     anims currentAnim;
+
+protected:
+    bool currentInput[];
+    bool prevInput[];
 public:
     Player();
-    ~Player();
+    ~Player() override;
 
     void UpdatePlayer(float dt);
     void SwitchAnim(anims animToPlay);

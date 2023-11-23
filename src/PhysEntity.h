@@ -1,7 +1,29 @@
 ﻿#pragma once
+#include <windows.h>
+
 #include "template.h"
 
 using namespace Tmpl8;
+
+/*enum currentStatusFlag
+{
+    pushesRightWall = 1,
+    pushesLeftWall = 2,
+    onGround = 4,
+    atCeiling = 8
+};
+
+DEFINE_ENUM_FLAG_OPERATORS(currentStatusFlag);
+
+enum oldStatusFlag
+{
+    pushedRightWall = 1,
+    pushedLeftWall = 2,
+    wasOnGround = 4,
+    wasAtCeiling = 8
+};
+
+DEFINE_ENUM_FLAG_OPERATORS(oldStatusFlag);*/
 
 struct AABB;
 
@@ -28,6 +50,7 @@ protected:
     bool onGround{};
     bool wasAtCeiling{};
     bool atCeiling{};
+    currentStatusFlag currentState;
 
 public:
     virtual void UpdatePhysics(float dt);
