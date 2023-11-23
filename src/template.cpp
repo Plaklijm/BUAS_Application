@@ -339,7 +339,13 @@ int main( int argc, char **argv )
 #endif
 	int exitapp = 0;
 	
-	SDL_GameController *controller = findController();
+	auto *controller = findController();
+	SDL_Joystick* joystick = nullptr;
+    if (controller != nullptr)
+    {
+	    joystick = SDL_GameControllerGetJoystick(controller);
+    }
+	printf("%s", SDL_GameControllerName(controller));
 	
 	
 	game = new Game();
@@ -388,6 +394,7 @@ int main( int argc, char **argv )
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
 		{
+			printf("%i", SDL_JoystickGetAxis(joystick, 2));
 			switch (event.type)
 			{
 			case SDL_QUIT:
@@ -443,8 +450,19 @@ int main( int argc, char **argv )
 				break;
 			}
 		}
+
+		// Outside event loop to make sure it gets constantly updated
+		SDL_GameControllerUpdate();
+
+		Sint16 l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
+		Sint16 l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
 	}
 	game->Shutdown();
+
+    if (controller) {
+		SDL_GameControllerClose(controller);
+    }
+	
 	SDL_Quit();
 	return 0;
 }
