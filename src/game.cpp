@@ -43,7 +43,7 @@ namespace Tmpl8
 		delete [] cfps;
 		
 		// print something to the text window
-		printf("this goes to the console window.\n");
+		//printf("this goes to the console window.\n");
 
 		// Update the game logic
 		GameTick(deltaTime);

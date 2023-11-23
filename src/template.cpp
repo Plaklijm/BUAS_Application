@@ -19,7 +19,7 @@
 #include <io.h>
 #include "template.h"
 #include <corecrt_math.h>
-#include <SDL.h>
+#include <SDL2-2.28.5/include/SDL.h>
 #include "surface.h"
 #include <cstdio>
 #include <iostream>
@@ -298,6 +298,17 @@ void swap()
 
 #endif
 
+SDL_GameController *findController() {
+	for (int i = 0; i < SDL_NumJoysticks(); i++) {
+		if (SDL_IsGameController(i)) {
+			printf("controller found");
+			return SDL_GameControllerOpen(i);
+		}
+	}
+	printf("controller not found");
+	return nullptr;
+}
+
 int main( int argc, char **argv ) 
 {  
 #ifdef _MSC_VER
@@ -305,7 +316,7 @@ int main( int argc, char **argv )
         return 1;
 #endif
 	printf( "application started.\n" );
-	SDL_Init( SDL_INIT_VIDEO );
+	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER );
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
@@ -327,10 +338,15 @@ int main( int argc, char **argv )
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif
 	int exitapp = 0;
+	
+	SDL_GameController *controller = findController();
+	
+	
 	game = new Game();
 	game->SetTarget( surface );
 	timer t;
 	t.reset();
+
 	while (!exitapp) 
 	{
 	#ifdef ADVANCEDGL
@@ -396,6 +412,32 @@ int main( int argc, char **argv )
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				game->MouseDown( event.button.button );
+				break;
+			case SDL_CONTROLLERDEVICEADDED:
+				if (!controller) {
+					controller = SDL_GameControllerOpen(event.cdevice.which);
+				}
+				break;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				if (controller && event.cdevice.which == SDL_JoystickInstanceID(
+						SDL_GameControllerGetJoystick(controller))) {
+					SDL_GameControllerClose(controller);
+					controller = SDL_GameControllerOpen(0);
+						}
+				break;
+			case SDL_CONTROLLERBUTTONDOWN:
+				if (controller && event.cdevice.which ==
+					SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
+				{
+					switch (event.cbutton.button)
+					{
+					case SDL_CONTROLLER_BUTTON_X:
+						std::cout << "X pressed!" << std::endl;
+						break;
+					default:
+						break;
+					}
+				}
 				break;
 			default:
 				break;
