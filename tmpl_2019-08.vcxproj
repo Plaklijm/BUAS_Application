@@ -299,15 +299,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\phys\forces\ForceRegistration.cpp" />
-    <ClCompile Include="src\phys\forces\ForceRegistry.cpp" />
-    <ClCompile Include="src\phys\forces\Gravity.cpp" />
-    <ClCompile Include="src\phys\PhysicsHandler.cpp" />
-    <ClCompile Include="src\phys\primitives\AABB.cpp" />
-    <ClCompile Include="src\phys\primitives\Circle.cpp" />
-    <ClCompile Include="src\phys\primitives\Collider.cpp" />
-    <ClCompile Include="src\phys\rigidbody\Intersect2D.cpp" />
-    <ClCompile Include="src\phys\rigidbody\Rigidbody2D.cpp" />
+    <ClCompile Include="src\PhysEntity.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -511,18 +504,11 @@
     <Content Include="tmpl_2019-08.sln" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AABB.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
-    <ClInclude Include="src\phys\forces\ForceGenerator.h" />
-    <ClInclude Include="src\phys\forces\ForceRegistration.h" />
-    <ClInclude Include="src\phys\forces\ForceRegistry.h" />
-    <ClInclude Include="src\phys\forces\Gravity.h" />
-    <ClInclude Include="src\phys\PhysicsHandler.h" />
-    <ClInclude Include="src\phys\primitives\AABB.h" />
-    <ClInclude Include="src\phys\primitives\Circle.h" />
-    <ClInclude Include="src\phys\primitives\Collider.h" />
-    <ClInclude Include="src\phys\rigidbody\Intersect2D.h" />
-    <ClInclude Include="src\phys\rigidbody\Rigidbody2D.h" />
+    <ClInclude Include="src\PhysEntity.h" />
+    <ClInclude Include="src\player.h" />
     <ClInclude Include="src\surface.h" />
     <ClInclude Include="src\template.h" />
   </ItemGroup>

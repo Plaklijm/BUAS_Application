@@ -29,32 +29,38 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 
 	Sprite testSprite(new Surface("assets/player/inhale_float.png"), 6);
-	unsigned int frame = 0;
-	float animationTime;
-	float animationSpeed = .1f;
 	
 	void Game::Tick(float deltaTime)
 	{
-		std::string fps = "Current FPS: " + std::to_string((1.0f / deltaTime));
 		// clear the graphics window
 		screen->Clear(0);
-		// print something in the graphics window
-		screen->Print("hello world", 10, 2, 0xffffff);
+
+		// log the current FPS
+		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
+		char *cfps = new char[fps.length() + 1];
+		strcpy(cfps, fps.c_str());
+		screen->Print(cfps, 2, 2, 0xffffff);
+		delete [] cfps;
+		
 		// print something to the text window
 		printf("this goes to the console window.\n");
-		
 
+		// Update the game logic
+		GameTick(deltaTime);
+		
+		// Render the game
+		Render();
+	}
+
+	void Game::GameTick(float dt)
+	{
 		/*
-		player->Update(deltaTime, screen);
-		animationTime += deltaTime;
-		if (animationTime >= animationSpeed)
-		{
-			animationTime = 0;
-			testSprite.SetFrame(frame);
-			frame++;
-			if (frame >= testSprite.Frames()) { frame = 0; }
-		}
-		testSprite.Draw(screen, 100, 100);*/
+		player->Update(deltaTime, screen);*/
+		testSprite.Draw(screen, 100, 100);
+	}
+
+	void Game::Render()
+	{
 	}
 
 	void Game::KeyUp(int key)
