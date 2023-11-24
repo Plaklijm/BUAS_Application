@@ -1,21 +1,24 @@
 #include "game.h"
 
-#include <bitset>
-
 #include "surface.h"
 #include <cstdio> //printf
 #include <string>
 
+#include "player.h"
 #include "template.h"
 
 namespace Tmpl8
 {
+
+
+	
+	Player* player;
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
 	void Game::Init()
 	{
-		
+		player = new Player();
 	}
 	
 	// -----------------------------------------------------------
@@ -50,29 +53,37 @@ namespace Tmpl8
 		// Update the game logic
 		GameTick(deltaTime);
 		
+		
 		// Render the game
 		Render();
 	}
-
+	
 	void Game::GameTick(float dt)
 	{
 		/*
 		player->Update(deltaTime, screen);*/
 		testSprite.Draw(screen, 100, 100);
+		
+	}
+	
+	void Game::PhysTick(float dt)
+	{
+		player->UpdatePlayer(dt);
 	}
 
 	void Game::Render()
 	{
+		player->RenderPlayer(screen);
 	}
 
 	void Game::KeyUp(int key)
 	{
-		printf("%i\n", key);
+		player->KeyUpEvent(key, false);
 	}
 
 	void Game::KeyDown(int key)
 	{
-		printf("%i\n", key);
+		player->KeyDownEvent(key, false);
 	}
 
 	void Game::ControllerJoystick(vec2 input)

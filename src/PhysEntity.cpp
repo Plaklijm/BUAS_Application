@@ -4,7 +4,6 @@
 
 PhysEntity::PhysEntity()
 {
-    aabb = new AABB({}, {});
 }
 
 PhysEntity::PhysEntity(vec2 center, vec2 halfSize)
@@ -26,8 +25,8 @@ void PhysEntity::UpdatePhysics(float dt)
     // Update frame independent position 
     position += speed * dt;
 
-    if (position.y < 0) {
-        position.y = 0;
+    if (position.y <= ScreenHeight-50) {
+        position.y = ScreenHeight-50;
         onGround = true;
     } else {
         onGround = false;

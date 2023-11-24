@@ -29,7 +29,7 @@ struct AABB;
 
 class PhysEntity
 {
-private:
+public:
     PhysEntity();
     PhysEntity(vec2 center, vec2 halfSize);
     virtual ~PhysEntity() = default;
@@ -43,11 +43,11 @@ protected:
 
     // TODO: Replace with FLAGS
     bool pushedRightWall{};
-    bool pushesRightWall{};
+    bool pushesRightWall{false};
     bool pushedLeftWall{};
-    bool pushesLeftWall{};
+    bool pushesLeftWall{false};
     bool wasOnGround{};
-    bool onGround{};
+    bool onGround{false};
     bool wasAtCeiling{};
     bool atCeiling{};
 

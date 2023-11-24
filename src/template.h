@@ -14,6 +14,8 @@
 constexpr int ScreenWidth = 800;
 constexpr int ScreenHeight = 512;
 
+constexpr float fixedTimeStep = 1/60;
+
 constexpr int DeadZoneX = 1000;
 constexpr int DeadZoneY = 1000;
 // #define FULLSCREEN

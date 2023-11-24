@@ -11,7 +11,7 @@
     A_Jump
 };*/
 
-enum playerState
+enum PlayerState
 {
     S_Idle,
     S_Walk,
@@ -28,10 +28,22 @@ private:
 private:
     Sprite* sprite;
 
-
+    // MovementVariables
+    PlayerState currentState = S_Idle;
+    float walkSpeed;
+    float jumpForce;
+    
 protected:
-    std::vector<bool> currentInput;
+    std::vector<bool> currInput;
     std::vector<bool> prevInput;
+
+
+    
+protected:
+    bool Released(int key);
+    bool KeyState(int key);
+    bool Pressed(int key);
+    
 public:
     Player();
     ~Player() override;
@@ -42,10 +54,17 @@ public:
     void KeyUpEvent(int key, bool isController);
     void KeyDownEvent(int key, bool isController);
     void ControllerJoyStick(vec2 input);
+    void UpdatePrevInputs();
+
+    // TEMP
+    bool moveRight = false; // 7
+    bool moveLeft = false; // 4
+    bool jump = false; // 44
     
 private:
     //void UpdateAnim(float dt);
 
 public:
     void UpdatePhysics(float dt) override;
+    void RenderPlayer(Surface* screen);
 };

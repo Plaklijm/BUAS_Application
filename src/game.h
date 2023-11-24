@@ -15,6 +15,7 @@ public:
 	void Shutdown();
 	void Tick( float deltaTime );
 	void GameTick(float dt);
+	void PhysTick(float dt);
 	void Render();
 	
 	void MouseUp( int button ) { /* implement if you want to detect mouse button presses */ }

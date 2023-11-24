@@ -350,7 +350,7 @@ int main( int argc, char **argv )
 #endif
 	surface = new Surface( ScreenWidth, ScreenHeight );
 	surface->Clear( 0 );
-	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif
 	int exitapp = 0;
@@ -361,6 +361,9 @@ int main( int argc, char **argv )
 	game->SetTarget( surface );
 	timer t;
 	t.reset();
+
+	auto previousTime = static_cast<double>(t.get());
+	double lag = 0.0f;
 
 	while (!exitapp) 
 	{
@@ -396,9 +399,19 @@ int main( int argc, char **argv )
 		// calculate frame time and pass it to game->Tick
 		// divided by 1000 to get milliseconds 
 		float elapsedTime = t.elapsed() / 1000 ;
+		lag += elapsedTime;
+		
 		t.reset();
+
+		// Physics loop to only tick 50 times per seconds
+		while (lag >= 0.02)
+		{
+			game->PhysTick(0.02);
+			lag -= 0.02;
+		}
 		
 		game->Tick( elapsedTime );
+		
 		// event loop
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
@@ -473,7 +486,7 @@ int main( int argc, char **argv )
 
 			const auto back = sgn<int>(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
 
-			printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
+			//printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
 			
 			const auto controllerInput = ClampControllerInput(l_x, l_y);
 			
