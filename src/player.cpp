@@ -4,7 +4,7 @@
 
 Player::Player() : PhysEntity()
 {
-    currentAnim = IDLE;
+    //currentAnim = IDLE;
     sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 }
 
@@ -12,12 +12,36 @@ Player::~Player()
 {
 }
 
-void Player::UpdatePlayer(float dt)
+void Player::UpdatePhysics(float dt)
 {
-    UpdateAnim(dt);
+    PhysEntity::UpdatePhysics(dt);
 }
 
-void Player::SwitchAnim(anims animToPlay)
+void Player::UpdatePlayer(float dt)
+{
+    //UpdateAnim(dt);
+}
+
+#pragma region Input
+
+void Player::KeyUpEvent(int key, bool isController)
+{
+    
+}
+
+void Player::KeyDownEvent(int key, bool isController)
+{
+    
+}
+
+void Player::ControllerJoyStick(vec2 input)
+{
+    
+}
+
+#pragma endregion
+
+/*void Player::SwitchAnim(anims animToPlay)
 {
     switch (animToPlay)
     {
@@ -31,9 +55,9 @@ void Player::SwitchAnim(anims animToPlay)
         std::cout << "ANIM WARNING: Anim does not exist" << std::endl;
         break;
     }
-}
+}*/
 
-void Player::UpdateAnim(float dt)
+/*void Player::UpdateAnim(float dt)
 {
     animationTime += dt;
     if (animationTime >= animationSpeed)
@@ -43,9 +67,5 @@ void Player::UpdateAnim(float dt)
         frame++;
         if (frame >= sprite->Frames()) { frame = 0; }
     }
-}
+}*/
 
-void Player::UpdatePhysics(float dt)
-{
-    PhysEntity::UpdatePhysics(dt);
-}

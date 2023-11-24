@@ -299,6 +299,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\PhysEntity.cpp" />
+    <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -505,6 +507,8 @@
     <ClInclude Include="src\AABB.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\PhysEntity.h" />
+    <ClInclude Include="src\player.h" />
     <ClInclude Include="src\surface.h" />
     <ClInclude Include="src\template.h" />
   </ItemGroup>

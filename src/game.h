@@ -1,8 +1,11 @@
 #pragma once
 
 namespace Tmpl8 {
+	
+class vec2;
 class Sprite;
 class Surface;
+
 class Game
 {
 public:
@@ -19,6 +22,7 @@ public:
 	void MouseMove( int x, int y ) { /* implement if you want to detect mouse movement */ }
 	void KeyUp( int key );
 	void KeyDown( int key );
+	void ControllerJoystick( vec2 input );
 private:
 	Surface* screen;
 };

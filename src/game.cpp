@@ -6,6 +6,8 @@
 #include <cstdio> //printf
 #include <string>
 
+#include "template.h"
+
 namespace Tmpl8
 {
 	// -----------------------------------------------------------
@@ -65,11 +67,16 @@ namespace Tmpl8
 
 	void Game::KeyUp(int key)
 	{
-		
+		printf("%i\n", key);
 	}
 
 	void Game::KeyDown(int key)
 	{
-		
+		printf("%i\n", key);
+	}
+
+	void Game::ControllerJoystick(vec2 input)
+	{
+		//printf("X=%f Y=%f\n", input.x, input.y);
 	}
 };

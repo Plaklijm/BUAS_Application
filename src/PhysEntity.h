@@ -50,7 +50,6 @@ protected:
     bool onGround{};
     bool wasAtCeiling{};
     bool atCeiling{};
-    currentStatusFlag currentState;
 
 public:
     virtual void UpdatePhysics(float dt);

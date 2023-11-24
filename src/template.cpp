@@ -298,17 +298,33 @@ void swap()
 
 #endif
 
-SDL_GameController *findController() {
+// Sign function to clamp the Controller input from -1 to 1
+template <typename T>
+auto sgn = [](T val) {return (T(0) < val) - (val < T(0)); };
+
+// Finds the current controller if one is connected
+SDL_GameController* findController() {
 	for (int i = 0; i < SDL_NumJoysticks(); i++) {
 		if (SDL_IsGameController(i)) {
-			printf("controller found");
+			printf("controller found\n");
 			return SDL_GameControllerOpen(i);
 		}
 	}
-	printf("controller not found");
+	printf("controller not found\n");
 	return nullptr;
 }
 
+vec2 ClampControllerInput(const Sint16 x, const Sint16 y)
+{
+	vec2 temp(x,y);
+	
+	temp.x = std::abs(temp.x) < DeadZoneX ? 0.0 : sgn<float>(temp.x);
+	temp.y = std::abs(temp.y) < DeadZoneY ? 0.0 : sgn<float>(temp.y);
+
+	return temp;
+}
+
+// Main function
 int main( int argc, char **argv ) 
 {  
 #ifdef _MSC_VER
@@ -340,13 +356,6 @@ int main( int argc, char **argv )
 	int exitapp = 0;
 	
 	auto *controller = findController();
-	SDL_Joystick* joystick = nullptr;
-    if (controller != nullptr)
-    {
-	    joystick = SDL_GameControllerGetJoystick(controller);
-    }
-	printf("%s", SDL_GameControllerName(controller));
-	
 	
 	game = new Game();
 	game->SetTarget( surface );
@@ -394,7 +403,6 @@ int main( int argc, char **argv )
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
 		{
-			printf("%i", SDL_JoystickGetAxis(joystick, 2));
 			switch (event.type)
 			{
 			case SDL_QUIT:
@@ -436,26 +444,41 @@ int main( int argc, char **argv )
 				if (controller && event.cdevice.which ==
 					SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
 				{
-					switch (event.cbutton.button)
-					{
-					case SDL_CONTROLLER_BUTTON_X:
-						std::cout << "X pressed!" << std::endl;
-						break;
-					default:
-						break;
-					}
+					game->KeyDown(event.cbutton.button);
 				}
 				break;
+			case SDL_CONTROLLERBUTTONUP:
+				if (controller && event.cdevice.which ==
+					SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
+				{
+					game->KeyUp(event.cbutton.button);
+				}
 			default:
 				break;
 			}
 		}
 
-		// Outside event loop to make sure it gets constantly updated
-		SDL_GameControllerUpdate();
+		if (controller != nullptr)
+		{
+			// Outside event loop to make sure it gets constantly updated if there is a controller
+			SDL_GameControllerUpdate();
 
-		Sint16 l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
-		Sint16 l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
+			const auto l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
+			const auto l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
+
+			const auto x = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X);
+			const auto y = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y);
+			const auto b = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B);
+			const auto a = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A);
+
+			const auto back = sgn<int>(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
+
+			printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
+			
+			const auto controllerInput = ClampControllerInput(l_x, l_y);
+			
+			game->ControllerJoystick(controllerInput);
+		}
 	}
 	game->Shutdown();
 
