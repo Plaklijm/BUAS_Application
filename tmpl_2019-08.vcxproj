@@ -299,6 +299,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\PhysEntity.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
@@ -505,8 +506,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AABB.h" />
+    <ClInclude Include="src\Commands.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\ICommand.h" />
+    <ClInclude Include="src\InputSystem.h" />
     <ClInclude Include="src\PhysEntity.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\surface.h" />

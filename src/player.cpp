@@ -8,21 +8,6 @@
 
 // TODO: IMPLEMENT BETTER INPUT SYSTEM PLS USING THE COMMAND PATTERN :D
 
-bool Player::Released(int key)
-{
-    return (!currInput[key] && prevInput[key]);
-}
-
-bool Player::KeyState(int key)
-{
-    return (currInput[key]);
-}
-
-bool Player::Pressed(int key)
-{
-    return (currInput[key] && !prevInput[key]);
-}
-
 Player::Player() : PhysEntity()
 {
     //currentAnim = IDLE;
@@ -57,7 +42,7 @@ void Player::RenderPlayer(Surface* screen)
 
 void Player::UpdatePlayer(float dt)
 {
-    printf("%i",onGround);
+    //printf("%i",onGround);
     switch (currentState)
     {
     case S_Idle:
@@ -159,24 +144,22 @@ void Player::UpdatePlayer(float dt)
 
     UpdatePrevInputs();
     
-    //printf("%d, %d, %d\n", moveLeft, moveRight, jump);
+    printf("%d, %d, %d\n", moveLeft, moveRight, jump);
 }
 
 #pragma region Input
 
 void Player::KeyUpEvent(int key, bool isController)
 {
-    if (key == 4)
+    if (!isController)
     {
-        moveLeft = false;
+        if (key == 4) moveLeft = false;
+        else if (key == 7) moveRight = false;
+        else if (key == 44) jump = false;
     }
-    else if (key == 7)
+    else
     {
-        moveRight = false;
-    }
-    else if (key == 44)
-    {
-        jump = false;
+        
     }
 }
 

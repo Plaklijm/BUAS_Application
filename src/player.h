@@ -36,13 +36,6 @@ private:
 protected:
     std::vector<bool> currInput;
     std::vector<bool> prevInput;
-
-
-    
-protected:
-    bool Released(int key);
-    bool KeyState(int key);
-    bool Pressed(int key);
     
 public:
     Player();

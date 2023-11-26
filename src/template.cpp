@@ -355,7 +355,7 @@ int main( int argc, char **argv )
 #endif
 	int exitapp = 0;
 	
-	auto *controller = findController();
+	SDL_GameController* controller = nullptr;
 	
 	game = new Game();
 	game->SetTarget( surface );
@@ -411,7 +411,10 @@ int main( int argc, char **argv )
 		}
 		
 		game->Tick( elapsedTime );
-		
+		if (controller)
+		{
+			printf(SDL_GameControllerName(controller));
+		}
 		// event loop
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
@@ -442,16 +445,11 @@ int main( int argc, char **argv )
 				game->MouseDown( event.button.button );
 				break;
 			case SDL_CONTROLLERDEVICEADDED:
-				if (!controller) {
-					controller = SDL_GameControllerOpen(event.cdevice.which);
-				}
+				controller = SDL_GameControllerOpen(event.cdevice.which);
 				break;
 			case SDL_CONTROLLERDEVICEREMOVED:
-				if (controller && event.cdevice.which == SDL_JoystickInstanceID(
-						SDL_GameControllerGetJoystick(controller))) {
-					SDL_GameControllerClose(controller);
-					controller = SDL_GameControllerOpen(0);
-						}
+				SDL_GameControllerClose(SDL_GameControllerFromInstanceID(event.cdevice.which));
+				controller = nullptr;
 				break;
 			case SDL_CONTROLLERBUTTONDOWN:
 				if (controller && event.cdevice.which ==
