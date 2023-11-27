@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
+#include "InputSystem.h"
 #include "PhysEntity.h"
 #include "surface.h"
 
@@ -10,6 +11,7 @@
     A_Walk,
     A_Jump
 };*/
+
 
 enum PlayerState
 {
@@ -27,37 +29,28 @@ private:
     float animationSpeed = .1f;*/
 private:
     Sprite* sprite;
+    InputSystem input;
 
+    // Input variables
+    float horizontalInput;
     // MovementVariables
     PlayerState currentState = S_Idle;
     float walkSpeed;
     float jumpForce;
-    
-protected:
-    std::vector<bool> currInput;
-    std::vector<bool> prevInput;
-    
+
+    //bool isFacingRight;
 public:
     Player();
     ~Player() override;
 
-    void UpdatePlayer(float dt);
-    //void SwitchAnim(anims animToPlay);
-
-    void KeyUpEvent(int key, bool isController);
-    void KeyDownEvent(int key, bool isController);
-    void ControllerJoyStick(vec2 input);
-    void UpdatePrevInputs();
-
-    // TEMP
-    bool moveRight = false; // 7
-    bool moveLeft = false; // 4
-    bool jump = false; // 44
-    
-private:
-    //void UpdateAnim(float dt);
-
-public:
+    void Update(float dt);
     void UpdatePhysics(float dt) override;
     void RenderPlayer(Surface* screen);
+    
+    //void SwitchAnim(anims animToPlay);
+    
+private:
+    //void FlipSprite();
+    //void UpdateAnim(float dt);
+    
 };

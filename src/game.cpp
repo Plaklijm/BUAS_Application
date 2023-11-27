@@ -4,6 +4,7 @@
 #include <cstdio> //printf
 #include <string>
 
+#include "InputSystem.h"
 #include "player.h"
 #include "template.h"
 
@@ -53,9 +54,10 @@ namespace Tmpl8
 		// Update the game logic
 		GameTick(deltaTime);
 		
-		
 		// Render the game
 		Render();
+
+		
 	}
 	
 	void Game::GameTick(float dt)
@@ -63,12 +65,15 @@ namespace Tmpl8
 		/*
 		player->Update(deltaTime, screen);*/
 		testSprite.Draw(screen, 100, 100);
-		
+
+		player->Update(dt);
+
+		InputSystem::instance().UpdatePrevInput();
 	}
 	
 	void Game::PhysTick(float dt)
 	{
-		player->UpdatePlayer(dt);
+		player->UpdatePhysics(dt);
 	}
 
 	void Game::Render()
@@ -78,12 +83,10 @@ namespace Tmpl8
 
 	void Game::KeyUp(int key)
 	{
-		player->KeyUpEvent(key, false);
 	}
 
 	void Game::KeyDown(int key)
 	{
-		player->KeyDownEvent(key, false);
 	}
 
 	void Game::ControllerJoystick(vec2 input)

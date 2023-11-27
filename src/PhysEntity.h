@@ -43,14 +43,14 @@ protected:
 
     // TODO: Replace with FLAGS
     bool pushedRightWall{};
-    bool pushesRightWall{false};
+    bool pushesRightWall{};
     bool pushedLeftWall{};
-    bool pushesLeftWall{false};
+    bool pushesLeftWall{};
     bool wasOnGround{};
-    bool onGround{false};
+    bool onGround{};
     bool wasAtCeiling{};
     bool atCeiling{};
 
-public:
+protected:
     virtual void UpdatePhysics(float dt);
 };

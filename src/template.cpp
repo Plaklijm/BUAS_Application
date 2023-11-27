@@ -14,6 +14,7 @@
 //#define ADVANCEDGL
 
 #include "game.h"
+#include "InputSystem.h"
 
 #include <fcntl.h>
 #include <io.h>
@@ -25,6 +26,7 @@
 #include <iostream>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+
 
 #ifdef ADVANCEDGL
 #define GLEW_BUILD
@@ -298,10 +300,6 @@ void swap()
 
 #endif
 
-// Sign function to clamp the Controller input from -1 to 1
-template <typename T>
-auto sgn = [](T val) {return (T(0) < val) - (val < T(0)); };
-
 // Finds the current controller if one is connected
 SDL_GameController* findController() {
 	for (int i = 0; i < SDL_NumJoysticks(); i++) {
@@ -313,6 +311,10 @@ SDL_GameController* findController() {
 	printf("controller not found\n");
 	return nullptr;
 }
+
+// Sign function to clamp the Controller input from -1 to 1
+template <typename T>
+auto sgn = [](T val) {return (T(0) < val) - (val < T(0)); };
 
 vec2 ClampControllerInput(const Sint16 x, const Sint16 y)
 {
@@ -359,6 +361,7 @@ int main( int argc, char **argv )
 	
 	game = new Game();
 	game->SetTarget( surface );
+	
 	timer t;
 	t.reset();
 
@@ -415,7 +418,9 @@ int main( int argc, char **argv )
 		{
 			printf(SDL_GameControllerName(controller));
 		}
+		
 		// event loop
+		// TODO: CLEANUP EVENT LOOP, INPUT MANAGER WILL HANDLE EVERYTHING
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
 		{
@@ -452,18 +457,10 @@ int main( int argc, char **argv )
 				controller = nullptr;
 				break;
 			case SDL_CONTROLLERBUTTONDOWN:
-				if (controller && event.cdevice.which ==
-					SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
-				{
 					game->KeyDown(event.cbutton.button);
-				}
 				break;
 			case SDL_CONTROLLERBUTTONUP:
-				if (controller && event.cdevice.which ==
-					SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller)))
-				{
 					game->KeyUp(event.cbutton.button);
-				}
 			default:
 				break;
 			}

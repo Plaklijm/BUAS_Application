@@ -104,6 +104,8 @@ public:
 	void normalize() { float r = 1.0f / length(); x *= r; y *= r; }
 	static vec2 normalize( vec2 v ) { return v.normalized(); }
 	float dot( const vec2& operand ) const { return x * operand.x + y * operand.y; }
+	// Added vec2 Zero function to get a zeroed out vector, instead of initializing it like: var = {0,0};
+	static vec2 Zero() {return vec2(0, 0); }
 };
 
 class vec3

@@ -1,17 +1,46 @@
 ﻿#include "InputSystem.h"
 
-#include "ICommand.h"
+#include <SDL_keyboard.h>
 
-void InputSystem::HandleInput() const
+InputSystem& InputSystem::instance()
 {
-    for (auto keyCommand : keyCommands)
-    {
-        // check if key is down;
-        keyCommand->command->Execute();
-    }
+    static auto instance = new InputSystem();
+    return *instance;
 }
 
-void InputSystem::BindInputToCommand(int keyCode, ICommand* command)
+InputSystem::InputSystem()
 {
-    keyCommands.push_back(new KeyCommand{keyCode, command});
+    keyboardState = SDL_GetKeyboardState(&keyLength);
+    prevKeyboardState = new Uint8[keyLength];
+    memcpy(prevKeyboardState, keyboardState, keyLength);
+}
+
+InputSystem::~InputSystem()
+{
+    delete[] prevKeyboardState;
+    prevKeyboardState = nullptr;
+}
+
+bool InputSystem::KeyDown(SDL_Scancode scanCode) const
+{
+    return keyboardState[scanCode];
+}
+
+bool InputSystem::KeyPressed(SDL_Scancode scanCode) const
+{
+    return !prevKeyboardState[scanCode] && keyboardState[scanCode];
+}
+
+bool InputSystem::KeyReleased(SDL_Scancode scanCode) const
+{
+    return prevKeyboardState[scanCode] && !keyboardState[scanCode];
+}
+
+void InputSystem::Update()
+{
+}
+
+void InputSystem::UpdatePrevInput()
+{
+    memcpy(prevKeyboardState, keyboardState, keyLength);
 }
