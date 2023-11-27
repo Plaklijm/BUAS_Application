@@ -104,8 +104,13 @@ public:
 	void normalize() { float r = 1.0f / length(); x *= r; y *= r; }
 	static vec2 normalize( vec2 v ) { return v.normalized(); }
 	float dot( const vec2& operand ) const { return x * operand.x + y * operand.y; }
-	// Added vec2 Zero function to get a zeroed out vector, instead of initializing it like: var = {0,0};
+	// Added vec2 standard direction functions to get a directional vector, instead of getting it like: var = {0,0};
 	static vec2 Zero() {return vec2(0, 0); }
+	static vec2 Left() {return vec2(-1, 0); }
+	static vec2 Right() {return vec2(1, 0); }
+	static vec2 Up() {return vec2(0, 1); }
+	static vec2 Down() {return vec2(0, -1); }
+	static vec2 Lerp(vec2 a, vec2 b, float f) { return a * (1.0 - f) + (b * f);	}
 };
 
 class vec3

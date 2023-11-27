@@ -1,7 +1,6 @@
 ﻿#pragma once
-#include <windows.h>
-
 #include "template.h"
+#include "World/World.h"
 
 using namespace Tmpl8;
 
@@ -30,6 +29,7 @@ struct AABB;
 class PhysEntity
 {
 public:
+    World world;
     PhysEntity();
     PhysEntity(vec2 center, vec2 halfSize);
     virtual ~PhysEntity() = default;
@@ -53,4 +53,6 @@ protected:
 
 protected:
     virtual void UpdatePhysics(float dt);
+
+    bool HasGround(float& groundY);
 };

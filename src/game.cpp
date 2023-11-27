@@ -3,6 +3,7 @@
 #include "surface.h"
 #include <cstdio> //printf
 #include <string>
+#include <fstream>
 
 #include "InputSystem.h"
 #include "player.h"

@@ -21,8 +21,15 @@ private:
     TileType tiles[width][height] = {};
     vec3 position;
 public:
+    World();
+    ~World();
+    
     vec2 GetMapTileAtPoint(vec2 point);
     int GetMapTileYAtPoint(float y);
     int GetMapTileXAtPoint(float x);
     vec2 GetMapTilePosition(int tileIndexX, int tileIndexY);
+    bool IsObstacle(int x, int y) const;
+    bool IsGround(int x, int y) const;
+    bool isEmpty(int x, int y) const;
+    vec3 GetPosition() const;
 };
