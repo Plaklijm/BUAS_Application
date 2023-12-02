@@ -14,10 +14,12 @@
 constexpr int ScreenWidth = 800;
 constexpr int ScreenHeight = 512;
 
-constexpr float fixedTimeStep = 1/60;
+constexpr float FixedTimeStep = 1.f/60;
 
-constexpr int DeadZoneX = 1000;
-constexpr int DeadZoneY = 1000;
+constexpr int DeadZonePercentage = 15;
+constexpr int JoystickRange = 32767; 
+constexpr int DeadZone = JoystickRange * DeadZonePercentage / 100;
+
 // #define FULLSCREEN
 // #define ADVANCEDGL	// faster if your system supports it. Switches SDL2's texture buffer out for OpenGL texture buffer with mappings to CPU Memory. 
 
@@ -93,6 +95,8 @@ public:
 	vec2 operator - ( const vec2& operand ) const { return vec2( x - operand.x, y - operand.y ); }
 	vec2 operator * ( const vec2& operand ) const { return vec2( x * operand.x, y * operand.y ); }
 	vec2 operator * ( float operand ) const { return vec2( x * operand, y * operand ); }
+	vec2  operator / (const float& a) const { return vec2(this->x / a, this->y / a); }
+	vec2  operator / (const vec2& a) const { return vec2(this->x / a.x, this->y / a.y); }
 	void operator -= ( const vec2& a ) { x -= a.x; y -= a.y; }
 	void operator += ( const vec2& a ) { x += a.x; y += a.y; }
 	void operator *= ( const vec2& a ) { x *= a.x; y *= a.y; }

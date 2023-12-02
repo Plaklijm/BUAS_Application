@@ -32,7 +32,7 @@ private:
     InputSystem input;
 
     // Input variables
-    float horizontalInput;
+    float horizontalInput{};
     // MovementVariables
     PlayerState currentState = S_Idle;
     float walkSpeed;
@@ -44,9 +44,14 @@ public:
     ~Player() override;
 
     void Update(float dt);
+    void HandleJump();
+    void HandleDirection();
+    void HandleGravity();
+    void ApplyMovement();
     void UpdatePhysics(float dt) override;
     void RenderPlayer(Surface* screen);
-    
+    void HandleAction(ActionType action);
+
     //void SwitchAnim(anims animToPlay);
     
 private:

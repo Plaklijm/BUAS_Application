@@ -1,4 +1,9 @@
 #pragma once
+#include <SDL2-2.28.5/include/SDL_stdinc.h>
+
+#include "game.h"
+
+class InputSystem;
 
 namespace Tmpl8 {
 	
@@ -10,6 +15,7 @@ class Game
 {
 public:
 	void SetTarget( Surface* surface ) { screen = surface; }
+	void SetInput( InputSystem* system ) { game_input = system; }
 	
 	void Init();
 	void Shutdown();
@@ -23,9 +29,14 @@ public:
 	void MouseMove( int x, int y ) { /* implement if you want to detect mouse movement */ }
 	void KeyUp( int key );
 	void KeyDown( int key );
+	void ButtonUp( int key ) const;
+	void ButtonDown( int key );
+	void Axis( int axis, Sint16 axisValue );
 	void ControllerJoystick( vec2 input );
+
 private:
 	Surface* screen;
+	InputSystem* game_input;
 };
 
 }; // namespace Tmpl8

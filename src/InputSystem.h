@@ -1,36 +1,36 @@
 ﻿#pragma once
+#include <SDL2-2.28.5/include/SDL_keycode.h>
 #include <SDL2-2.28.5/include/SDL_gamecontroller.h>
-#include <SDL2-2.28.5/include/SDL_scancode.h>
-#include <string.h>
+#include <unordered_map>
 
+enum class ActionType
+{
+    NO_MOVEMENT,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    JUMP,
+    SPRINT,
+};
 
 class InputSystem
 {
 public:
-    // Using a singleton because there will only be one inputsystem for the whole game
-    static InputSystem& instance();
-
-    InputSystem();
-    ~InputSystem();
-
-private:
-    Uint8* prevKeyboardState;
-    const Uint8* keyboardState;
-    int keyLength;
-
-    Uint8* prevControllerState;
-    const Uint8* ControllerState;
-    int controllerLenght;
+    InputSystem() = default;
     
-public:
-    bool KeyDown(SDL_Scancode scanCode) const;
-    bool KeyPressed(SDL_Scancode scanCode) const;
-    bool KeyReleased(SDL_Scancode scanCode) const;
+    std::unordered_map<SDL_GameControllerButton, ActionType> controllerButtonMapping = {
+        {SDL_CONTROLLER_BUTTON_A, ActionType::JUMP},
+    };
 
-    bool CButtonDown(SDL_GameControllerButton scanCode) const;
-    bool CButtonPressed(SDL_GameControllerButton scanCode) const;
-    bool CButtonReleased(SDL_GameControllerButton scanCode) const;
+    std::unordered_map<SDL_GameControllerAxis, ActionType> controllerAxisMapping = {
+        {SDL_CONTROLLER_AXIS_LEFTX, ActionType::MOVE_LEFT},
+        {SDL_CONTROLLER_AXIS_LEFTX, ActionType::MOVE_RIGHT},
+        {SDL_CONTROLLER_AXIS_TRIGGERRIGHT, ActionType::SPRINT}
+    };
 
-    void Update();
-    void UpdatePrevInput();
+    std::unordered_map<SDL_Keycode, ActionType> keyboardButtonMapping = {
+        {SDL_SCANCODE_A, ActionType::MOVE_LEFT},
+        {SDL_SCANCODE_D, ActionType::MOVE_RIGHT},
+        {SDL_SCANCODE_SPACE, ActionType::JUMP},
+        {SDL_SCANCODE_LSHIFT, ActionType::SPRINT}
+    };
 };

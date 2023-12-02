@@ -57,8 +57,6 @@ namespace Tmpl8
 		
 		// Render the game
 		Render();
-
-		
 	}
 	
 	void Game::GameTick(float dt)
@@ -68,8 +66,6 @@ namespace Tmpl8
 		testSprite.Draw(screen, 100, 100);
 
 		player->Update(dt);
-
-		InputSystem::instance().UpdatePrevInput();
 	}
 	
 	void Game::PhysTick(float dt)
@@ -84,10 +80,59 @@ namespace Tmpl8
 
 	void Game::KeyUp(int key)
 	{
+		player->HandleAction(ActionType::NO_MOVEMENT);
 	}
 
 	void Game::KeyDown(int key)
 	{
+		const auto temp = game_input->keyboardButtonMapping.find(key);
+		if (temp !=  game_input->keyboardButtonMapping.end()) {
+			const ActionType action = temp->second;
+			player->HandleAction(action);
+		}
+	}
+
+	void Game::ButtonUp(int key) const
+	{
+		const auto temp = game_input->controllerButtonMapping.find(static_cast<SDL_GameControllerButton>(key));
+		if (temp !=  game_input->controllerButtonMapping.end()) {
+			const ActionType action = temp->second;
+			player->HandleAction(action);
+		}
+	}
+
+	void Game::ButtonDown(int key)
+	{
+	}
+
+	void Game::Axis(int axis, Sint16 axisValue)
+	{
+		const auto axisIt = game_input->controllerAxisMapping.find(static_cast<SDL_GameControllerAxis>(axis));
+
+		if (axisIt != game_input->controllerAxisMapping.end())
+		{
+			const ActionType action = axisIt->second;
+			const int value = axisValue;
+			if (axis == SDL_CONTROLLER_AXIS_LEFTX)
+			{
+				// Handle left and right movement based on the axis value
+				if (value < -DeadZone)
+					player->HandleAction(ActionType::MOVE_LEFT); 
+				else if (value > DeadZone)
+					player->HandleAction(ActionType::MOVE_RIGHT);
+				else
+					player->HandleAction(ActionType::NO_MOVEMENT);
+				
+			}
+			else if (axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT)
+			{
+				if (axisValue > DeadZone)
+				{
+					player->HandleAction(action);
+				}
+			}
+
+		}
 	}
 
 	void Game::ControllerJoystick(vec2 input)

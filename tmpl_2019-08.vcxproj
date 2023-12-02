@@ -225,6 +225,7 @@
     <Text Include="_readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\game.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -299,7 +300,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\InputSystem.cpp" />
     <ClCompile Include="src\PhysEntity.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
@@ -507,6 +507,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AABB.h" />
+    <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\InputSystem.h" />

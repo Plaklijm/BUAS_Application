@@ -320,18 +320,18 @@ vec2 ClampControllerInput(const Sint16 x, const Sint16 y)
 {
 	vec2 temp(x,y);
 	
-	temp.x = std::abs(temp.x) < DeadZoneX ? 0.0 : sgn<float>(temp.x);
-	temp.y = std::abs(temp.y) < DeadZoneY ? 0.0 : sgn<float>(temp.y);
+	temp.x = std::abs(temp.x) < DeadZone ? 0.0 : sgn<float>(temp.x);
+	temp.y = std::abs(temp.y) < DeadZone ? 0.0 : sgn<float>(temp.y);
 
 	return temp;
 }
 
 // Main function
-int main( int argc, char **argv ) 
-{  
+int main( int argc, char **argv )
+{
 #ifdef _MSC_VER
-    if (!redirectIO())
-        return 1;
+	if (!redirectIO())
+		return 1;
 #endif
 	printf( "application started.\n" );
 	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER );
@@ -358,9 +358,11 @@ int main( int argc, char **argv )
 	int exitapp = 0;
 	
 	SDL_GameController* controller = nullptr;
+	auto* input = new InputSystem();
 	
 	game = new Game();
 	game->SetTarget( surface );
+	game->SetInput( input );
 	
 	timer t;
 	t.reset();
@@ -370,10 +372,10 @@ int main( int argc, char **argv )
 
 	while (!exitapp) 
 	{
-	#ifdef ADVANCEDGL
+#ifdef ADVANCEDGL
 		swap();
 		surface->SetBuffer( (Pixel*)framedata );
-	#else
+#else
 		void* target = 0;
 		int pitch;
 		SDL_LockTexture( frameBuffer, NULL, &target, &pitch );
@@ -393,11 +395,12 @@ int main( int argc, char **argv )
 		SDL_UnlockTexture( frameBuffer );
 		SDL_RenderCopy( renderer, frameBuffer, NULL, NULL );
 		SDL_RenderPresent( renderer );
-	#endif
+#endif
 		if (firstframe)
 		{
 			game->Init();
 			firstframe = false;
+			printf("%i", DeadZone);
 		}
 		// calculate frame time and pass it to game->Tick
 		// divided by 1000 to get milliseconds 
@@ -414,10 +417,6 @@ int main( int argc, char **argv )
 		}
 		
 		game->Tick( elapsedTime );
-		if (controller)
-		{
-			printf(SDL_GameControllerName(controller));
-		}
 		
 		// event loop
 		// TODO: CLEANUP EVENT LOOP, INPUT MANAGER WILL HANDLE EVERYTHING
@@ -449,6 +448,8 @@ int main( int argc, char **argv )
 			case SDL_MOUSEBUTTONDOWN:
 				game->MouseDown( event.button.button );
 				break;
+
+			// Controller
 			case SDL_CONTROLLERDEVICEADDED:
 				controller = SDL_GameControllerOpen(event.cdevice.which);
 				break;
@@ -457,42 +458,47 @@ int main( int argc, char **argv )
 				controller = nullptr;
 				break;
 			case SDL_CONTROLLERBUTTONDOWN:
-					game->KeyDown(event.cbutton.button);
+				game->ButtonDown(event.cbutton.button);
 				break;
 			case SDL_CONTROLLERBUTTONUP:
-					game->KeyUp(event.cbutton.button);
+				game->ButtonUp(event.cbutton.button);
+				break;
+			case SDL_CONTROLLERAXISMOTION:
+				game->Axis(event.caxis.axis, event.caxis.value);
+				break;
 			default:
 				break;
+			
 			}
-		}
 
-		if (controller != nullptr)
-		{
-			// Outside event loop to make sure it gets constantly updated if there is a controller
-			SDL_GameControllerUpdate();
+			if (controller != nullptr)
+			{
+				// Outside event loop to make sure it gets constantly updated if there is a controller
+				SDL_GameControllerUpdate();
 
-			const auto l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
-			const auto l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
+				const auto l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
+				const auto l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
 
-			const auto x = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X);
-			const auto y = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y);
-			const auto b = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B);
-			const auto a = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A);
+				const auto x = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X);
+				const auto y = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y);
+				const auto b = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B);
+				const auto a = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A);
 
-			const auto back = sgn<int>(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
+				const auto back = sgn<int>(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
 
-			//printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
+				//printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
 			
-			const auto controllerInput = ClampControllerInput(l_x, l_y);
+				const auto controllerInput = ClampControllerInput(l_x, l_y);
 			
-			game->ControllerJoystick(controllerInput);
+				game->ControllerJoystick(controllerInput);
+			}
 		}
 	}
 	game->Shutdown();
 
-    if (controller) {
+	if (controller) {
 		SDL_GameControllerClose(controller);
-    }
+	}
 	
 	SDL_Quit();
 	return 0;

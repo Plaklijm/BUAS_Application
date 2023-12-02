@@ -35,6 +35,7 @@ public:
     virtual ~PhysEntity() = default;
 protected:
     vec2 position, oldPosition;
+    vec2 acceleration;
     vec2 speed, oldSpeed;
     vec2 scale;
 

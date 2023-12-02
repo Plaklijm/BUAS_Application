@@ -30,7 +30,7 @@ void PhysEntity::UpdatePhysics(float dt)
     float groundY = ScreenHeight - 50;
     if (speed.y <= 0.0f && HasGround(groundY))
     {
-        position.y = groundY + aabb->GetHalfSize().y - aabbOffset.y;
+        position.y = groundY;// + aabb->GetHalfSize().y - aabbOffset.y;
         speed.y = 0.0f;
         onGround = true;
     }
@@ -42,7 +42,7 @@ void PhysEntity::UpdatePhysics(float dt)
 
 bool PhysEntity::HasGround(float& groundY)
 {
-    const auto oldCenter = oldPosition + aabbOffset;
+    /*const auto oldCenter = oldPosition + aabbOffset;
     const auto center = position + aabbOffset;
     
     auto oldBottomLeft = oldCenter - aabb->GetHalfSize() - vec2::Up() + vec2::Right();
@@ -72,7 +72,7 @@ bool PhysEntity::HasGround(float& groundY)
             if (checkedTile.x >= bottomRight.x)
                 break;
         }
-    }
+    }*/
     
-    return false;
+    return true;
 }
