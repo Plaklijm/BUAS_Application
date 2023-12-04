@@ -9,15 +9,15 @@
 
 // TODO: IMPLEMENT BETTER INPUT SYSTEM PLS USING THE COMMAND PATTERN :D
 
-Player::Player() : PhysEntity()
+Player::Player()
 {
     //currentAnim = IDLE;
     sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 
-    position = {40, ScreenHeight-50};
+    playerPosition = {40, ScreenHeight-50};
     
     vec2 halfsizeTemp{10,10};
-    aabb = new AABB(position, halfsizeTemp);
+    aabb = new AABB(playerPosition, halfsizeTemp);
     walkSpeed = 160.f;
     jumpForce = 400.f;
 }
@@ -28,7 +28,7 @@ Player::~Player()
 
 void Player::RenderPlayer(Surface* screen)
 {
-    sprite->Draw(screen, position.x, position.y);
+    sprite->Draw(screen, playerPosition.x, playerPosition.y);
     
     std::string cs = std::to_string(currentState);
     char *ccs = new char[cs.length() + 1];
@@ -89,11 +89,11 @@ void Player::UpdatePhysics(float dt)
     HandleGravity();
 
     ApplyMovement();
-    speed.x = horizontalInput * walkSpeed;
 
     
-    PhysEntity::UpdatePhysics(dt);
 }
+
+
 
 /*void Player::SwitchAnim(anims animToPlay)
 {

@@ -1,9 +1,12 @@
 ﻿#pragma once
-#include <vector>
 
 #include "InputSystem.h"
-#include "PhysEntity.h"
 #include "surface.h"
+#include "template.h"
+
+class AABB;
+
+using namespace Tmpl8;
 
 /*enum anims
 {
@@ -20,7 +23,7 @@ enum PlayerState
     S_Jump,
 };
 
-class Player : public PhysEntity
+class Player
 {
 private:
     // LOOK FOR A PLACE TO PUT THESE
@@ -30,7 +33,10 @@ private:
 private:
     Sprite* sprite;
     InputSystem input;
+    AABB* aabb;
 
+    vec2 playerPosition{};
+    
     // Input variables
     float horizontalInput{};
     // MovementVariables
@@ -41,14 +47,14 @@ private:
     //bool isFacingRight;
 public:
     Player();
-    ~Player() override;
+    ~Player();
 
     void Update(float dt);
     void HandleJump();
     void HandleDirection();
     void HandleGravity();
     void ApplyMovement();
-    void UpdatePhysics(float dt) override;
+    void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
     void HandleAction(ActionType action);
 

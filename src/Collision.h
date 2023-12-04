@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "template.h"
 
+class PhysEntity;
 struct AABB;
 using namespace Tmpl8;
 

@@ -3,6 +3,7 @@
 #include <array>
 
 #include "AABB.h"
+#include "PhysEntity.h"
 // https://www.youtube.com/watch?v=8JJ-4JgR7Dg
 
 Collision::Collision()
@@ -65,11 +66,11 @@ bool Collision::RayVsAABB(const vec2& rayOrigin, const vec2& rayDirection, const
 bool Collision::DynamicAABBVsAABB(const AABB& in, const AABB& target,
     vec2& contactPoint, vec2& contactNormal, float& contactTime, float dt)
 {
-    if (in.vel.x == 0.f && in.vel.y == 0.f) return false;
+    if (in.velocity.x == 0.f && in.velocity.y == 0.f) return false;
 
-    AABB expandedTarget = {target.pos - in.size / 2, target.size + in.size};
+    AABB expandedTarget = {target.pos - in.size  / 2, target.size + in.size };
 
-    if (RayVsAABB(in.pos + in.size / 2, in.vel * dt, expandedTarget, contactPoint, contactNormal, contactTime))
+    if (RayVsAABB(in.pos + in.size / 2, in.velocity * dt, expandedTarget, contactPoint, contactNormal, contactTime))
     {
         if (contactTime <= 1.f)
             return true;
