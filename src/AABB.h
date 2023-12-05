@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include "template.h"
 
-using namespace Tmpl8;
 struct AABB
 {
 public:

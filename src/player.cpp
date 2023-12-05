@@ -6,18 +6,15 @@
 #include "AABB.h"
 #include "InputSystem.h"
 
-
-// TODO: IMPLEMENT BETTER INPUT SYSTEM PLS USING THE COMMAND PATTERN :D
-
 Player::Player()
 {
     //currentAnim = IDLE;
-    sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
+    //sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 
-    playerPosition = {40, ScreenHeight-50};
+    playerPosition = {0, 0};
     
-    vec2 halfsizeTemp{10,10};
-    aabb = new AABB(playerPosition, halfsizeTemp);
+    vec2 size{64,64};
+    aabb = new AABB(playerPosition, size);
     walkSpeed = 160.f;
     jumpForce = 400.f;
 }
@@ -28,7 +25,7 @@ Player::~Player()
 
 void Player::RenderPlayer(Surface* screen)
 {
-    sprite->Draw(screen, playerPosition.x, playerPosition.y);
+    screen->Box(int(aabb->pos.x),int(aabb->pos.y),int(aabb->pos.x + aabb->size.x),int(aabb->pos.y + aabb->size.y),0xffffff);
     
     std::string cs = std::to_string(currentState);
     char *ccs = new char[cs.length() + 1];

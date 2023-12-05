@@ -15,12 +15,14 @@ namespace Tmpl8
 
 	
 	Player* player;
+	Sprite testSprite(new Surface("assets/player/inhale_float.png"), 6);
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
 	void Game::Init()
 	{
 		player = new Player();
+		testSprite.SetFrame(5);
 	}
 	
 	// -----------------------------------------------------------
@@ -35,7 +37,6 @@ namespace Tmpl8
 	// Main application tick function
 	// -----------------------------------------------------------
 
-	Sprite testSprite(new Surface("assets/player/inhale_float.png"), 6);
 	
 	void Game::Tick(float deltaTime)
 	{
@@ -63,7 +64,6 @@ namespace Tmpl8
 	{
 		/*
 		player->Update(deltaTime, screen);*/
-		testSprite.Draw(screen, 100, 100);
 
 		player->Update(dt);
 	}
