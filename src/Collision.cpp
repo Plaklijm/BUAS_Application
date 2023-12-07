@@ -65,7 +65,7 @@ bool Collision::RayVsAABB(const vec2& rayOrigin, const vec2& rayDirection, const
 bool Collision::DynamicAABBVsAABB(const AABB& in, const AABB& target,
     vec2& contactPoint, vec2& contactNormal, float& contactTime, float dt)
 {
-    if (in.velocity.x == 0.f && in.velocity.y == 0.f) return false;
+    /*if (in.velocity.x == 0.f && in.velocity.y == 0.f) return false;
 
     AABB expandedTarget = {target.pos - in.size  / 2, target.size + in.size };
 
@@ -73,7 +73,7 @@ bool Collision::DynamicAABBVsAABB(const AABB& in, const AABB& target,
     {
         if (contactTime <= 1.f)
             return true;
-    }
+    }*/
 
     return false;
 }

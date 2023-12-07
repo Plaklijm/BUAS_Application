@@ -23,6 +23,8 @@ enum PlayerState
     S_Jump,
 };
 
+constexpr float gravity {.0001};
+
 class Player
 {
 private:
@@ -35,7 +37,14 @@ private:
     InputSystem input;
     AABB* aabb;
 
-    vec2 playerPosition{};
+    
+    float mass, invMass;
+    float restitution;
+    float friction;
+
+    vec2 position;
+    vec2 velocity;
+    vec2 force;
     
     // Input variables
     float horizontalInput{};
@@ -43,6 +52,7 @@ private:
     PlayerState currentState = S_Idle;
     float walkSpeed;
     float jumpForce;
+
 
     //bool isFacingRight;
 public:
@@ -54,6 +64,16 @@ public:
     void HandleDirection();
     void HandleGravity();
     void ApplyMovement();
+
+    void IntegrateForces();
+    void IntegrateVelocity(float dt);
+    
+    void ApplyForce(vec2 inputForce);
+    void ApplyImpulse(vec2 impulseForce);
+    void ClearForces();
+    void SetMass(float mass);
+
+    
     void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
     void HandleAction(ActionType action);

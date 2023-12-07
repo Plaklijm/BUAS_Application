@@ -11,12 +11,13 @@ Player::Player()
     //currentAnim = IDLE;
     //sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 
-    playerPosition = {0, 0};
-    
-    vec2 size{64,64};
-    aabb = new AABB(playerPosition, size);
+    position = {0, 0};
+
+    const vec2 size{64,64};
+    aabb = new AABB(position, size);
     walkSpeed = 160.f;
     jumpForce = 400.f;
+    SetMass(.001);
 }
 
 Player::~Player()
@@ -79,15 +80,53 @@ void Player::ApplyMovement()
 {
 }
 
+void Player::IntegrateForces()
+{
+    if (this->invMass != 0)
+    {
+        this->velocity.x += (this->force.x * this->invMass) / 2;
+        this->velocity.y += (this->force.y * this->invMass + gravity) / 2;
+    }
+}
+
+void Player::IntegrateVelocity(float dt)
+{
+    if (this->invMass != 0)
+    {
+        this->position += this->velocity * dt;
+        this->IntegrateForces();
+    }
+}
+
+void Player::ApplyForce(const vec2 inputForce)
+{
+    this->force = inputForce;
+}
+
+void Player::ApplyImpulse(const vec2 impulseForce)
+{
+    this->velocity.x += this->invMass * impulseForce.x;
+    this->velocity.y += this->invMass * impulseForce.y;
+}
+
+void Player::ClearForces()
+{
+    this->force = vec2::Zero();
+}
+
+void Player::SetMass(float mass)
+{
+    this->mass = mass;
+    this->invMass = 1 / mass;
+}
+
 void Player::UpdatePhysics(float dt)
 {
-    HandleJump();
-    HandleDirection();
-    HandleGravity();
+    IntegrateForces();
+    IntegrateVelocity(dt);
 
-    ApplyMovement();
-
-    
+    printf("x = %f, y = %f\n", position.x, position.y);
+    aabb->pos = position;
 }
 
 
