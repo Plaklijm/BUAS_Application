@@ -225,7 +225,6 @@
     <Text Include="_readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\game.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -300,6 +299,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\Physics\World.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -505,11 +505,13 @@
     <Content Include="tmpl_2019-08.sln" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AABB.h" />
-    <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\InputSystem.h" />
+    <ClInclude Include="src\Physics\AABB.h" />
+    <ClInclude Include="src\Physics\Arbiter.h" />
+    <ClInclude Include="src\Physics\Body.h" />
+    <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\surface.h" />
     <ClInclude Include="src\template.h" />
