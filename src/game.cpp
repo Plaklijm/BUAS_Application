@@ -1,19 +1,16 @@
 #include "game.h"
 
-#include "surface.h"
 #include <cstdio> //printf
 #include <string>
 #include <fstream>
 
-#include "InputSystem.h"
+#include "InputManager.h"
 #include "player.h"
 #include "template.h"
+#include "surface.h"
 
 namespace Tmpl8
 {
-
-
-	
 	Player* player;
 	Sprite testSprite(new Surface("assets/player/inhale_float.png"), 6);
 	// -----------------------------------------------------------
@@ -21,7 +18,8 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Init()
 	{
-		player = new Player();
+		game_input = InputManager::Instance();
+		player = new Player(game_input);
 		testSprite.SetFrame(5);
 	}
 	
@@ -30,19 +28,19 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Shutdown()
 	{
-		
+		InputManager::Release();
+		game_input = nullptr;
 	}
 	
 	// -----------------------------------------------------------
 	// Main application tick function
 	// -----------------------------------------------------------
-
-	
 	void Game::Tick(float deltaTime)
 	{
+		game_input->Update();
 		// clear the graphics window
 		screen->Clear(0);
-
+		testSprite.Draw(screen, 0, 0);
 		// log the current FPS
 		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
 		char *cfps = new char[fps.length() + 1];
@@ -58,6 +56,8 @@ namespace Tmpl8
 		
 		// Render the game
 		Render();
+		
+		game_input->UpdatePrevInput();
 	}
 	
 	void Game::GameTick(float dt)
@@ -78,36 +78,12 @@ namespace Tmpl8
 		player->RenderPlayer(screen);
 	}
 
-	void Game::KeyUp(int key)
-	{
-		player->HandleAction(ActionType::NO_MOVEMENT);
-	}
 
-	void Game::KeyDown(int key)
-	{
-		const auto temp = game_input->keyboardButtonMapping.find(key);
-		if (temp !=  game_input->keyboardButtonMapping.end()) {
-			const ActionType action = temp->second;
-			player->HandleAction(action);
-		}
-	}
+	
+	// MAYBE STILL USEFULL IN THE FUTURE
 
-	void Game::ButtonUp(int key) const
-	{
-		const auto temp = game_input->controllerButtonMapping.find(static_cast<SDL_GameControllerButton>(key));
-		if (temp !=  game_input->controllerButtonMapping.end()) {
-			const ActionType action = temp->second;
-			player->HandleAction(action);
-		}
-	}
-
-	void Game::ButtonDown(int key)
-	{
-	}
-
-	void Game::Axis(int axis, Sint16 axisValue)
-	{
-		const auto axisIt = game_input->controllerAxisMapping.find(static_cast<SDL_GameControllerAxis>(axis));
+	
+		/*const auto axisIt = game_input->controllerAxisMapping.find(static_cast<SDL_GameControllerAxis>(axis));
 
 		if (axisIt != game_input->controllerAxisMapping.end())
 		{
@@ -132,11 +108,6 @@ namespace Tmpl8
 				}
 			}
 
-		}
-	}
-
-	void Game::ControllerJoystick(vec2 input)
-	{
-		//printf("X=%f Y=%f\n", input.x, input.y);
-	}
+		}*/
+	
 };

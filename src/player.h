@@ -1,8 +1,12 @@
 ﻿#pragma once
 
-#include "InputSystem.h"
 #include "surface.h"
 #include "template.h"
+
+namespace Tmpl8
+{
+    class InputManager;
+}
 
 class AABB;
 
@@ -16,13 +20,6 @@ using namespace Tmpl8;
 };*/
 
 
-enum PlayerState
-{
-    S_Idle,
-    S_Walk,
-    S_Jump,
-};
-
 constexpr float gravity {.0001};
 
 class Player
@@ -33,50 +30,47 @@ private:
     float animationTime{};
     float animationSpeed = .1f;*/
 private:
-    Sprite* sprite;
-    InputSystem input;
-    AABB* aabb;
+    InputManager*               pInput;
+    Sprite*                     sprite;
+
+    struct PlayerStats*         stats;
+    class BoxCollider*          collider;
 
     
-    float mass, invMass;
-    float restitution;
-    float friction;
+    vec2                        position;
+    vec2                        velocity;
+    vec2                        friction;
+    vec2                        gravity;
+    vec2                        force;
 
-    vec2 position;
-    vec2 velocity;
-    vec2 force;
-    
+    bool                        flipHorizontally;
     // Input variables
-    float horizontalInput{};
-    // MovementVariables
-    PlayerState currentState = S_Idle;
-    float walkSpeed;
-    float jumpForce;
-
+    float                       horizontalInput{};
+    bool                        jumpDown{};
+    bool                        jumpHeld{};
+    bool                        sprintPressed{};
+    bool                        crouchPressed{};
+    
+    
 
     //bool isFacingRight;
 public:
-    Player();
+    Player(InputManager* input);
     ~Player();
 
     void Update(float dt);
-    void HandleJump();
-    void HandleDirection();
-    void HandleGravity();
-    void ApplyMovement();
-
-    void IntegrateForces();
-    void IntegrateVelocity(float dt);
     
     void ApplyForce(vec2 inputForce);
-    void ApplyImpulse(vec2 impulseForce);
+    void ApplyGravity();
+    void ApplyFriction(vec2 friction);
     void ClearForces();
-    void SetMass(float mass);
 
-    
+    void Move(float dt);
+    void LimitVelocity();
+
     void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
-    void HandleAction(ActionType action);
+    //void HandleAction(ActionType action);
 
     //void SwitchAnim(anims animToPlay);
     

@@ -1,135 +1,119 @@
 ﻿#include "player.h"
 
-#include <iostream>
-#include <string>
+#include "BoxCollider.h"
 #include "template.h"
-#include "AABB.h"
-#include "InputSystem.h"
+#include "InputManager.h"
+#include "PlayerStats.h"
 
-Player::Player()
+// https://www.myphysicslab.com/engine2D/rigid-body-en.html
+
+Player::Player(InputManager* input)
 {
+    pInput = input;
+    stats = new PlayerStats();
+    
     //currentAnim = IDLE;
     //sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 
     position = {0, 0};
-
-    const vec2 size{64,64};
-    aabb = new AABB(position, size);
-    walkSpeed = 160.f;
-    jumpForce = 400.f;
-    SetMass(.001);
+    velocity = {0, 0};
+    gravity = {0, 9.81f};
 }
 
 Player::~Player()
 {
-}
-
-void Player::RenderPlayer(Surface* screen)
-{
-    screen->Box(int(aabb->pos.x),int(aabb->pos.y),int(aabb->pos.x + aabb->size.x),int(aabb->pos.y + aabb->size.y),0xffffff);
     
-    std::string cs = std::to_string(currentState);
-    char *ccs = new char[cs.length() + 1];
-    strcpy(ccs, cs.c_str());
-    screen->Print(ccs, 2, 10, 0xffffff);
-}
-
-void Player::HandleAction(ActionType action)
-{
-    switch (action) {
-    case  ActionType::NO_MOVEMENT:
-        printf("IDLE\n");
-        horizontalInput = 0;
-        break;
-    case ActionType::MOVE_LEFT:
-        printf("LEFT\n");
-        horizontalInput = -1;
-        break;
-    case ActionType::MOVE_RIGHT:
-        printf("RIGHT\n");
-        horizontalInput = 1;
-        break;
-    case ActionType::JUMP:
-        printf("JUMP\n");
-        break;
-    case ActionType::SPRINT:
-        printf("SPRINT\n");
-        break;
-    default: break;
-    }
 }
 
 void Player::Update(float dt)
 {
-    
-}
-
-void Player::HandleJump()
-{
-}
-
-void Player::HandleDirection()
-{
-}
-
-void Player::HandleGravity()
-{
-}
-
-void Player::ApplyMovement()
-{
-}
-
-void Player::IntegrateForces()
-{
-    if (this->invMass != 0)
+    // Handle input
+    if (pInput->KeyPressed(SDL_SCANCODE_D) == pInput->KeyPressed(SDL_SCANCODE_A))
     {
-        this->velocity.x += (this->force.x * this->invMass) / 2;
-        this->velocity.y += (this->force.y * this->invMass + gravity) / 2;
+        horizontalInput = 0;
     }
-}
-
-void Player::IntegrateVelocity(float dt)
-{
-    if (this->invMass != 0)
+    else if (pInput->KeyPressed(SDL_SCANCODE_A))
     {
-        this->position += this->velocity * dt;
-        this->IntegrateForces();
+        horizontalInput = -1;
     }
+    else if (pInput->KeyPressed(SDL_SCANCODE_D))
+    {
+        horizontalInput = 1;
+    }
+
+    // TODO: Fix controller input and add Axis support for left right and crouch
+    jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);// || pInput->CButtonDown(SDL_CONTROLLER_BUTTON_X);
+    jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);// || pInput->CButtonPressed(SDL_CONTROLLER_BUTTON_X);
+
+    sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);// || pInput->CButtonPressed(SDL_CONTROLLER_BUTTON_A);
+
+    crouchPressed = pInput->KeyPressed(SDL_SCANCODE_LCTRL);
 }
 
-void Player::ApplyForce(const vec2 inputForce)
-{
-    this->force = inputForce;
-}
-
-void Player::ApplyImpulse(const vec2 impulseForce)
-{
-    this->velocity.x += this->invMass * impulseForce.x;
-    this->velocity.y += this->invMass * impulseForce.y;
-}
-
-void Player::ClearForces()
-{
-    this->force = vec2::Zero();
-}
-
-void Player::SetMass(float mass)
-{
-    this->mass = mass;
-    this->invMass = 1 / mass;
-}
 
 void Player::UpdatePhysics(float dt)
 {
-    IntegrateForces();
-    IntegrateVelocity(dt);
-
-    printf("x = %f, y = %f\n", position.x, position.y);
-    aabb->pos = position;
+    // Check Collision
+    // Jump
+    // 
+    // Move player << gravity applied
+    Move(dt);
 }
 
+void Player::RenderPlayer(Surface* screen)
+{
+    screen->Box(position.x, position.y, position.x + 64, position.y + 64, 0xffffff);
+    /*std::string cs = std::to_string(currentState);
+    char *ccs = new char[cs.length() + 1];
+    strcpy(ccs, cs.c_str());
+    screen->Print(ccs, 2, 10, 0xffffff);*/
+}
 
+void Player::Move(float dt)
+{
+    // Newton's second law
+    velocity.x += horizontalInput * stats->GetAcceleration() * dt;
+    velocity.x *= 1 - stats->GetGroundFriction() * dt;
+
+    velocity.y += gravity.y * dt;
+    
+    LimitVelocity();
+    printf("%f\n", velocity.x);
+
+    // Apply the movement
+    position += velocity * dt;
+}
+
+void Player::LimitVelocity()
+{
+    // Set min velocity in X dimension
+    // When subtracting the friction it'll get infinitely smaller, so this makes sure to put the vel at 0 
+    if (abs(velocity.x) < stats->GetMinVel().x)
+        velocity.x = 0;
+    
+    // Set max velocity in X dimension based on direction
+    if (abs(velocity.x) > stats->GetMaxVel().x)
+        velocity.x = stats->GetMaxVel().x * (velocity.x < 0.f ? -1.f : 1.f);
+
+    // Set max velocity in Y dimension based on direction, this will also limit the fall speed
+    if (abs(velocity.x) > stats->GetMaxVel().y)
+        velocity.y = stats->GetMaxVel().y * (velocity.y < 0.f ? -1.f : 1.f);
+}
+
+void Player::ApplyForce(vec2 inputForce)
+{
+    force += inputForce * stats->GetInvMass();
+}
+
+void Player::ApplyGravity()
+{
+    
+}
+
+void Player::ApplyFriction(vec2 friction)
+{
+    
+}
 
 /*void Player::SwitchAnim(anims animToPlay)
 {

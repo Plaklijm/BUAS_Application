@@ -299,7 +299,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\Physics\World.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\surface.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -449,7 +449,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\aagun.tga" />
@@ -505,17 +504,14 @@
     <Content Include="tmpl_2019-08.sln" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BoxCollider.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
-    <ClInclude Include="src\InputSystem.h" />
-    <ClInclude Include="src\Physics\AABB.h" />
-    <ClInclude Include="src\Physics\Arbiter.h" />
-    <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\PlayerStats.h" />
     <ClInclude Include="src\surface.h" />
     <ClInclude Include="src\template.h" />
-    <ClInclude Include="src\World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

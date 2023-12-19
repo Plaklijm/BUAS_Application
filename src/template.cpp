@@ -14,7 +14,6 @@
 //#define ADVANCEDGL
 
 #include "game.h"
-#include "InputSystem.h"
 
 #include <fcntl.h>
 #include <io.h>
@@ -358,11 +357,9 @@ int main( int argc, char **argv )
 	int exitapp = 0;
 	
 	SDL_GameController* controller = nullptr;
-	auto* input = new InputSystem();
 	
 	game = new Game();
 	game->SetTarget( surface );
-	game->SetInput( input );
 	
 	timer t;
 	t.reset();
@@ -419,7 +416,6 @@ int main( int argc, char **argv )
 		game->Tick( elapsedTime );
 		
 		// event loop
-		// TODO: CLEANUP EVENT LOOP, INPUT MANAGER WILL HANDLE EVERYTHING
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
 		{
@@ -434,63 +430,7 @@ int main( int argc, char **argv )
 					exitapp = 1;
 					// find other keys here: http://sdl.beuc.net/sdl.wiki/SDLKey
 				}
-				game->KeyDown( event.key.keysym.scancode );
 				break;
-			case SDL_KEYUP:
-				game->KeyUp( event.key.keysym.scancode );
-				break;
-			case SDL_MOUSEMOTION:
-				game->MouseMove( event.motion.xrel, event.motion.yrel );
-				break;
-			case SDL_MOUSEBUTTONUP:
-				game->MouseUp( event.button.button );
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				game->MouseDown( event.button.button );
-				break;
-
-			// Controller
-			case SDL_CONTROLLERDEVICEADDED:
-				controller = SDL_GameControllerOpen(event.cdevice.which);
-				break;
-			case SDL_CONTROLLERDEVICEREMOVED:
-				SDL_GameControllerClose(SDL_GameControllerFromInstanceID(event.cdevice.which));
-				controller = nullptr;
-				break;
-			case SDL_CONTROLLERBUTTONDOWN:
-				game->ButtonDown(event.cbutton.button);
-				break;
-			case SDL_CONTROLLERBUTTONUP:
-				game->ButtonUp(event.cbutton.button);
-				break;
-			case SDL_CONTROLLERAXISMOTION:
-				game->Axis(event.caxis.axis, event.caxis.value);
-				break;
-			default:
-				break;
-			
-			}
-
-			if (controller != nullptr)
-			{
-				// Outside event loop to make sure it gets constantly updated if there is a controller
-				SDL_GameControllerUpdate();
-
-				const auto l_x = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
-				const auto l_y = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
-
-				const auto x = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X);
-				const auto y = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y);
-				const auto b = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B);
-				const auto a = SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A);
-
-				const auto back = sgn<int>(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT));
-
-				//printf("X=%i Y=%i B=%i A=%i BACK=%i\n", x,y,b,a,back);
-			
-				const auto controllerInput = ClampControllerInput(l_x, l_y);
-			
-				game->ControllerJoystick(controllerInput);
 			}
 		}
 	}

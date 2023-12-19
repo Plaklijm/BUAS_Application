@@ -104,10 +104,12 @@ public:
 	float& operator [] ( const int idx ) { return cell[idx]; }
 	float length() { return sqrtf( x * x + y * y ); }
 	float sqrLentgh() { return x * x + y * y; }
+	float distance(const vec2& operand) { return sqrtf( pow(x - operand.x, 2) + pow(y - operand.y, 2) ); }
 	vec2 normalized() { float r = 1.0f / length(); return vec2( x * r, y * r ); }
 	void normalize() { float r = 1.0f / length(); x *= r; y *= r; }
 	static vec2 normalize( vec2 v ) { return v.normalized(); }
 	float dot( const vec2& operand ) const { return x * operand.x + y * operand.y; }
+	float cross (const vec2& operand ) const { return x * operand.y - y * operand.x; }
 	// Added vec2 standard direction functions to get a directional vector, instead of getting it like: var = {0,0};
 	static vec2 Zero() {return vec2(0, 0); }
 	static vec2 Left() {return vec2(-1, 0); }

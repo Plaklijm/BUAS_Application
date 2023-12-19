@@ -371,6 +371,7 @@ void Sprite::Draw( Surface* a_Target, int a_X, int a_Y )
 	int x1 = a_X, x2 = a_X + m_Width;
 	int y1 = a_Y, y2 = a_Y + m_Height;
 	Pixel* src = GetBuffer() + m_CurrentFrame * m_Width;
+
 	if (x1 < 0)
 	{
 		src += -x1;
