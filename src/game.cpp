@@ -20,7 +20,7 @@ namespace Tmpl8
 	{
 		game_input = InputManager::Instance();
 		player = new Player(game_input);
-		testSprite.SetFrame(5);
+		testSprite.SetFrame(1);
 	}
 	
 	// -----------------------------------------------------------
@@ -40,7 +40,7 @@ namespace Tmpl8
 		game_input->Update();
 		// clear the graphics window
 		screen->Clear(0);
-		testSprite.Draw(screen, 0, 0);
+		testSprite.Draw(screen, 0, -20);
 		// log the current FPS
 		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
 		char *cfps = new char[fps.length() + 1];

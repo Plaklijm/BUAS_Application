@@ -225,6 +225,7 @@
     <Text Include="_readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Actor.cpp" />
     <ClCompile Include="src\game.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Debug\</AssemblerListingLocation>
@@ -449,6 +450,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\TestCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\aagun.tga" />
@@ -504,6 +506,7 @@
     <Content Include="tmpl_2019-08.sln" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Actor.h" />
     <ClInclude Include="src\BoxCollider.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\GameState.h" />
@@ -512,6 +515,7 @@
     <ClInclude Include="src\PlayerStats.h" />
     <ClInclude Include="src\surface.h" />
     <ClInclude Include="src\template.h" />
+    <ClInclude Include="src\TestCollision.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

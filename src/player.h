@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+
+#include "Actor.h"
 #include "surface.h"
 #include "template.h"
 
@@ -22,7 +24,7 @@ using namespace Tmpl8;
 
 constexpr float gravity {.0001};
 
-class Player
+class Player : Actor
 {
 private:
     // LOOK FOR A PLACE TO PUT THESE
@@ -35,7 +37,7 @@ private:
 
     struct PlayerStats*         stats;
     class BoxCollider*          collider;
-
+    class TestCollision*        testCollision;
     
     vec2                        position;
     vec2                        velocity;
@@ -44,14 +46,15 @@ private:
     vec2                        force;
 
     bool                        flipHorizontally;
+    
     // Input variables
     float                       horizontalInput{};
     bool                        jumpDown{};
     bool                        jumpHeld{};
     bool                        sprintPressed{};
     bool                        crouchPressed{};
-    
-    
+    bool                        left{};
+    bool                        right{};
 
     //bool isFacingRight;
 public:
