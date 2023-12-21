@@ -8,6 +8,7 @@
 #include "player.h"
 #include "template.h"
 #include "surface.h"
+#include "World.h"
 
 namespace Tmpl8
 {
@@ -18,8 +19,9 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Init()
 	{
+		world = new World(10);
 		game_input = InputManager::Instance();
-		player = new Player(game_input);
+		player = new Player(game_input, world);
 		testSprite.SetFrame(1);
 	}
 	
@@ -47,7 +49,8 @@ namespace Tmpl8
 		strcpy(cfps, fps.c_str());
 		screen->Print(cfps, 2, 2, 0xffffff);
 		delete [] cfps;
-		
+
+		world->DrawTiles(screen);
 		// print something to the text window
 		//printf("this goes to the console window.\n");
 

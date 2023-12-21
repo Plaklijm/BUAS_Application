@@ -24,7 +24,7 @@ using namespace Tmpl8;
 
 constexpr float gravity {.0001};
 
-class Player : Actor
+class Player : public Actor
 {
 private:
     // LOOK FOR A PLACE TO PUT THESE
@@ -58,7 +58,7 @@ private:
 
     //bool isFacingRight;
 public:
-    Player(InputManager* input);
+    Player(InputManager* input, World* world);
     ~Player();
 
     void Update(float dt);

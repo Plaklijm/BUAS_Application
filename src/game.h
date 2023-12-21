@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL2-2.28.5/include/SDL_render.h>
 
 namespace Tmpl8 {
 
@@ -18,6 +17,7 @@ public:
 private:
 	class Surface* screen;
 	class InputManager* game_input = nullptr;
+	class World* world;
 };
 
 }; // namespace Tmpl8

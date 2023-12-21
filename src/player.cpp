@@ -6,24 +6,24 @@
 #include "template.h"
 #include "InputManager.h"
 #include "PlayerStats.h"
+#include "Collision.h"
 
 
-#include "TestCollision.h"
+#include "World.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
 
-Player::Player(InputManager* input)
+Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(32,32), world)
 {
     pInput = input;
     stats = new PlayerStats();
     //currentAnim = IDLE;
     //sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
 
-    position = {0, 0};
+    position = {32, 0};
     velocity = {0, 0};
-    gravity = {0, .981f};
+    gravity = {0, .981f / 2};
     collider = new BoxCollider(position, stats->GetSize());
-    testCollision = new TestCollision();
 }
 
 Player::~Player()
@@ -52,14 +52,14 @@ void Player::Update(float dt)
 }
 
 
-    SDL_Rect result;
+    vec2 result;
 void Player::UpdatePhysics(float dt)
 {
     // Check Collision
-    bool collide = SDL_IntersectRect(&collider->GetHitBox(), &testCollision->hitBox->GetHitBox(), &result);
-
+    //bool collide = Collision::RectIntersectAt(&collider->GetHitBox(), vec2(0, 50), &testCollision->hitBox->GetHitBox(), result); //SDL_IntersectRect(&collider->GetHitBox(), &testCollision->hitBox->GetHitBox(), &result);
+    
     // Jump
-    //
+    // 
     // Move player << gravity applied
     
     Move(dt);
@@ -68,12 +68,9 @@ void Player::UpdatePhysics(float dt)
 
 void Player::RenderPlayer(Surface* screen)
 {
-    collider->SetPosition(position, stats->GetSize());
+    collider->SetPosition(position);
     auto b1 = collider->GetHitBox();
     screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
-
-    auto b2 = testCollision->hitBox->GetHitBox();
-    screen->Box(b2.x, b2.y, b2.x + b2.w, b2.y + b2.h, 0xffffff);
     
     /*std::string cs = std::to_string(currentState);
     char *ccs = new char[cs.length() + 1];
@@ -88,10 +85,10 @@ void Player::Move(float dt)
     speedY = std::min(speedY+gravity.y, stats->GetMaxVel().y);
 
     MoveX(speedX);
-    //MoveY(speedY);
+    MoveY(speedY);
 
     position = GetPosition();
-    printf("X = %f, Y = %f\n", speedX, speedY);
+    //printf("X = %f, Y = %f\n", speedX, speedY);
     /*if (jumpDown)
     {
         velocity.y = 200;
