@@ -15,7 +15,6 @@ public:
     std::vector<Solid> GetAllSolidsInCurrentLevel();
     World(int amount);
     void DrawTiles(class Surface* surface);
-    void DrawBox(SDL_Rect cube);
 
     Surface* screen;
 private:

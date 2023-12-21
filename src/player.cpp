@@ -22,7 +22,7 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(32,32
 
     position = {32, 0};
     velocity = {0, 0};
-    gravity = {0, .981f / 2};
+    gravity = {0, .981f};
     collider = new BoxCollider(position, stats->GetSize());
 }
 
@@ -43,7 +43,9 @@ void Player::Update(float dt)
     horizontalInput = right - left;
 
     // TODO: Fix controller input and add Axis support for left right and crouch
-    jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);// || pInput->CButtonDown(SDL_CONTROLLER_BUTTON_X);
+    // Set as separate boolean, because the Phys update will lag behind and will not register 1 frame normal update events
+    if(pInput->KeyDown(SDL_SCANCODE_SPACE))
+        jumpDown = true; // || pInput->CButtonDown(SDL_CONTROLLER_BUTTON_X);
     jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);// || pInput->CButtonPressed(SDL_CONTROLLER_BUTTON_X);
 
     sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);// || pInput->CButtonPressed(SDL_CONTROLLER_BUTTON_A);
@@ -55,15 +57,10 @@ void Player::Update(float dt)
     vec2 result;
 void Player::UpdatePhysics(float dt)
 {
-    // Check Collision
-    //bool collide = Collision::RectIntersectAt(&collider->GetHitBox(), vec2(0, 50), &testCollision->hitBox->GetHitBox(), result); //SDL_IntersectRect(&collider->GetHitBox(), &testCollision->hitBox->GetHitBox(), &result);
-    
     // Jump
     // 
     // Move player << gravity applied
-    
     Move(dt);
-    
 }
 
 void Player::RenderPlayer(Surface* screen)
@@ -84,11 +81,25 @@ void Player::Move(float dt)
     auto speedY = 0.f;
     speedY = std::min(speedY+gravity.y, stats->GetMaxVel().y);
 
+    // consume the jump event this physics frame
+    if (jumpDown)
+    {
+        speedY = -50;
+        jumpDown = false;
+    }
+
+    if (GetCollisionNormal().y > 0)
+        grounded = true;
+    else
+        grounded = false;
+
+    printf("%hhd", grounded);
+
+    
     MoveX(speedX);
     MoveY(speedY);
 
     position = GetPosition();
-    //printf("X = %f, Y = %f\n", speedX, speedY);
     /*if (jumpDown)
     {
         velocity.y = 200;
@@ -128,21 +139,6 @@ void Player::LimitVelocity()
     // Set max velocity in Y dimension based on direction, this will also limit the fall speed
     if (abs(velocity.y) > stats->GetMaxVel().y)
         velocity.y = stats->GetMaxVel().y * (velocity.y < 0.f ? -1.f : 1.f);
-}
-
-void Player::ApplyForce(vec2 inputForce)
-{
-    force += inputForce * stats->GetInvMass();
-}
-
-void Player::ApplyGravity()
-{
-    
-}
-
-void Player::ApplyFriction(vec2 friction)
-{
-    
 }
 
 /*void Player::SwitchAnim(anims animToPlay)

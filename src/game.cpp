@@ -19,7 +19,7 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Init()
 	{
-		world = new World(10);
+		world = new World(20);
 		game_input = InputManager::Instance();
 		player = new Player(game_input, world);
 		testSprite.SetFrame(1);

@@ -30,9 +30,8 @@ namespace Tmpl8
             // Move the actor
             while (move != 0)
             {
-                vec2 normal;
                 // check if the next pixel is free to move at
-                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),normal, world))
+                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),collisionNormal, world))
                 {
                     // There is no solid in the way that would prevent us from moving there.
                     // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
@@ -60,9 +59,8 @@ namespace Tmpl8
             int sign = sgn(move);
             while (move != 0)
             {
-                vec2 normal;
                 // check if the next pixel is free to move at
-                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(0, sign),normal, world))
+                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(0, sign),collisionNormal, world))
                 {
                     // There is no solid in the way that would prevent us from moving there.
                     // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished

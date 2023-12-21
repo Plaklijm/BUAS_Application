@@ -43,9 +43,9 @@ private:
     vec2                        velocity;
     vec2                        friction;
     vec2                        gravity;
-    vec2                        force;
 
     bool                        flipHorizontally;
+    bool                        grounded;
     
     // Input variables
     float                       horizontalInput{};

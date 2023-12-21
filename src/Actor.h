@@ -24,7 +24,7 @@ protected:
 public:
     vec2 GetPosition() const { return position; }
     BoxCollider* GetCollider() const { return hitBox; }
-
+    vec2 GetCollisionNormal() const { return collisionNormal; }
 private:
     void OnCollideX();
     void OnCollideY();
@@ -33,6 +33,7 @@ private:
     float yRemainder{};
     
     vec2 position = vec2::Zero();
+    vec2 collisionNormal = vec2::Zero();
     BoxCollider* hitBox;
 };
     
