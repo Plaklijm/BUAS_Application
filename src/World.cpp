@@ -8,17 +8,39 @@ namespace Tmpl8
 {
     World::World(int amount)
     {
-        vec2 position{0, 128};
+        vec2 position{0, 288};
         vec2 size = {32,32};
+        tiles.emplace_back(position, size);
+        position.y -= 32;
+        tiles.emplace_back(position, size);
+        position.y -= 32;
+        tiles.emplace_back(position, size);
+        position.y -= 32;
         tiles.emplace_back(position, size);
         
         for (int i = 0; i < amount; ++i)
         {
-            vec2 position{size.x * i, 160};
+            vec2 position{size.x * i, 320};
             tiles.emplace_back(position, size);
             printf("Tile = %i,%i\n", tiles[i].GetCollider()->GetHitBox().x, tiles[i].GetCollider()->GetHitBox().y);
         }
-        position.x = 608;
+        position.x = 640;
+        position.y = 256;
+        tiles.emplace_back(position, size);
+
+        position.x += 32;
+        tiles.emplace_back(position, size);
+
+        position.x += 64;
+        position.y -= 32;
+        tiles.emplace_back(position, size);
+        position.x += 32;
+        tiles.emplace_back(position, size);
+
+        position.x += 32;
+        position.y -= 96;
+        tiles.emplace_back(position, size);
+        position.x += 32;
         tiles.emplace_back(position, size);
     }
 

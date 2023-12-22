@@ -333,14 +333,20 @@ int main( int argc, char **argv )
 		return 1;
 #endif
 	printf( "application started.\n" );
-	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER );
+	SDL_Init( SDL_INIT_EVERYTHING );
+
 #ifdef ADVANCEDGL
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+	glEnable(GL_MULTISAMPLE);
 #ifdef FULLSCREEN
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN|SDL_WINDOW_OPENGL );
 #else
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL );
 #endif
 	SDL_GLContext glContext = SDL_GL_CreateContext( window);
+	
 	init();
 	ShowCursor( false );
 #else
@@ -355,6 +361,7 @@ int main( int argc, char **argv )
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif
 	int exitapp = 0;
+	
 	
 	SDL_GameController* controller = nullptr;
 	
@@ -439,6 +446,9 @@ int main( int argc, char **argv )
 	if (controller) {
 		SDL_GameControllerClose(controller);
 	}
+#ifdef ADVANCEDGL
+	SDL_GL_DeleteContext(glContext);
+#endif
 	
 	SDL_Quit();
 	return 0;

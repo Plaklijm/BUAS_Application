@@ -36,17 +36,7 @@ private:
     Sprite*                     sprite;
 
     struct PlayerStats*         stats;
-    class BoxCollider*          collider;
-    class TestCollision*        testCollision;
-    
-    vec2                        position;
-    vec2                        velocity;
-    vec2                        friction;
-    vec2                        gravity;
 
-    bool                        flipHorizontally;
-    bool                        grounded;
-    
     // Input variables
     float                       horizontalInput{};
     bool                        jumpDown{};
@@ -56,6 +46,20 @@ private:
     bool                        left{};
     bool                        right{};
 
+    // movement variables
+    vec2                        velocityAccumulator;
+    vec2                        velocity;
+    vec2                        gravity;
+
+    bool                        flipHorizontally;
+    bool                        grounded{};
+
+    bool                        jumpToConsume{};
+    bool                        bufferedJumpUsable{};
+    bool                        endedJumpEarly{};
+    bool                        coyoteUsable{};
+    float                       timeJumpWasPressed{};
+
     //bool isFacingRight;
 public:
     Player(InputManager* input, World* world);
@@ -63,17 +67,16 @@ public:
 
     void Update(float dt);
     
-    void ApplyForce(vec2 inputForce);
-    void ApplyGravity();
-    void ApplyFriction(vec2 friction);
-    void ClearForces();
-
-    void Move(float dt);
+    void CalculateGravity(float dt);
+    void HandleJump();
+    void CalculateDirectionalMovement(float dt);
+    void ApplyMovement();
     void LimitVelocity();
 
     void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
-    //void HandleAction(ActionType action);
+    bool HasBufferedJump() const;
+    bool CanUseCoyote() const;
 
     //void SwitchAnim(anims animToPlay);
     
