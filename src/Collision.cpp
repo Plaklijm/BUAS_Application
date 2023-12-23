@@ -5,7 +5,7 @@
 #include "BoxCollider.h"
 #include "Solid.h"
 #include "surface.h"
-#include "World.h"
+#include "Map/World.h"
 
 // This collision class is made to extend the functionality of the SDL_Intersect functions by adding normal detection and offset.
 // These functions work with the SDL collision functions because they are pretty robust and good enough for my needs,

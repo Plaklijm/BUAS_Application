@@ -1,8 +1,8 @@
 ﻿#include "World.h"
 
-#include "BoxCollider.h"
-#include "Solid.h"
-#include "surface.h"
+#include "../BoxCollider.h"
+#include "../Solid.h"
+#include "../surface.h"
 
 namespace Tmpl8
 {

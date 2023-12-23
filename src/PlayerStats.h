@@ -20,7 +20,7 @@ public:
 private:
     // Statistics of the player movement
     // TODO: Figure out the variable amount of each one
-    vec2            maxVel              { 7.5f, 12.5f };
+    vec2            maxVel              { 7.5f, 17.5f };
     vec2            minVel              { 2.f, 0.f };
     float           acceleration        { 100.f };
     float           fallAcceleration    { 125.f };

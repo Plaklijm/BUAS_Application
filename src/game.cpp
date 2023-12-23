@@ -8,7 +8,7 @@
 #include "player.h"
 #include "template.h"
 #include "surface.h"
-#include "World.h"
+#include "Map/World.h"
 
 namespace Tmpl8
 {
