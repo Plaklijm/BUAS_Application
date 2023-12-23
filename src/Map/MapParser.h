@@ -12,7 +12,7 @@ public:
     bool Load();
     void Clean();
 
-    GameMap* GetMaps();
+    GameMap* GetMaps(const std::string& id) { return maps[id]; }
     static MapParser* GetInstance() { return instance = (instance != nullptr)? instance : new MapParser(); }
 
 private:

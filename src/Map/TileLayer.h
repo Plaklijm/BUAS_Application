@@ -19,7 +19,7 @@ struct TileSet
 using TileSetList = std::vector<TileSet>;
 using TileMap = std::vector<std::vector<int> >;
 
-class TileLayer
+class TileLayer : public Layer
 {
 public:
     TileLayer(int tileSize, int rowCount, int colCount, const TileMap& tileMap, const TileSetList& tileSetList);
