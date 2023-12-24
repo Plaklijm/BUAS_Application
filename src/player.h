@@ -49,8 +49,9 @@ private:
     // movement variables
     vec2                        velocityAccumulator;
     vec2                        velocity;
-    vec2                        gravity;
+ //   vec2                        gravity;
 
+    float                       maxSpeedX;
     bool                        flipHorizontally;
     bool                        grounded{};
 
@@ -67,14 +68,16 @@ public:
 
     void Update(float dt);
     
+    void UpdatePhysics(float dt);
+    void RenderPlayer(Surface* screen);
+
+private:
     void CalculateGravity(float dt);
     void HandleJump();
     void CalculateDirectionalMovement(float dt);
     void ApplyMovement();
-    void LimitVelocity();
 
-    void UpdatePhysics(float dt);
-    void RenderPlayer(Surface* screen);
+    // Helper functions
     bool HasBufferedJump() const;
     bool CanUseCoyote() const;
 

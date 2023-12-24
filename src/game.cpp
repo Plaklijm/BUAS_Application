@@ -14,7 +14,7 @@
 namespace Tmpl8
 {
 	Player* player;
-	Sprite testSprite(new Surface("assets/Map/lunar1b_tileset_visual.png"), 10);
+	Sprite testSprite(new Surface("assets/Map/lunar1b_tileset_visual.png"), 1);
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
@@ -43,7 +43,7 @@ namespace Tmpl8
 		game_input->Update();
 		// clear the graphics window
 		screen->Clear(0);
-		testSprite.Draw(screen, 0, 0);
+		//testSprite.Draw(screen, 0, 0);
 		// log the current FPS
 		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
 		char *cfps = new char[fps.length() + 1];

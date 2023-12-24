@@ -311,16 +311,12 @@ SDL_GameController* findController() {
 	return nullptr;
 }
 
-// Sign function to clamp the Controller input from -1 to 1
-template <typename T>
-auto sgn = [](T val) {return (T(0) < val) - (val < T(0)); };
-
 vec2 ClampControllerInput(const Sint16 x, const Sint16 y)
 {
 	vec2 temp(x,y);
 	
-	temp.x = std::abs(temp.x) < DeadZone ? 0.0 : sgn<float>(temp.x);
-	temp.y = std::abs(temp.y) < DeadZone ? 0.0 : sgn<float>(temp.y);
+	temp.x = std::abs(temp.x) < DeadZone ? 0.0 : Tmpl8::sgn<float>(temp.x);
+	temp.y = std::abs(temp.y) < DeadZone ? 0.0 : Tmpl8::sgn<float>(temp.y);
 
 	return temp;
 }

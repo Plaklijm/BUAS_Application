@@ -6,10 +6,6 @@
 #include "InputManager.h"
 #include "PlayerStats.h"
 
-template <typename T> int sgn(T val) {
-    return (T(0) < val) - (val < T(0));
-}
-
 #include "Map/World.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
@@ -22,7 +18,7 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(32,32
     //sprite = new Sprite(new Surface("assets/player/inhale_float.png"), 6);
     
     velocityAccumulator = {0, 0};
-    gravity = {0, .981f};
+    //gravity = {0, .981f};
 }
 
 Player::~Player()
@@ -50,6 +46,12 @@ void Player::Update(float dt)
 
     crouchPressed = pInput->KeyPressed(SDL_SCANCODE_LCTRL);
 
+    if (sprintPressed)
+        maxSpeedX = stats->GetWalkSpeed();
+    else
+        maxSpeedX = stats->GetSprintSpeed();
+
+    
     if (jumpDown)
     {
         jumpToConsume = true;
@@ -96,10 +98,10 @@ void Player::CalculateGravity(float dt)
         if (endedJumpEarly && velocityAccumulator.y > 0)
             inAirGravity *= 3;
         
-        if (abs(stats->GetMaxVel().y - velocityAccumulator.y) <= inAirGravity * dt)
-            velocityAccumulator.y = stats->GetMaxVel().y;
+        if (abs(stats->GetMaxFallSpeed() - velocityAccumulator.y) <= inAirGravity * dt)
+            velocityAccumulator.y = stats->GetMaxFallSpeed();
         else
-            velocityAccumulator.y += sgn(stats->GetMaxVel().y - velocityAccumulator.y) * (inAirGravity * dt);
+            velocityAccumulator.y += sgn(stats->GetMaxFallSpeed() - velocityAccumulator.y) * (inAirGravity * dt);
     }
 }
 
@@ -159,10 +161,10 @@ void Player::CalculateDirectionalMovement(float dt)
     }
     else
     {
-        if (abs((horizontalInput * stats->GetMaxVel().x) - velocityAccumulator.x) <= stats->GetAcceleration() * dt)
-            velocityAccumulator.x = (horizontalInput * stats->GetMaxVel().x);
+        if (abs((horizontalInput * maxSpeedX) - velocityAccumulator.x) <= stats->GetAcceleration() * dt)
+            velocityAccumulator.x = (horizontalInput * maxSpeedX);
         else
-            velocityAccumulator.x += sgn((horizontalInput * stats->GetMaxVel().x) - velocityAccumulator.x) * (stats->GetAcceleration() * dt);
+            velocityAccumulator.x += sgn((horizontalInput * maxSpeedX) - velocityAccumulator.x) * (stats->GetAcceleration() * dt);
     }
 }
 
@@ -173,47 +175,8 @@ void Player::ApplyMovement()
     velocity = velocityAccumulator;
     MoveX(velocity.x);
     MoveY(velocity.y);
-    
-    /*if (jumpDown)
-    {
-        velocity.y = 200;
-        printf("JUMP");
-    }
-    
-    // Newton's second law
-    velocity.x += horizontalInput * stats->GetAcceleration() * dt;
-    velocity.x *= 1 - stats->GetGroundFriction() * dt;
-
-    velocity.y += gravity.y * stats->GetAcceleration() * dt;
-    
-    LimitVelocity();
-
-    if (!SDL_IntersectRect(&collider->GetHitBox(), &testCollision->hitBox->GetHitBox(), &result))
-    {
-        position += velocity * dt;
-    }
-    else
-    {
-        position.x += velocity.x * dt;
-    }*/
-    // Apply the movement
 }
 
-void Player::LimitVelocity()
-{
-    // Set min velocity in X dimension
-    // When subtracting the friction it'll get infinitely smaller, so this makes sure to put the vel at 0 
-    if (abs(velocityAccumulator.x) < stats->GetMinVel().x)
-        velocityAccumulator.x = 0;
-    
-    // Set max velocity in X dimension based on direction
-    if (abs(velocityAccumulator.x) > stats->GetMaxVel().x)
-        velocityAccumulator.x = stats->GetMaxVel().x * (velocityAccumulator.x < 0.f ? -1.f : 1.f);
-
-    // Set max velocity in Y dimension based on direction, this will also limit the fall speed
-    if (abs(velocityAccumulator.y) > stats->GetMaxVel().y)
-        velocityAccumulator.y = stats->GetMaxVel().y * (velocityAccumulator.y < 0.f ? -1.f : 1.f);
-}
 
 /*void Player::SwitchAnim(anims animToPlay)
 {
