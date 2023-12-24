@@ -3,6 +3,7 @@
 #include "../BoxCollider.h"
 #include "../Solid.h"
 #include "../surface.h"
+#include "MapParser.h"
 
 namespace Tmpl8
 {
@@ -42,6 +43,13 @@ namespace Tmpl8
         tiles.emplace_back(position, size);
         position.x += 32;
         tiles.emplace_back(position, size);
+
+        /*if (MapParser::GetInstance()->Load())
+        {
+            
+        }
+
+        levelMap = MapParser::GetInstance()->GetMap("Level1");*/
     }
 
     void World::DrawTiles(Surface* surface)

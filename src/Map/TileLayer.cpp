@@ -1,17 +1,15 @@
 ﻿#include "TileLayer.h"
 
-TileLayer::TileLayer(int tileSize, int rowCount, int colCount, const TileMap& tileMap, const TileSetList& tileSetList)
-: tileSets(tileSetList)
-{
-    this->tileSize = tileSize;
-    this->rowCount = rowCount;
-    this->colCount = colCount;
-    this->tileMap = tileMap;
+#include "../TextureManager.h"
 
+TileLayer::TileLayer(int tileSize, int rowCount, int colCount, const TileMap& tileMap, const TileSetList& tileSetList)
+: tileSize(tileSize), rowCount(rowCount), colCount(colCount), tileMap(tileMap) , tileSets(tileSetList)
+{
     // Load the texture
+    // TODO: Map texture needs to be in 1 row Then figure out which frame to render at the correct position
 }
 
-void TileLayer::Render()
+void TileLayer::Render(Tmpl8::Surface* screen)
 {
     for (unsigned int i = 0; i < rowCount; i++)
     {
@@ -45,6 +43,7 @@ void TileLayer::Render()
                 tileRow--;
                 tileCol = ts.columns -1;
             }
+            
         }
     }
 }

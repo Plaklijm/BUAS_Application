@@ -8,12 +8,13 @@
 #include "player.h"
 #include "template.h"
 #include "surface.h"
+#include "TextureManager.h"
 #include "Map/World.h"
 
 namespace Tmpl8
 {
 	Player* player;
-	Sprite testSprite(new Surface("assets/player/inhale_float.png"), 6);
+	Sprite testSprite(new Surface("assets/Map/lunar1b_tileset_visual.png"), 10);
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
@@ -22,7 +23,7 @@ namespace Tmpl8
 		world = new World(20);
 		game_input = InputManager::Instance();
 		player = new Player(game_input, world);
-		testSprite.SetFrame(1);
+		textureManager = new TextureManager(screen);
 	}
 	
 	// -----------------------------------------------------------
@@ -42,7 +43,7 @@ namespace Tmpl8
 		game_input->Update();
 		// clear the graphics window
 		screen->Clear(0);
-		testSprite.Draw(screen, 0, -20);
+		testSprite.Draw(screen, 0, 0);
 		// log the current FPS
 		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
 		char *cfps = new char[fps.length() + 1];

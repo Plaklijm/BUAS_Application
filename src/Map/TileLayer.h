@@ -24,7 +24,7 @@ class TileLayer : public Layer
 public:
     TileLayer(int tileSize, int rowCount, int colCount, const TileMap& tileMap, const TileSetList& tileSetList);
 
-    virtual void Render();
+    virtual void Render(Tmpl8::Surface* screen);
     virtual void Update();
 
     TileMap GetTileMap()    { return tileMap; }

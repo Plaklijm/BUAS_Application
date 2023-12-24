@@ -1,5 +1,6 @@
 ﻿#include "MapParser.h"
 
+MapParser* MapParser::instance = nullptr;
 
 MapParser::MapParser()
 {
@@ -12,7 +13,12 @@ bool MapParser::Load()
 
 void MapParser::Clean()
 {
-    
+    std::map<std::string, GameMap*>::iterator it;
+    for (it = maps.begin(); it != maps.end(); it++)
+    {
+        it->second = nullptr;
+    }
+    maps.clear();
 }
 
 bool MapParser::Parse(std::string mapID, std::string source)
@@ -34,48 +40,48 @@ bool MapParser::Parse(std::string mapID, std::string source)
     root->Attribute("tilewidth", &ts);
 
     // parse Tilesets
-    TileSetList tilesets;
+    TileSetList tileSets;
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
         if (e->Value() == std::string("tileset"))
         {
-            tilesets.push_back(ParseTileSet(e));
+            tileSets.push_back(ParseTileSet(e));
         }
     }
 
-    GameMap* gamemap = new GameMap();
+    auto* gameMap = new GameMap();
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
         if (e->Value() == std::string("layer"))
         {
-            TileLayer* tilelayer = ParseTileLayer(e, tilesets, ts, rc, cc);
-            gamemap->mapLayers.push_back(tilelayer);
+            TileLayer* tilelayer = ParseTileLayer(e, tileSets, ts, rc, cc);
+            gameMap->mapLayers.push_back(tilelayer);
         }
     }
 
-    maps[mapID] = gamemap;
+    maps[mapID] = gameMap;
     return true;
 }
 
 TileSet MapParser::ParseTileSet(TiXmlElement* xmlTileSet)
 {
     // Read the attributes from the 
-    TileSet tileset;
-    tileset.layerName = xmlTileSet->Attribute("name");
-    xmlTileSet->Attribute("firstgid", &tileset.firstID);
-    xmlTileSet->Attribute("tilecount", &tileset.tileCount);
-    tileset.lastID = (tileset.firstID + tileset.tileCount) - 1;
+    TileSet tileSet;
+    tileSet.layerName = xmlTileSet->Attribute("name");
+    xmlTileSet->Attribute("firstgid", &tileSet.firstID);
+    xmlTileSet->Attribute("tilecount", &tileSet.tileCount);
+    tileSet.lastID = (tileSet.firstID + tileSet.tileCount) - 1;
     
-    xmlTileSet->Attribute("columns", &tileset.columns);
-    tileset.rows = tileset.tileCount/tileset.columns;
-    xmlTileSet->Attribute("tilewidth", &tileset.tileSize);
+    xmlTileSet->Attribute("columns", &tileSet.columns);
+    tileSet.rows = tileSet.tileCount/tileSet.columns;
+    xmlTileSet->Attribute("tilewidth", &tileSet.tileSize);
 
     const auto image = xmlTileSet->FirstChildElement();
-    tileset.source = image->Attribute("source");
-    return tileset;
+    tileSet.source = image->Attribute("source");
+    return tileSet;
 }
 
-TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, TileSetList tileSets, int tileSize, int rowCount,
+TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& tileSets, int tileSize, int rowCount,
     int colCount)
 {
     TiXmlElement* data;
@@ -93,7 +99,7 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, TileSetList tileSet
     std::istringstream iss(matrix);
     std::string id;
 
-    TileMap tilemap(rowCount, std::vector<int>(colCount, 0));
+    TileMap tileMap(rowCount, std::vector<int>(colCount, 0));
 
     for (int i = 0; i < rowCount; i++)
     {
@@ -102,7 +108,7 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, TileSetList tileSet
             // get every element before a comma and add it to our tilemap
             std::getline(iss, id, ',');
             std::stringstream convertor(id);
-            convertor >> tilemap[i][j];
+            convertor >> tileMap[i][j];
 
             // if we've reached the end break
             if (!iss.good())
@@ -110,5 +116,5 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, TileSetList tileSet
         }
     }
 
-    return new TileLayer(tileSize, rowCount, colCount, tilemap, tileSets);
+    return new TileLayer(tileSize, rowCount, colCount, tileMap, tileSets);
 }

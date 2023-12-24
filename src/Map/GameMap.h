@@ -2,22 +2,23 @@
 
 #include <vector>
 #include "Layer.h"
+#include "../player.h"
 
 class GameMap
 {
 public:
     GameMap() = default;
 
-    void RenderMap() const
+    void RenderMap(Surface* screen) const
     {
-        for (auto layer : mapLayers) {
-            layer->Render();
+        for (const auto layer : mapLayers) {
+            layer->Render(screen);
         }
     }
 
     void UpdateMap() const
     {
-        for (auto layer : mapLayers) {
+        for (const auto layer : mapLayers) {
             layer->Update();
         }
     }

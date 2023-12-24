@@ -1,9 +1,8 @@
 ﻿#pragma once
-#include "SDL2-2.28.5/include/SDL_rect.h"
-
 #include <vector>
 
 class Solid;
+class GameMap;
 
 namespace Tmpl8
 {
@@ -19,5 +18,7 @@ public:
     Surface* screen;
 private:
     std::vector<Solid> tiles;
+
+   GameMap* levelMap;
 };
 }
