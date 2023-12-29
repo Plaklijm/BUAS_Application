@@ -400,7 +400,6 @@ int main( int argc, char **argv )
 		{
 			game->Init();
 			firstframe = false;
-			printf("%i", DeadZone);
 		}
 		// calculate frame time and pass it to game->Tick
 		// divided by 1000 to get milliseconds 

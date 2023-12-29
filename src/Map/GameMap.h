@@ -2,14 +2,13 @@
 
 #include <vector>
 #include "Layer.h"
-#include "../player.h"
 
 class GameMap
 {
 public:
     GameMap() = default;
 
-    void RenderMap(Surface* screen) const
+    void RenderMap(Tmpl8::Surface* screen) const
     {
         for (const auto layer : mapLayers) {
             layer->Render(screen);

@@ -11,14 +11,12 @@ class World
 {
     
 public:
-    std::vector<Solid> GetAllSolidsInCurrentLevel();
-    World(int amount);
-    void DrawTiles(class Surface* surface);
+    GameMap* GetMap() const;
 
-    Surface* screen;
+    World();
+    void RenderMap(class Surface* surface);
 private:
-    std::vector<Solid> tiles;
 
-   GameMap* levelMap;
+    GameMap* levelMap;
 };
 }

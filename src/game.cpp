@@ -14,13 +14,13 @@
 namespace Tmpl8
 {
 	Player* player;
-	Sprite testSprite(new Surface("assets/Map/lunar1b_tileset_visual.png"), 1);
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
+	Sprite testSprite(new Surface("assets/pixil-frame-0 (2).png"), 8);
 	void Game::Init()
 	{
-		world = new World(20);
+		world = new World();
 		game_input = InputManager::Instance();
 		player = new Player(game_input, world);
 		textureManager = new TextureManager(screen);
@@ -42,16 +42,7 @@ namespace Tmpl8
 	{
 		game_input->Update();
 		// clear the graphics window
-		screen->Clear(0);
-		//testSprite.Draw(screen, 0, 0);
-		// log the current FPS
-		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
-		char *cfps = new char[fps.length() + 1];
-		strcpy(cfps, fps.c_str());
-		screen->Print(cfps, 2, 2, 0xffffff);
-		delete [] cfps;
-
-		world->DrawTiles(screen);
+		
 		// print something to the text window
 		//printf("this goes to the console window.\n");
 
@@ -59,7 +50,7 @@ namespace Tmpl8
 		GameTick(deltaTime);
 		
 		// Render the game
-		Render();
+		Render(deltaTime);
 		
 		game_input->UpdatePrevInput();
 	}
@@ -77,9 +68,46 @@ namespace Tmpl8
 		player->UpdatePhysics(dt);
 	}
 
-	void Game::Render()
+	int frameIndex = 0;
+	bool flip = false;
+	void Game::Render(float deltaTime)
 	{
-		player->RenderPlayer(screen);
+		screen->Clear(0);
+
+		// log the current FPS
+		std::string fps = "Current FPS: " + std::to_string(1.0f / deltaTime);
+		char *cfps = new char[fps.length() + 1];
+		strcpy(cfps, fps.c_str());
+		screen->Print(cfps, 2, 2, 0xffffff);
+		delete [] cfps;
+
+		flip = game_input->KeyDown(SDL_SCANCODE_F);
+		if (game_input->KeyDown(SDL_SCANCODE_P))
+		{
+			frameIndex++;
+		}
+		if (game_input->KeyDown(SDL_SCANCODE_M))
+		{
+			frameIndex--;
+		}
+
+		if (flip)
+		{
+			testSprite.FlipHorizontally();
+		}
+		
+		testSprite.SetFrame(frameIndex);
+		testSprite.Draw(screen,0,0);
+		/*testSprite.SetFrame(1);
+		testSprite.Draw(screen,64,0);
+		testSprite.SetFrame(2);
+		testSprite.Draw(screen,128,0);
+		testSprite.SetFrame(3);
+		testSprite.Draw(screen,192,0);*/
+		/*testSprite->SetFrame(1);
+		testSprite->Draw(screen, 100,200);*/
+		//player->RenderPlayer(screen);
+		//world->RenderMap(screen);
 	}
 
 

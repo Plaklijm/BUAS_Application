@@ -25,14 +25,14 @@ private:
     // Statistics of the player movement
     // TODO: Figure out the variable amount of each one
     vec2            minVel              { 2.f, 0.f };
-    float           maxFallSpeed        { 25.f };
-    float           walkSpeed           { 6.f };
-    float           sprintSpeed         { 10.f };
-    float           acceleration        { 100.f };
-    float           fallAcceleration    { 100.f };
-    float           groundFriction      { 55.f };
-    float           airFriction         { 30.f };
-    float           jumpForce           { -25.f };
+    float           maxFallSpeed        { 30.f };
+    float           walkSpeed           { 3.5f };
+    float           sprintSpeed         { 7.f };
+    float           acceleration        { 80.f };
+    float           fallAcceleration    { 75.f };
+    float           groundFriction      { 40.f };
+    float           airFriction         { 15.f };
+    float           jumpForce           { -15.f };
     float           coyoteTime          { .15f };
     float           jumpBuffer          { .15f };
     float           mass                { 10.f };

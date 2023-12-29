@@ -97,11 +97,12 @@ public:
 	
 	// Structors
 	Sprite( Surface* a_Surface, unsigned int a_NumFrames );
+	Sprite() = default;
 	~Sprite();
 	// Methods
-	// Changed the Draw function to handle the flipping of the sprite
 	void Draw( Surface* a_Target, int a_X, int a_Y );
 	void DrawScaled( int a_X, int a_Y, int a_Width, int a_Height, Surface* a_Target );
+	void FlipHorizontally();
 	void SetFlags( unsigned int a_Flags ) { m_Flags = a_Flags; }
 	void SetFrame( float a_Index ) { m_CurrentFrame = a_Index; }
 	unsigned int GetFlags() const { return m_Flags; }
@@ -110,9 +111,9 @@ public:
 	Pixel* GetBuffer() { return m_Surface->GetBuffer(); }	
 	unsigned int Frames() { return m_NumFrames; }
 	Surface* GetSurface() { return m_Surface; }
+	void InitializeStartData();
 private:
 	// Methods
-	void InitializeStartData();
 	// Attributes
 	int m_Width, m_Height, m_Pitch;
 	unsigned int m_NumFrames;          

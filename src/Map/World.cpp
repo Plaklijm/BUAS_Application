@@ -1,70 +1,27 @@
 ﻿#include "World.h"
 
-#include "../BoxCollider.h"
-#include "../Solid.h"
-#include "../surface.h"
 #include "MapParser.h"
 
 namespace Tmpl8
 {
-    World::World(int amount)
+
+    World::World()
     {
-        vec2 position{0, 288};
-        vec2 size = {32,32};
-        tiles.emplace_back(position, size);
-        position.y -= 32;
-        tiles.emplace_back(position, size);
-        position.y -= 32;
-        tiles.emplace_back(position, size);
-        position.y -= 32;
-        tiles.emplace_back(position, size);
-        
-        for (int i = 0; i < amount; ++i)
+        if (!MapParser::GetInstance()->Load())
         {
-            vec2 position{size.x * i, 320};
-            tiles.emplace_back(position, size);
-            printf("Tile = %i,%i\n", tiles[i].GetCollider()->GetHitBox().x, tiles[i].GetCollider()->GetHitBox().y);
+            printf("Failed to load map");
         }
-        position.x = 640;
-        position.y = 256;
-        tiles.emplace_back(position, size);
-
-        position.x += 32;
-        tiles.emplace_back(position, size);
-
-        position.x += 64;
-        position.y -= 32;
-        tiles.emplace_back(position, size);
-        position.x += 32;
-        tiles.emplace_back(position, size);
-
-        position.x += 32;
-        position.y -= 96;
-        tiles.emplace_back(position, size);
-        position.x += 32;
-        tiles.emplace_back(position, size);
-
-        /*if (MapParser::GetInstance()->Load())
-        {
-            
-        }
-
-        levelMap = MapParser::GetInstance()->GetMap("Level1");*/
+        levelMap = MapParser::GetInstance()->GetMap("Level1");
+    }
+    
+    void World::RenderMap(Surface* surface)
+    {
+        //texture.Draw(surface, 0 ,0);
+        levelMap->RenderMap(surface);
     }
 
-    void World::DrawTiles(Surface* surface)
+    GameMap* World::GetMap() const
     {
-        screen = surface;
-        for (auto tile : tiles)
-        {
-            auto b1 = tile.GetCollider()->GetHitBox();
-            surface->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
-        }
-    }
-
-    std::vector<Solid> World::GetAllSolidsInCurrentLevel()
-    {
-        // Now you can use the static variable 'tiles' here
-        return tiles;
+        return levelMap;
     }
 }

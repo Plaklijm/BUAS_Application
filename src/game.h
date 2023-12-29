@@ -15,7 +15,7 @@ public:
 	void Tick( float deltaTime );
 	void GameTick(float dt);
 	void PhysTick(float dt);
-	void Render();
+	void Render(float deltaTime);
 	
 private:
 	class Surface* screen;

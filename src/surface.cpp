@@ -7,6 +7,8 @@
 #include <cstring>
 #include "FreeImage.h"
 
+#include <algorithm>
+
 namespace Tmpl8 {
 
 void NotifyUser( char* s );
@@ -363,7 +365,7 @@ Sprite::~Sprite()
 	for ( unsigned int i = 0; i < m_NumFrames; i++ ) delete m_Start[i];
 	delete[] m_Start;
 }
-
+	
 void Sprite::Draw( Surface* a_Target, int a_X, int a_Y )
 {
 	if ((a_X < -m_Width) || (a_X > (a_Target->GetWidth() + m_Width))) return;
@@ -433,6 +435,25 @@ void Sprite::DrawScaled( int a_X, int a_Y, int a_Width, int a_Height, Surface* a
 		int v = (int)((float)y * ((float)m_Height / (float)a_Height));
 		Pixel color = GetBuffer()[u + v * m_Pitch];
 		if (color & 0xffffff) a_Target->GetBuffer()[a_X + x + ((a_Y + y) * a_Target->GetPitch())] = color;
+	}
+}
+
+void Sprite::FlipHorizontally()
+{
+	if (m_CurrentFrame < m_NumFrames)
+	{
+		if (m_CurrentFrame < m_NumFrames)
+		{
+			for (int y = 0; y < m_Height; y++)
+			{
+				for (int x = 0; x < m_Width / 2; x++)
+				{
+					// Swap pixels from the left and right sides within the specified frame
+					std::swap(m_Surface->GetBuffer()[x + y * m_Pitch + m_CurrentFrame * m_Width],
+					m_Surface->GetBuffer()[m_Width - 1 - x + y * m_Pitch + m_CurrentFrame * m_Width]);
+				}
+			}
+		}
 	}
 }
 

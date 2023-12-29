@@ -5,6 +5,7 @@
 #include "BoxCollider.h"
 #include "Solid.h"
 #include "surface.h"
+#include "Map/GameMap.h"
 #include "Map/World.h"
 
 // This collision class is made to extend the functionality of the SDL_Intersect functions by adding normal detection and offset.
@@ -55,7 +56,16 @@ namespace Tmpl8
         aWithOffset.x += static_cast<int>(aOffset.x);
         aWithOffset.y += static_cast<int>(aOffset.y);
         
-        const auto allSolids = world->GetAllSolidsInCurrentLevel();
+        const auto map = world->GetMap();
+        std::vector<Solid*> allSolids;
+        
+        for (const auto layer : map->GetMapLayers())
+        {
+            if (layer->GetIsCollidable())
+            {
+                allSolids = layer->GetCollisionTiles();
+            }
+        }        
         
         // Check for all the solids in the level if there was a collision
         for (const auto solid : allSolids)
@@ -63,7 +73,7 @@ namespace Tmpl8
             // The exact same procedure as the normal RectIntersect
             // temporary variable to calculate the direction with
             SDL_Rect result{};
-            if(SDL_IntersectRect(&aWithOffset, &solid.GetCollider()->GetHitBox(), &result))
+            if(SDL_IntersectRect(&aWithOffset, &solid->GetCollider()->GetHitBox(), &result))
             {
                 //printf("Collision Occured\n");
                 // Collision has occurred, now to determine the collision normal

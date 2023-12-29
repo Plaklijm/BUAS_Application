@@ -16,7 +16,7 @@ public:
     static MapParser* GetInstance() { return instance = (instance != nullptr)? instance : new MapParser(); }
 
 private:
-    bool Parse(std::string mapID, std::string source);
+    bool Parse(const std::string& mapID, const std::string& source);
     static TileSet ParseTileSet(TiXmlElement* xmlTileSet);
     static TileLayer* ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& tileSets, int tileSize, int rowCount, int colCount);
     

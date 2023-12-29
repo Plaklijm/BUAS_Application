@@ -542,12 +542,13 @@
     <Content Include="assets\ctankgun.tga" />
     <Content Include="assets\ctankshadow.tga" />
     <Content Include="assets\Map\Level1.tmx" />
-    <Content Include="assets\Map\lunar1b_tileset_visual.png" />
+    <Content Include="assets\Map\lunar1b_tileset_singlefile_fixed.png" />
     <Content Include="assets\mill.tga" />
     <Content Include="assets\minigun.tga" />
     <Content Include="assets\missile.tga" />
     <Content Include="assets\missile_big.tga" />
     <Content Include="assets\phaser.tga" />
+    <Content Include="assets\pixil-frame-0 (2).png" />
     <Content Include="assets\playership.png" />
     <Content Include="assets\player\climb_back.png" />
     <Content Include="assets\player\crawl.png" />
