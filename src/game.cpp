@@ -4,11 +4,10 @@
 #include <string>
 #include <fstream>
 
-#include "InputManager.h"
-#include "player.h"
+#include "Player/InputManager.h"
+#include "Player/player.h"
 #include "template.h"
 #include "surface.h"
-#include "TextureManager.h"
 #include "Map/World.h"
 
 namespace Tmpl8
@@ -23,7 +22,6 @@ namespace Tmpl8
 		world = new World();
 		game_input = InputManager::Instance();
 		player = new Player(game_input, world);
-		textureManager = new TextureManager(screen);
 	}
 	
 	// -----------------------------------------------------------
@@ -98,16 +96,9 @@ namespace Tmpl8
 		
 		testSprite.SetFrame(frameIndex);
 		testSprite.Draw(screen,0,0);
-		/*testSprite.SetFrame(1);
-		testSprite.Draw(screen,64,0);
-		testSprite.SetFrame(2);
-		testSprite.Draw(screen,128,0);
-		testSprite.SetFrame(3);
-		testSprite.Draw(screen,192,0);*/
-		/*testSprite->SetFrame(1);
-		testSprite->Draw(screen, 100,200);*/
-		//player->RenderPlayer(screen);
-		//world->RenderMap(screen);
+		
+		player->RenderPlayer(screen);
+		world->RenderMap(screen);
 	}
 
 

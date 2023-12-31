@@ -1,8 +1,7 @@
 ﻿#include "TileLayer.h"
 
-#include "../TextureManager.h"
-#include "../Solid.h"
-#include "../BoxCollider.h"
+#include "../Engine/Solid.h"
+#include "../Engine/BoxCollider.h"
 
 
 TileLayer::TileLayer(bool collidable, int tileSize, int rowCount, int colCount, TileMap tileMap, const TileSetList& tileSetList)

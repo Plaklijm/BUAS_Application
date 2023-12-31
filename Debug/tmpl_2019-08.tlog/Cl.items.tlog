@@ -1,7 +1,8 @@
-C:\DEV\CPP\BUAS\src\Actor.cpp;C:\DEV\CPP\BUAS\Debug\Actor.obj
-C:\DEV\CPP\BUAS\src\Collision.cpp;C:\DEV\CPP\BUAS\Debug\Collision.obj
+C:\DEV\CPP\BUAS\src\Animation\AnimationSystem.cpp;C:\DEV\CPP\BUAS\Debug\AnimationSystem.obj
+C:\DEV\CPP\BUAS\src\Engine\Actor.cpp;C:\DEV\CPP\BUAS\Debug\Actor.obj
+C:\DEV\CPP\BUAS\src\Engine\Collision.cpp;C:\DEV\CPP\BUAS\Debug\Collision.obj
+C:\DEV\CPP\BUAS\src\Engine\Solid.cpp;C:\DEV\CPP\BUAS\Debug\Solid.obj
 C:\DEV\CPP\BUAS\src\game.cpp;C:\DEV\CPP\BUAS\Debug\game.obj
-C:\DEV\CPP\BUAS\src\InputManager.cpp;C:\DEV\CPP\BUAS\Debug\InputManager.obj
 C:\DEV\CPP\BUAS\src\Map\MapParser.cpp;C:\DEV\CPP\BUAS\Debug\MapParser.obj
 C:\DEV\CPP\BUAS\src\Map\TileLayer.cpp;C:\DEV\CPP\BUAS\Debug\TileLayer.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinystr.cpp;C:\DEV\CPP\BUAS\Debug\tinystr.obj
@@ -9,8 +10,7 @@ C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxml.cpp;C:\DEV\CPP\BUAS\Debug\tinyxml.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlerror.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmlerror.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlparser.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmlparser.obj
 C:\DEV\CPP\BUAS\src\Map\World.cpp;C:\DEV\CPP\BUAS\Debug\World.obj
-C:\DEV\CPP\BUAS\src\player.cpp;C:\DEV\CPP\BUAS\Debug\player.obj
-C:\DEV\CPP\BUAS\src\Solid.cpp;C:\DEV\CPP\BUAS\Debug\Solid.obj
+C:\DEV\CPP\BUAS\src\Player\InputManager.cpp;C:\DEV\CPP\BUAS\Debug\InputManager.obj
+C:\DEV\CPP\BUAS\src\Player\player.cpp;C:\DEV\CPP\BUAS\Debug\player.obj
 C:\DEV\CPP\BUAS\src\surface.cpp;C:\DEV\CPP\BUAS\Debug\surface.obj
 C:\DEV\CPP\BUAS\src\template.cpp;C:\DEV\CPP\BUAS\Debug\template.obj
-C:\DEV\CPP\BUAS\src\TextureManager.cpp;C:\DEV\CPP\BUAS\Debug\TextureManager.obj
