@@ -262,8 +262,12 @@
     <ClCompile Include="src\Animation\AnimationSystem.cpp" />
     <ClCompile Include="src\Engine\Actor.cpp" />
     <ClCompile Include="src\Engine\Collision.cpp" />
+    <ClCompile Include="src\Engine\Game\game.cpp" />
+    <ClCompile Include="src\Engine\Game\MenuState.cpp" />
+    <ClCompile Include="src\Engine\Game\PlayState.cpp" />
     <ClCompile Include="src\Engine\Solid.cpp" />
-    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\Engine\surface.cpp" />
+    <ClCompile Include="src\Engine\template.cpp" />
     <ClCompile Include="src\Map\MapParser.cpp" />
     <ClCompile Include="src\Map\TileLayer.cpp" />
     <ClCompile Include="src\Map\tinyxml\tinystr.cpp" />
@@ -273,8 +277,6 @@
     <ClCompile Include="src\Map\World.cpp" />
     <ClCompile Include="src\Player\InputManager.cpp" />
     <ClCompile Include="src\Player\player.cpp" />
-    <ClCompile Include="src\surface.cpp" />
-    <ClCompile Include="src\template.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h" />
@@ -282,9 +284,13 @@
     <ClInclude Include="src\Engine\Actor.h" />
     <ClInclude Include="src\Engine\BoxCollider.h" />
     <ClInclude Include="src\Engine\Collision.h" />
+    <ClInclude Include="src\Engine\Game\game.h" />
+    <ClInclude Include="src\Engine\Game\MenuState.h" />
+    <ClInclude Include="src\Engine\Game\PlayState.h" />
+    <ClInclude Include="src\Engine\Game\State.h" />
     <ClInclude Include="src\Engine\Solid.h" />
-    <ClInclude Include="src\game.h" />
-    <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\Engine\surface.h" />
+    <ClInclude Include="src\Engine\template.h" />
     <ClInclude Include="src\Map\GameMap.h" />
     <ClInclude Include="src\Map\Layer.h" />
     <ClInclude Include="src\Map\MapParser.h" />
@@ -295,8 +301,6 @@
     <ClInclude Include="src\Player\InputManager.h" />
     <ClInclude Include="src\Player\player.h" />
     <ClInclude Include="src\Player\PlayerStats.h" />
-    <ClInclude Include="src\surface.h" />
-    <ClInclude Include="src\template.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,16 +1,10 @@
 ﻿#pragma once
 
 #include "../Engine/Actor.h"
-#include "../surface.h"
-#include "../template.h"
+#include "../Engine/surface.h"
+#include "../Engine/template.h"
 
-
-namespace Tmpl8
-{
-    class InputManager;
-}
-
-class AABB;
+class InputManager;
 class AnimationSystem;
 
 using namespace Tmpl8;
@@ -83,11 +77,5 @@ private:
     // Helper functions
     bool HasBufferedJump() const;
     bool CanUseCoyote() const;
-
-    //void SwitchAnim(anims animToPlay);
-    
-private:
-    //void FlipSprite();
-    //void UpdateAnim(float dt);
     
 };

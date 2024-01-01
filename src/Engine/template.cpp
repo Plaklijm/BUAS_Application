@@ -13,7 +13,8 @@
 //#define FULLSCREEN
 //#define ADVANCEDGL
 
-#include "game.h"
+
+#include "../Engine/Game/game.h"
 
 #include <fcntl.h>
 #include <io.h>
@@ -347,7 +348,7 @@ int main( int argc, char **argv )
 	ShowCursor( false );
 #else
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_FULLSCREEN );
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, 1920, 1080, SDL_WINDOW_FULLSCREEN );
 #else
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN );
 #endif
@@ -358,6 +359,7 @@ int main( int argc, char **argv )
 #endif
 	int exitapp = 0;
 	
+	SDL_RenderSetLogicalSize(renderer, ScreenWidth, ScreenHeight);
 	
 	SDL_GameController* controller = nullptr;
 	
@@ -435,6 +437,8 @@ int main( int argc, char **argv )
 				break;
 			}
 		}
+
+		game->Render();
 	}
 	game->Shutdown();
 

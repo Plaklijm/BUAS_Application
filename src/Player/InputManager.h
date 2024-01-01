@@ -11,11 +11,6 @@ enum class ActionType
     SPRINT,
 };
 
-// is inside the Tmpl8 namespace because the linker couldn't recognize the Inputmanager class when outside it
-// (dont really know why)
-namespace Tmpl8
-{
-    
 // based on the implementation of https://www.youtube.com/watch?v=YjeIUbzDvDE&list=PLhJr2LOK-xwxQlevIZ97ZABLw72Eu9he7&index=12
 // Done it this way to have more functions like KeyPressed and to separate out the input handling and not make it event based
 // Added controller support to this system and changed it a little bit to work with my own requirements
@@ -44,7 +39,7 @@ private:
 public:
     // System functions
     void Update();
-    void UpdatePrevInput();
+    void UpdatePrevInput() const;
     
     // Input functions
     bool KeyDown(SDL_Scancode scanCode) const;
@@ -55,5 +50,3 @@ public:
     bool CButtonPressed(SDL_GameControllerButton scanCode) const;
     bool CButtonReleased(SDL_GameControllerButton scanCode) const;
 };
-    
-}

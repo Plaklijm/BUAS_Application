@@ -1,16 +1,11 @@
 ﻿#pragma once
-#include "SDL_rect.h"
-#include "../template.h"
+#include <SDL2-2.28.5/include/SDL_Rect.h>
+#include "template.h"
 
-namespace Tmpl8
-{
-    
 class Collision
 {
 public:
-    static bool RectIntersect(const SDL_Rect* a, const SDL_Rect* b, vec2& normal);
-    static bool RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, class World* world);
+    static bool RectIntersect(const SDL_Rect* a, const SDL_Rect* b, Tmpl8::vec2& normal);
+    static bool RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::vec2& normal, class World* world);
 };
-    
-}
 

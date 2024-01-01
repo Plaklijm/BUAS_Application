@@ -1,11 +1,8 @@
 ﻿#include "InputManager.h"
 
 #include <cstring>
-#include <SDL_keyboard.h>
+#include <SDL2-2.28.5/include/SDL_keyboard.h>
 
-namespace Tmpl8
-{
-    
 InputManager* InputManager::instance = nullptr;
 
 InputManager* InputManager::Instance()
@@ -82,10 +79,7 @@ void InputManager::Update()
 {
 }
 
-void InputManager::UpdatePrevInput()
+void InputManager::UpdatePrevInput() const
 {
     memcpy(prevKeyboardState, keyboardState, keyLength);
 }
-    
-}
-

@@ -1,27 +1,23 @@
 ﻿#include "World.h"
 
 #include "MapParser.h"
+#include "../Engine/surface.h"
 
-namespace Tmpl8
+World::World()
 {
-
-    World::World()
+    if (!MapParser::GetInstance()->Load())
     {
-        if (!MapParser::GetInstance()->Load())
-        {
-            printf("Failed to load map");
-        }
-        levelMap = MapParser::GetInstance()->GetMap("Level1");
+        printf("Failed to load map");
     }
+    levelMap = MapParser::GetInstance()->GetMap("Level1");
+}
     
-    void World::RenderMap(Surface* surface)
-    {
-        //texture.Draw(surface, 0 ,0);
-        levelMap->RenderMap(surface);
-    }
+void World::RenderMap(Tmpl8::Surface* surface)
+{
+    levelMap->RenderMap(surface);
+}
 
-    GameMap* World::GetMap() const
-    {
-        return levelMap;
-    }
+GameMap* World::GetMap() const
+{
+    return levelMap;
 }

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <SDL_rect.h>
-#include "../template.h"
+#include "template.h"
 
 using namespace Tmpl8;
 

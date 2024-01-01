@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../surface.h"
-#include "../template.h"
+#include "../Engine/surface.h"
+#include "../Engine/template.h"
 
 class Animation
 {

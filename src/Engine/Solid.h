@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../template.h"
+#include "template.h"
 
 using namespace Tmpl8;
 struct BoxCollider;
