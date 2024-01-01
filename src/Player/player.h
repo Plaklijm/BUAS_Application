@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-
-#include <memory>
-
 #include "../Engine/Actor.h"
 #include "../surface.h"
 #include "../template.h"

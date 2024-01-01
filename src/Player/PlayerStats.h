@@ -50,6 +50,6 @@ private:
     float           coyoteTime          { .15f };
     float           jumpBuffer          { .15f };
 
-    float           animRate            { 50.f };
+    float           animRate            { 100.f };
     float           spriteOffset        { 10.f };
 };

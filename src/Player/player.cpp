@@ -4,7 +4,6 @@
 
 #include "../Animation/AnimationSystem.h"
 #include "../Engine/BoxCollider.h"
-#include "../template.h"
 #include "InputManager.h"
 #include "PlayerStats.h"
 

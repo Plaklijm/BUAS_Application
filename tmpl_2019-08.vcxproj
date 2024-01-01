@@ -243,7 +243,6 @@
     <Content Include="assets\player\Character Idle 48x48.png" />
     <Content Include="assets\player\player air spin 48x48.png" />
     <Content Include="assets\player\player jump 48x48.png" />
-    <Content Include="assets\player\player land 48x48.png" />
     <Content Include="assets\player\PlayerWalk 48x48.png" />
     <Content Include="assets\player\run cycle 48x48.png" />
     <Content Include="assets\smoke.tga" />

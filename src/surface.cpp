@@ -411,7 +411,7 @@ void Sprite::Draw( Surface* a_Target, int a_X, int a_Y, bool flip )
 					}
 				}
 			}
-			if (flip)
+			/*if (flip)
 			{
 				xs = (lsx > x1)?lsx - x1:0;
 				for ( int x = xs; x < width; x++ )
@@ -422,7 +422,7 @@ void Sprite::Draw( Surface* a_Target, int a_X, int a_Y, bool flip )
 					// In the end only thing that had to be done was the (width -1) - x instead of the + x
 					if (c1 & 0xffffff) *(dest + addr + (width - 1) - x) = c1;
 				}
-			}
+			}*/
 			else 
 			{
 				xs = (lsx > x1)?lsx - x1:0;
