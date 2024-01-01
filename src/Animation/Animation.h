@@ -1,21 +1,20 @@
 ﻿#pragma once
 #include "../surface.h"
+#include "../template.h"
 
 class Animation
 {
 public:
-    Animation(Tmpl8::Sprite* sprite, bool loop = true);
-    void Update(float frameToPlay);
+    Animation(Tmpl8::Sprite* sprite, float animRate, bool loop = true);
 
+    void UpdateAnimation();
     void OnAnimationChange();
-    Tmpl8::Sprite* GetSprite() const { return sprite; }
-
-    int GetFrames() const { return sprite->Frames(); }
-    void RenderAnimation(Tmpl8::Surface* screen, float x, float y);
+    void RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const;
 
 private:
+    Tmpl8::timer timer;
     Tmpl8::Sprite* sprite;
     bool loop;
+    float animationRate;
     unsigned int currentFrameIndex;
-    unsigned int frameThreshold;
 };

@@ -15,15 +15,14 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40
     stats = new PlayerStats();
 
     pInput = input;
-    //sprite = std::make_shared<Sprite>(Sprite(new Surface("assets/player/Character Idle 48x48.png"), 1));
+
+    // Initialize Animation
     anim = new AnimationSystem(stats->GetAnimRate());
-    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Character Idle 48x48.png"), 10)));
-    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/PlayerWalk 48x48.png"), 8)));
-    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player jump 48x48.png"), 3), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player air spin 48x48.png"), 6), false));
-    /*anim->AddAnim(WALK, new Animation(sprite));
-    anim->AddAnim(RUN, new Animation(sprite));
-    anim->AddAnim(JUMP, new Animation(sprite));*/
+    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Character Idle 48x48.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/PlayerWalk 48x48.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/run cycle 48x48.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player jump 48x48.png"), 3), stats->GetAnimRate(), false));
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player air spin 48x48.png"), 6), stats->GetAnimRate(), false));
 
     anim->SetCurrentAnim(IDLE);
     //sprite->SetFrame(0);
@@ -46,7 +45,6 @@ int currentAnimFrameCount;
 void Player::Update(float dt)
 {
     time += dt;
-    anim->Update(time);
 
     // Handle input
     left = pInput->KeyPressed(SDL_SCANCODE_A);
@@ -54,12 +52,29 @@ void Player::Update(float dt)
     // Set the horizontal input to -1 if left 1 if right and 0 if both left and right are pressed
     horizontalInput = right - left;
 
+
     // TODO: Fix controller input and add Axis support for left right and crouch
     jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);
     jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);
 
     sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);
     
+    if (left)
+    {
+        flipHorizontally = true;
+        if (!sprintPressed && grounded && !jumpDown)
+        {
+            anim->SetCurrentAnim(RUN);
+        }
+    }
+    else if (right)
+    {
+        flipHorizontally = false;
+        if (!sprintPressed && grounded && !jumpDown)
+        {
+            anim->SetCurrentAnim(RUN);
+        }
+    }
     
     if (sprintPressed)
     {
@@ -77,8 +92,11 @@ void Player::Update(float dt)
 
     if (GetCollisionNormal().y > 0)
     {
+        if (!horizontalInput)
+        {
+            anim->SetCurrentAnim(IDLE);
+        }
         grounded = true;
-        anim->SetCurrentAnim(IDLE);
         coyoteUsable = true;
         bufferedJumpUsable = true;
         endedJumpEarly = false;
@@ -94,16 +112,11 @@ void Player::Update(float dt)
         grounded = false;
         frameLeftGrounded = time;
     }
+    anim->Update();
 }
 
-
-
-vec2 result;
 void Player::UpdatePhysics(float dt)
 {
-    // Jump
-    // 
-    // Move player << gravity applied
     CalculateGravity(dt);
     HandleJump();
     CalculateDirectionalMovement(dt);
@@ -115,7 +128,7 @@ void Player::RenderPlayer(Surface* screen)
     const auto b1 = GetCollider()->GetHitBox();
     screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
 
-    anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y);
+    anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
 
 void Player::CalculateGravity(float dt)
@@ -157,7 +170,7 @@ void Player::HandleJump()
     if (!jumpToConsume && !HasBufferedJump())
         return;
     
-    if (grounded || CanUseCoyote() || canDoubleJump) 
+    if (grounded && jumpToConsume || CanUseCoyote() || canDoubleJump) 
     {
         endedJumpEarly = false;
         timeJumpWasPressed = 0;
@@ -179,10 +192,10 @@ void Player::HandleJump()
 void Player::CalculateDirectionalMovement(float dt)
 {
     // TODO: Fix jittre
-    if (horizontalInput == 0)
+    if (horizontalInput == 0.f)
     {
         // Get the appropriate deceleration factor
-        auto decel = grounded ? stats->GetGroundFriction() : stats->GetAirFriction();
+        const auto decel = grounded ? stats->GetGroundFriction() : stats->GetAirFriction();
         // Add to the velocity by a fixed amount depending on the step size (decel * dt)
         if (abs(0 - velocityAccumulator.x) <= decel * dt)
             velocityAccumulator.x = 0;
@@ -197,8 +210,6 @@ void Player::CalculateDirectionalMovement(float dt)
             velocityAccumulator.x += sgn((horizontalInput * maxSpeedX) - velocityAccumulator.x) * (stats->GetAcceleration() * dt);
     }
 }
-
-
 
 void Player::ApplyMovement()
 {

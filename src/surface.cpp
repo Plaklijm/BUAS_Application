@@ -366,7 +366,7 @@ Sprite::~Sprite()
 	delete[] m_Start;
 }
 	
-void Sprite::Draw( Surface* a_Target, int a_X, int a_Y )
+void Sprite::Draw( Surface* a_Target, int a_X, int a_Y, bool flip )
 {
 	if ((a_X < -m_Width) || (a_X > (a_Target->GetWidth() + m_Width))) return;
 	if ((a_Y < -m_Height) || (a_Y > (a_Target->GetHeight() + m_Height))) return;
@@ -411,6 +411,18 @@ void Sprite::Draw( Surface* a_Target, int a_X, int a_Y )
 					}
 				}
 			}
+			if (flip)
+			{
+				xs = (lsx > x1)?lsx - x1:0;
+				for ( int x = xs; x < width; x++ )
+				{
+					const Pixel c1 = *(src + x);
+					// Thanks to @Lynn in the 3dgep discord for helping me with this function;
+					// I initially had a function to swap the pixels in the buffers, but this is much neater
+					// In the end only thing that had to be done was the (width -1) - x instead of the + x
+					if (c1 & 0xffffff) *(dest + addr + (width - 1) - x) = c1;
+				}
+			}
 			else 
 			{
 				xs = (lsx > x1)?lsx - x1:0;
@@ -442,16 +454,13 @@ void Sprite::FlipHorizontally()
 {
 	if (m_CurrentFrame < m_NumFrames)
 	{
-		if (m_CurrentFrame < m_NumFrames)
+		for (int y = 0; y < m_Height; y++)
 		{
-			for (int y = 0; y < m_Height; y++)
+			for (int x = 0; x < m_Width / 2; x++)
 			{
-				for (int x = 0; x < m_Width / 2; x++)
-				{
-					// Swap pixels from the left and right sides within the specified frame
-					std::swap(m_Surface->GetBuffer()[x + y * m_Pitch + m_CurrentFrame * m_Width],
-					m_Surface->GetBuffer()[m_Width - 1 - x + y * m_Pitch + m_CurrentFrame * m_Width]);
-				}
+				// Swap pixels from the left and right sides within the specified frame
+				std::swap(m_Surface->GetBuffer()[x + y * m_Pitch + m_CurrentFrame * m_Width],
+				m_Surface->GetBuffer()[m_Width - 1 - x + y * m_Pitch + m_CurrentFrame * m_Width]);
 			}
 		}
 	}

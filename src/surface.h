@@ -100,7 +100,7 @@ public:
 	Sprite() = default;
 	~Sprite();
 	// Methods
-	void Draw( Surface* a_Target, int a_X, int a_Y );
+	void Draw( Surface* a_Target, int a_X, int a_Y, bool flip = false );
 	void DrawScaled( int a_X, int a_Y, int a_Width, int a_Height, Surface* a_Target );
 	void FlipHorizontally();
 	void SetFlags( unsigned int a_Flags ) { m_Flags = a_Flags; }

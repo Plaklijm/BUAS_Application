@@ -1,35 +1,41 @@
 ﻿#include "Animation.h"
 
-Animation::Animation(Tmpl8::Sprite* sprite, bool loop) : sprite(sprite), loop(loop) , currentFrameIndex(0), frameThreshold(0)
+Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop) :
+    sprite(sprite),
+    loop(loop),
+    animationRate(animRate),
+    currentFrameIndex(0)
 {
     
 }
 
-bool loopForever = false;
-void Animation::Update(float frameToPlay)
+void Animation::UpdateAnimation()
 {
-    frameThreshold = frameToPlay;
-    // The logic for the animation rate will be calculated inside the animation system
-    if (!loop && frameThreshold >= sprite->Frames() - 2 || loopForever)
+    if (timer.elapsed() >= animationRate)
     {
-        loopForever = true;
-        sprite->SetFrame(sprite->Frames() - 1);
+        currentFrameIndex++;
+        if (currentFrameIndex >= (sprite->Frames() - 1))
+        {
+            // Handle looping, so when its enabled it sets the index to start over again, otherwise stay at the last frame
+            if (loop)
+                currentFrameIndex = 0;
+            else
+                currentFrameIndex = sprite->Frames() -1;
+        }
+        timer.reset();
     }
-    else
-    {
-        sprite->SetFrame(frameToPlay);
-    }
+    sprite->SetFrame(currentFrameIndex);
 }
 
 void Animation::OnAnimationChange()
 {
+    // Reset animation
+    timer.reset();
     currentFrameIndex = 0;
-    frameThreshold = 0;
-    loopForever = false;
-    // For now, maybe not necessary
 }
 
-void Animation::RenderAnimation(Tmpl8::Surface* screen, float x, float y)
+void Animation::RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const
 {
-    sprite->Draw(screen, x, y);
+    sprite->Draw(screen, x, y, flip);
 }
+

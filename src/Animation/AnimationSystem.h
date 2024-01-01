@@ -23,11 +23,11 @@ public:
     AnimationSystem(float animRate);
 
     void AddAnim(AnimationName id, std::unique_ptr<Animation> animation);
-    void Update(float time);
+    void Update();
     void SetCurrentAnim(AnimationName id);
 
     const Tmpl8::Sprite& GetMasterSprite() const;
-    void Render(Tmpl8::Surface* screen, float x, float y);
+    void Render(Tmpl8::Surface* screen, float x, float y, bool flip);
 
 private:
     float animationRate;

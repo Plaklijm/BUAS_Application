@@ -16,7 +16,7 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
-	//Sprite testSprite(new Surface("assets/pixil-frame-0 (2).png"), 8);
+	Sprite testSprite(new Surface("assets/pixil-frame-0 (2).png"), 8);
 	void Game::Init()
 	{
 		world = new World();
@@ -79,7 +79,7 @@ namespace Tmpl8
 		screen->Print(cfps, 2, 2, 0xffffff);
 		delete [] cfps;
 
-		flip = game_input->KeyDown(SDL_SCANCODE_F);
+		flip = game_input->KeyPressed(SDL_SCANCODE_F);
 		if (game_input->KeyDown(SDL_SCANCODE_P))
 		{
 			frameIndex++;
@@ -92,10 +92,10 @@ namespace Tmpl8
 		/*if (flip)
 		{
 			testSprite.FlipHorizontally();
-		}
+		}*/
 		
 		testSprite.SetFrame(frameIndex);
-		testSprite.Draw(screen,0,0);*/
+		testSprite.Draw(screen,200,350, flip);
 		
 		player->RenderPlayer(screen);
 		world->RenderMap(screen);

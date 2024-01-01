@@ -66,7 +66,7 @@ void TiXmlBase::EncodeString( const TIXML_STRING& str, TIXML_STRING* outString )
 			// Pass through unchanged.
 			// &#xA9;	-- copyright symbol, for example.
 			//
-			// The -1 is a fix from Rob Laveaux. It keeps
+			// The -1 is a bug fix from Rob Laveaux. It keeps
 			// an overflow from happening if there is no ';'.
 			// There are actually 2 ways to exit this loop -
 			// while fails (error case) and break (semicolon found).
@@ -1008,7 +1008,7 @@ bool TiXmlDocument::LoadFile( FILE* file, TiXmlEncoding encoding )
 		return false;
 	}
 
-	// Subtle problem here. TinyXml did use fgets. But from the XML spec:
+	// Subtle bug here. TinyXml did use fgets. But from the XML spec:
 	// 2.11 End-of-Line Handling
 	// <snip>
 	// <quote>

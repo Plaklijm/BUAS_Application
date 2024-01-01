@@ -31,9 +31,6 @@ public:
     float GetDoubleJumpForce() const    { return doubleJumpForce; }
     float GetCoyoteTime() const         { return coyoteTime; }
     float GetJumpBuffer() const         { return jumpBuffer; }
-    float GetMass() const               { return mass; }
-    float GetInvMass() const            { return 1 / mass; }
-    vec2 GetSize() const                { return size; }
     
     float GetAnimRate() const           { return animRate; }
     float GetSpriteOffset() const       { return spriteOffset; }
@@ -52,9 +49,7 @@ private:
     float           doubleJumpForce     { -15.f };
     float           coyoteTime          { .15f };
     float           jumpBuffer          { .15f };
-    float           mass                { 10.f };
-    vec2            size                { 32, 32 };
 
-    float           animRate            { .075f };
+    float           animRate            { 50.f };
     float           spriteOffset        { 10.f };
 };

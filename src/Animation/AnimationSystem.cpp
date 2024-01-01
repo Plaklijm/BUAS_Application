@@ -1,12 +1,10 @@
 ﻿#include "AnimationSystem.h"
 
-#include <string>
-// first time using the new pointer system, Wanted to give it a shot for sometime and thought maybe could be handy here
-
-AnimationSystem::AnimationSystem(float animRate) : animationRate(animRate), frameToPlay(0)
+AnimationSystem::AnimationSystem(float animRate) : animationRate(animRate), frameToPlay(0), currentAnimID()
 {
 }
 
+// first time using the new pointer system, Wanted to give it a shot for sometime and thought maybe could be handy here
 void AnimationSystem::AddAnim(AnimationName id, std::unique_ptr<Animation> animation)
 {
     if (animations.empty())
@@ -14,11 +12,9 @@ void AnimationSystem::AddAnim(AnimationName id, std::unique_ptr<Animation> anima
     animations.try_emplace(id, std::move(animation));
 }
 
-void AnimationSystem::Update(float time)
+void AnimationSystem::Update()
 {
-    const auto frameCount = animations[currentAnimID]->GetFrames();
-    frameToPlay = static_cast<int>(time / animationRate) % frameCount;
-    animations[currentAnimID]->Update(frameToPlay);
+    animations[currentAnimID]->UpdateAnimation();
 }
 
 void AnimationSystem::SetCurrentAnim(AnimationName id)
@@ -30,11 +26,11 @@ void AnimationSystem::SetCurrentAnim(AnimationName id)
     }
 }
 
-void AnimationSystem::Render(Tmpl8::Surface* screen, float x, float y)
+void AnimationSystem::Render(Tmpl8::Surface* screen, float x, float y, bool flip)
 {
     if (animations.find(currentAnimID) != animations.end())
     {
-        animations.at(currentAnimID)->RenderAnimation(screen, x, y);
+        animations.at(currentAnimID)->RenderAnimation(screen, x, y, flip);
     }
 }
 

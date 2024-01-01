@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <vector>
 
 class Solid;
 class GameMap;
