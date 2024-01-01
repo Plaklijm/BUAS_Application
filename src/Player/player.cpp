@@ -17,11 +17,11 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40
 
     // Initialize Animation
     anim = new AnimationSystem(stats->GetAnimRate());
-    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Character Idle 48x48.png"), 10), stats->GetAnimRate()));
-    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/PlayerWalk 48x48.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/run cycle 48x48.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player jump 48x48.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player air spin 48x48.png"), 6), stats->GetAnimRate(), false));
+    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Idle.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Walk.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Run.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Jump.png"), 3), stats->GetAnimRate(), false));
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_DoubleJump.png"), 6), stats->GetAnimRate(), false));
 
     anim->SetCurrentAnim(IDLE);
     //sprite->SetFrame(0);
