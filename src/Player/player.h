@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 
+#include <memory>
+
 #include "../Engine/Actor.h"
 #include "../surface.h"
 #include "../template.h"
@@ -32,7 +34,6 @@ private:
     float animationSpeed = .1f;*/
 private:
     InputManager*               pInput;
-    Sprite*                      sprite;
     AnimationSystem*            anim;
 
     struct PlayerStats*         stats;

@@ -111,9 +111,9 @@ public:
 	Pixel* GetBuffer() { return m_Surface->GetBuffer(); }	
 	unsigned int Frames() { return m_NumFrames; }
 	Surface* GetSurface() { return m_Surface; }
-	void InitializeStartData();
 private:
 	// Methods
+	void InitializeStartData();
 	// Attributes
 	int m_Width, m_Height, m_Pitch;
 	unsigned int m_NumFrames;          

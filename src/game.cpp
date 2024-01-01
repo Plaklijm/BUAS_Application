@@ -16,7 +16,7 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
-	Sprite testSprite(new Surface("assets/pixil-frame-0 (2).png"), 8);
+	//Sprite testSprite(new Surface("assets/pixil-frame-0 (2).png"), 8);
 	void Game::Init()
 	{
 		world = new World();
@@ -89,13 +89,13 @@ namespace Tmpl8
 			frameIndex--;
 		}
 
-		if (flip)
+		/*if (flip)
 		{
 			testSprite.FlipHorizontally();
 		}
 		
 		testSprite.SetFrame(frameIndex);
-		testSprite.Draw(screen,0,0);
+		testSprite.Draw(screen,0,0);*/
 		
 		player->RenderPlayer(screen);
 		world->RenderMap(screen);

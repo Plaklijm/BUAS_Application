@@ -20,8 +20,8 @@ constexpr int DeadZonePercentage = 15;
 constexpr int JoystickRange = 32767; 
 constexpr int DeadZone = JoystickRange * DeadZonePercentage / 100;
 
-// #define FULLSCREEN
-#define ADVANCEDGL	// faster if your system supports it. Switches SDL2's texture buffer out for OpenGL texture buffer with mappings to CPU Memory. 
+//#define FULLSCREEN
+//#define ADVANCEDGL	// faster if your system supports it. Switches SDL2's texture buffer out for OpenGL texture buffer with mappings to CPU Memory. 
 
 static const char* TemplateVersion = "Template_v2019.08";
 

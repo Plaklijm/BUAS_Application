@@ -15,10 +15,18 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40
     stats = new PlayerStats();
 
     pInput = input;
+    //sprite = std::make_shared<Sprite>(Sprite(new Surface("assets/player/Character Idle 48x48.png"), 1));
     anim = new AnimationSystem(stats->GetAnimRate());
-    //currentAnim = IDLE;
-    sprite = new Sprite(new Surface("assets/player/run cycle 48x48.png"), 8);
-    
+    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Character Idle 48x48.png"), 10)));
+    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/PlayerWalk 48x48.png"), 8)));
+    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player jump 48x48.png"), 3), false));
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/player air spin 48x48.png"), 6), false));
+    /*anim->AddAnim(WALK, new Animation(sprite));
+    anim->AddAnim(RUN, new Animation(sprite));
+    anim->AddAnim(JUMP, new Animation(sprite));*/
+
+    anim->SetCurrentAnim(IDLE);
+    //sprite->SetFrame(0);
     velocityAccumulator = {0, 0};
     //gravity = {0, .981f};
     canDoubleJump = true;
@@ -38,8 +46,7 @@ int currentAnimFrameCount;
 void Player::Update(float dt)
 {
     time += dt;
-    anim->Update(time, sprite);
-    currentFrame = static_cast<int>(time / stats->GetAnimRate()) % sprite->Frames();
+    anim->Update(time);
 
     // Handle input
     left = pInput->KeyPressed(SDL_SCANCODE_A);
@@ -55,7 +62,10 @@ void Player::Update(float dt)
     
     
     if (sprintPressed)
+    {
         maxSpeedX = stats->GetWalkSpeed();
+        anim->SetCurrentAnim(WALK);
+    }
     else
         maxSpeedX = stats->GetSprintSpeed();
     
@@ -68,6 +78,7 @@ void Player::Update(float dt)
     if (GetCollisionNormal().y > 0)
     {
         grounded = true;
+        anim->SetCurrentAnim(IDLE);
         coyoteUsable = true;
         bufferedJumpUsable = true;
         endedJumpEarly = false;
@@ -99,6 +110,14 @@ void Player::UpdatePhysics(float dt)
     ApplyMovement();
 }
 
+void Player::RenderPlayer(Surface* screen)
+{
+    const auto b1 = GetCollider()->GetHitBox();
+    screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
+
+    anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y);
+}
+
 void Player::CalculateGravity(float dt)
 {
     if (grounded)// && velocityAccumulator.y <= 0.f)
@@ -118,13 +137,6 @@ void Player::CalculateGravity(float dt)
     }
 }
 
-void Player::RenderPlayer(Surface* screen)
-{
-    const auto b1 = GetCollider()->GetHitBox();
-    screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
-    sprite->SetFrame(currentFrame);
-    sprite->Draw(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y);
-}
 
 #pragma region Jump
 bool Player::HasBufferedJump() const
@@ -153,6 +165,7 @@ void Player::HandleJump()
         coyoteUsable = false;
         
         // perform actual jump
+        anim->SetCurrentAnim(canDoubleJump ? DOUBLEJUMP : JUMP);
         canDoubleJump = !canDoubleJump;
         velocityAccumulator.y = canDoubleJump ? stats->GetJumpForce() : stats->GetDoubleJumpForce();
     }

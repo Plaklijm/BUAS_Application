@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include <map>
+#include <memory>
+
+#include "Animation.h"
 #include "../surface.h"
+
 
 /*
 *       animations.emplace(RUN, new Sprite(new Surface("assets/player/run cycle 48x48.png"), 8));
@@ -11,19 +15,23 @@
  */
 
 
+enum AnimationName : int;
+
 class AnimationSystem
 {
 public:
-    AnimationSystem(int animRate);
-    
-    void Update(float time, Tmpl8::Sprite* sprite);
-    void SetAnim();
+    AnimationSystem(float animRate);
+
+    void AddAnim(AnimationName id, std::unique_ptr<Animation> animation);
+    void Update(float time);
+    void SetCurrentAnim(AnimationName id);
+
+    const Tmpl8::Sprite& GetMasterSprite() const;
+    void Render(Tmpl8::Surface* screen, float x, float y);
 
 private:
-    int animationRate;
-
-    int currentFrame;
-    int currentAnimFrameCount;
-
-    Tmpl8::Sprite* currentAnim;
+    float animationRate;
+    int frameToPlay;
+    std::map<AnimationName, std::unique_ptr<Animation>> animations;
+    AnimationName currentAnimID;
 };
