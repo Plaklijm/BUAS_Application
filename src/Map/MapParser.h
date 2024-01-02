@@ -9,7 +9,7 @@
 class MapParser
 {
 public:
-    bool Load();
+    bool Load(const std::string& level);
     void Clean();
 
     GameMap* GetMap(const std::string& id) { return maps[id]; }

@@ -14,7 +14,7 @@
 constexpr int ScreenWidth = 854;
 constexpr int ScreenHeight = 480;
 
-constexpr float FixedTimeStep = 1.f/60;
+constexpr float FixedTimeStep = 1.f/50;
 
 constexpr int DeadZonePercentage = 15;
 constexpr int JoystickRange = 32767; 
@@ -42,7 +42,7 @@ typedef unsigned __int64 uint64;
 typedef unsigned int uint;
 
 namespace Tmpl8 {
-
+	
 template <typename T>
 constexpr T Min(T a, T b) { return (a > b) ? b : a; }
 
@@ -54,7 +54,7 @@ constexpr T Clamp(T value, T min, T max) { return Min(max, Max(value, min)); }
 
 // Added Sign function (I needed it and this is the place to put it)
 template <typename T>
-int sgn(T val) { return (T(0) < val) - (val < T(0)); }
+constexpr T sgn(T val) { return (T(0) < val) - (val < T(0)); }
 
 constexpr float PI = 3.14159265358979323846264338327950288419716939937510582097494459072381640628620899862803482534211706798f;
 

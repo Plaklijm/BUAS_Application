@@ -4,7 +4,7 @@
 
 #include "../Animation/AnimationSystem.h"
 #include "../Engine/BoxCollider.h"
-#include "InputManager.h"
+#include "../Engine/InputManager.h"
 #include "PlayerStats.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
@@ -17,11 +17,11 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40
 
     // Initialize Animation
     anim = new AnimationSystem(stats->GetAnimRate());
-    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Idle.png"), 10), stats->GetAnimRate()));
-    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Walk.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Run.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_Jump.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/p_DoubleJump.png"), 6), stats->GetAnimRate(), false));
+    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate(), false));
 
     anim->SetCurrentAnim(IDLE);
     //sprite->SetFrame(0);
@@ -41,6 +41,7 @@ float frameLeftGrounded = std::numeric_limits<float>::lowest();
 int currentFrame;
 int currentAnimFrameCount;
 
+bool dead = false;
 void Player::Update(float dt)
 {
     time += dt;
@@ -61,25 +62,14 @@ void Player::Update(float dt)
     if (left)
     {
         flipHorizontally = true;
-        if (!sprintPressed && grounded && !jumpDown)
-        {
-            anim->SetCurrentAnim(RUN);
-        }
     }
     else if (right)
     {
         flipHorizontally = false;
-        if (!sprintPressed && grounded && !jumpDown)
-        {
-            anim->SetCurrentAnim(RUN);
-        }
     }
     
     if (sprintPressed)
-    {
         maxSpeedX = stats->GetWalkSpeed();
-        anim->SetCurrentAnim(WALK);
-    }
     else
         maxSpeedX = stats->GetSprintSpeed();
     
@@ -91,10 +81,6 @@ void Player::Update(float dt)
 
     if (GetCollisionNormal().y > 0)
     {
-        if (!horizontalInput)
-        {
-            anim->SetCurrentAnim(IDLE);
-        }
         grounded = true;
         coyoteUsable = true;
         bufferedJumpUsable = true;
@@ -111,15 +97,23 @@ void Player::Update(float dt)
         grounded = false;
         frameLeftGrounded = time;
     }
+    
     anim->Update();
 }
 
 void Player::UpdatePhysics(float dt)
 {
+    HandleAnimations();
     CalculateGravity(dt);
     HandleJump();
     CalculateDirectionalMovement(dt);
     ApplyMovement();
+}
+
+void Player::HandleAnimations()
+{
+    if (grounded && !horizontalInput)
+        anim->SetCurrentAnim(IDLE);
 }
 
 void Player::RenderPlayer(Surface* screen)
@@ -129,6 +123,7 @@ void Player::RenderPlayer(Surface* screen)
 
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
+
 
 void Player::CalculateGravity(float dt)
 {

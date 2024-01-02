@@ -1,11 +1,11 @@
 ﻿#pragma once
+#include <string>
 
 namespace Tmpl8
 {
     class Surface;
 }
 
-class Solid;
 class GameMap;
 
 class World
@@ -14,10 +14,11 @@ class World
 public:
     GameMap* GetMap() const;
 
-    World();
-    void RenderMap(Tmpl8::Surface* surface);
+    World() = default;
+    void LoadMap(const std::string& level);
+    void RenderMap(Tmpl8::Surface* surface) const;
 private:
 
-    GameMap* levelMap;
+    GameMap* currentLevel;
 };
 

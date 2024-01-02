@@ -3,20 +3,29 @@
 #include <string>
 #include <fstream>
 
-#include "MenuState.h"
+#include "MainMenuState.h"
+#include "PauseState.h"
 #include "PlayState.h"
-#include "../src/Player/InputManager.h"
+#include "../src/Engine/InputManager.h"
 #include "../surface.h"
 
 namespace Tmpl8
 {
+	Game::Game() : exitApp(0)
+	{
+		isPlaying = false;
+		isPaused = false;
+	}
+
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
-	void Game::Init()
+	//Sprite testSprite = Sprite(new Surface(), 1);
+	void Game::Init(bool fullscreen, float windowX, float windowY)
 	{
 		game_input = InputManager::Instance();
-		ChangeState(new PlayState());
+		game_input->SetWindowParams(fullscreen, windowX, windowY);
+		ChangeState(MainMenuState::Instance());
 	}
 	
 	// -----------------------------------------------------------
@@ -30,7 +39,8 @@ namespace Tmpl8
 			states.back()->Exit();
 			states.pop_back();
 		}
-		
+
+		//Cleanup the input manager
 		InputManager::Release();
 		game_input = nullptr;
 	}
@@ -42,15 +52,18 @@ namespace Tmpl8
 	void Game::Tick(float deltaTime)
 	{
 		game_input->Update();
+		
+		// Only for logging the FPS
 		dt = deltaTime;
+
+		// Update the current state
 		states.back()->Update(deltaTime);
 
-		if (game_input->KeyDown(SDL_SCANCODE_P))
+		if (game_input->KeyDown(SDL_SCANCODE_ESCAPE) && isPlaying)
 		{
-			PushState(new MenuState());
+			PushState(PauseState::Instance());
 		}
-
-		if (game_input->KeyReleased(SDL_SCANCODE_P))
+		else if (game_input->KeyDown(SDL_SCANCODE_ESCAPE) && isPaused)
 		{
 			PopState();
 		}
@@ -59,9 +72,9 @@ namespace Tmpl8
 		game_input->UpdatePrevInput();
 	}
 	
-	
 	void Game::PhysTick(float physDeltaTime) const
 	{
+		// Update the physics in the states
 		states.back()->PhysUpdate(physDeltaTime);
 	}
 	
@@ -87,14 +100,16 @@ namespace Tmpl8
 
 	void Game::ChangeState(State* state)
 	{
-		if (!states.empty())
+		while (!states.empty())
 		{
+			// Exit the current state and remove it from the list
 			states.back()->Exit();
 			states.pop_back();
 		}
 
+		// push the new state and initialize it
 		states.push_back(state);
-		states.back()->Init();
+		states.back()->Init(this);
 	}
 
 	// pushes a state onto the current one
@@ -106,22 +121,24 @@ namespace Tmpl8
 			states.back()->Pause();
 		}
 
-		// Push the state and initialize it
+		// Push the new state and initialize it
 		states.push_back(state);
-		states.back()->Init();
+		states.back()->Init(this);
 	}
 
 	void Game::PopState()
 	{
 		if (!states.empty())
 		{
+			// Exit from the back state
 			states.back()->Exit();
 			states.pop_back();
 		}
 
 		if (!states.empty())
 		{
+			// Resume old state
 			states.back()->Continue();
 		}
 	}
-};
+}

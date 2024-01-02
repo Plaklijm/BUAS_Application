@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "../Engine/Actor.h"
-#include "../Engine/surface.h"
 #include "../Engine/template.h"
 
 class InputManager;
@@ -68,6 +67,8 @@ public:
     void RenderPlayer(Surface* screen);
 
 private:
+    void HandleAnimations();
+    
     void CalculateGravity(float dt);
     void HandleJump();
     

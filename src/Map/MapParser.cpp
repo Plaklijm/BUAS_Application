@@ -6,9 +6,10 @@ MapParser::MapParser()
 {
 }
 
-bool MapParser::Load()
+bool MapParser::Load(const std::string& level)
 {
-    return Parse("Level1", "assets/Map/Level1.tmx");
+    const auto source = "assets/map/" + level + ".tmx";
+    return Parse(level, source);
 }
 
 void MapParser::Clean()
@@ -77,7 +78,6 @@ TileSet MapParser::ParseTileSet(TiXmlElement* xmlTileSet)
 
     const auto image = xmlTileSet->FirstChildElement();
     tileSet.source = image->Attribute("source");
-
     
     return tileSet;
 }
@@ -99,7 +99,6 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& 
 
         collidable = collision;
     }
-    
     
     TiXmlElement* data;
     for (TiXmlElement* e = xmlLayer->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())

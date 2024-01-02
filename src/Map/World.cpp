@@ -1,23 +1,19 @@
 ﻿#include "World.h"
 
 #include "MapParser.h"
-#include "../Engine/surface.h"
 
-World::World()
+void World::LoadMap(const std::string& level)
 {
-    if (!MapParser::GetInstance()->Load())
-    {
-        printf("Failed to load map");
-    }
-    levelMap = MapParser::GetInstance()->GetMap("Level1");
+    MapParser::GetInstance()->Load(level);
+    currentLevel = MapParser::GetInstance()->GetMap(level);
 }
-    
-void World::RenderMap(Tmpl8::Surface* surface)
+
+void World::RenderMap(Tmpl8::Surface* surface) const
 {
-    levelMap->RenderMap(surface);
+    currentLevel->RenderMap(surface);
 }
 
 GameMap* World::GetMap() const
 {
-    return levelMap;
+    return currentLevel;
 }

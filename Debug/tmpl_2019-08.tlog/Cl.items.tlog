@@ -2,9 +2,12 @@ C:\DEV\CPP\BUAS\src\Animation\Animation.cpp;C:\DEV\CPP\BUAS\Debug\Animation.obj
 C:\DEV\CPP\BUAS\src\Animation\AnimationSystem.cpp;C:\DEV\CPP\BUAS\Debug\AnimationSystem.obj
 C:\DEV\CPP\BUAS\src\Engine\Actor.cpp;C:\DEV\CPP\BUAS\Debug\Actor.obj
 C:\DEV\CPP\BUAS\src\Engine\Collision.cpp;C:\DEV\CPP\BUAS\Debug\Collision.obj
+C:\DEV\CPP\BUAS\src\Engine\Game\Button.cpp;C:\DEV\CPP\BUAS\Debug\Button.obj
 C:\DEV\CPP\BUAS\src\Engine\Game\game.cpp;C:\DEV\CPP\BUAS\Debug\game.obj
-C:\DEV\CPP\BUAS\src\Engine\Game\MenuState.cpp;C:\DEV\CPP\BUAS\Debug\MenuState.obj
+C:\DEV\CPP\BUAS\src\Engine\Game\MainMenuState.cpp;C:\DEV\CPP\BUAS\Debug\MainMenuState.obj
+C:\DEV\CPP\BUAS\src\Engine\Game\PauseState.cpp;C:\DEV\CPP\BUAS\Debug\PauseState.obj
 C:\DEV\CPP\BUAS\src\Engine\Game\PlayState.cpp;C:\DEV\CPP\BUAS\Debug\PlayState.obj
+C:\DEV\CPP\BUAS\src\Engine\InputManager.cpp;C:\DEV\CPP\BUAS\Debug\InputManager.obj
 C:\DEV\CPP\BUAS\src\Engine\Solid.cpp;C:\DEV\CPP\BUAS\Debug\Solid.obj
 C:\DEV\CPP\BUAS\src\Engine\surface.cpp;C:\DEV\CPP\BUAS\Debug\surface.obj
 C:\DEV\CPP\BUAS\src\Engine\template.cpp;C:\DEV\CPP\BUAS\Debug\template.obj
@@ -15,5 +18,4 @@ C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxml.cpp;C:\DEV\CPP\BUAS\Debug\tinyxml.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlerror.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmlerror.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlparser.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmlparser.obj
 C:\DEV\CPP\BUAS\src\Map\World.cpp;C:\DEV\CPP\BUAS\Debug\World.obj
-C:\DEV\CPP\BUAS\src\Player\InputManager.cpp;C:\DEV\CPP\BUAS\Debug\InputManager.obj
 C:\DEV\CPP\BUAS\src\Player\player.cpp;C:\DEV\CPP\BUAS\Debug\player.obj

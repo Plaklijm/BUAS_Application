@@ -36,7 +36,7 @@ extern "C"
 }
 #include "gl.h"
 #include "wglext.h"
-#endif
+#endif																																																																																																																																																																																													
 
 namespace Tmpl8 { 
 
@@ -300,27 +300,9 @@ void swap()
 
 #endif
 
-// Finds the current controller if one is connected
-SDL_GameController* findController() {
-	for (int i = 0; i < SDL_NumJoysticks(); i++) {
-		if (SDL_IsGameController(i)) {
-			printf("controller found\n");
-			return SDL_GameControllerOpen(i);
-		}
-	}
-	printf("controller not found\n");
-	return nullptr;
-}
-
-vec2 ClampControllerInput(const Sint16 x, const Sint16 y)
-{
-	vec2 temp(x,y);
-	
-	temp.x = std::abs(temp.x) < DeadZone ? 0.0 : Tmpl8::sgn<float>(temp.x);
-	temp.y = std::abs(temp.y) < DeadZone ? 0.0 : Tmpl8::sgn<float>(temp.y);
-
-	return temp;
-}
+float ActualScreenWidth;
+float ActualScreenHeight;
+bool FullScreen;
 
 // Main function
 int main( int argc, char **argv )
@@ -348,20 +330,36 @@ int main( int argc, char **argv )
 	ShowCursor( false );
 #else
 #ifdef FULLSCREEN
-	window = SDL_CreateWindow(TemplateVersion, 100, 100, 1920, 1080, SDL_WINDOW_FULLSCREEN );
+	// Create a window according to the resolution of the screen it will be rendered at
+	// Needs to be done in order to (otherwise SDL will do some weird stuff and will not display correctly)
+	SDL_DisplayMode currentDisplayMode;
+	SDL_GetCurrentDisplayMode(0, &currentDisplayMode);
+	ActualScreenWidth = currentDisplayMode.w;
+	ActualScreenHeight = currentDisplayMode.h;
+	printf("Current display resolution: %dx%d\n", currentDisplayMode.w, currentDisplayMode.h);
+	FullScreen = true;
+	
+	window = SDL_CreateWindow(TemplateVersion, 100, 100, currentDisplayMode.w, currentDisplayMode.h, SDL_WINDOW_FULLSCREEN );
 #else
+	FullScreen = false;
+	ActualScreenWidth = ScreenWidth;
+	ActualScreenHeight = ScreenHeight;
 	window = SDL_CreateWindow(TemplateVersion, 100, 100, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN );
 #endif
 	surface = new Surface( ScreenWidth, ScreenHeight );
 	surface->Clear( 0 );
 	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	// Sets the logical render size, What this means is that when we go FullScreen, the game is rendered at the given
+	// screen width and height but displayed in an higher resolution. This will ensure that when the game moves you 1 pixel,
+	// and its scaled by 4 for example, the player will move 4 pixels in the rendered version, but the game will calculate at 1
+	// So this way i can render a smaller window size at higher resolutions
+	SDL_RenderSetLogicalSize(renderer, ScreenWidth, ScreenHeight);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+	// Scale the mouse also according to the render logical size
+	//SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SCALING, "0");
+
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif
-	int exitapp = 0;
-	
-	SDL_RenderSetLogicalSize(renderer, ScreenWidth, ScreenHeight);
-	
-	SDL_GameController* controller = nullptr;
 	
 	game = new Game();
 	game->SetTarget( surface );
@@ -369,10 +367,9 @@ int main( int argc, char **argv )
 	timer t;
 	t.reset();
 
-	auto previousTime = static_cast<double>(t.get());
 	double lag = 0.0f;
 
-	while (!exitapp) 
+	while (!game->GetExitApp()) 
 	{
 #ifdef ADVANCEDGL
 		swap();
@@ -400,21 +397,21 @@ int main( int argc, char **argv )
 #endif
 		if (firstframe)
 		{
-			game->Init();
+			game->Init(FullScreen, ActualScreenWidth, ActualScreenHeight);
 			firstframe = false;
 		}
 		// calculate frame time and pass it to game->Tick
 		// divided by 1000 to get milliseconds 
-		float elapsedTime = t.elapsed() / 1000 ;
+		const auto elapsedTime = t.elapsed() / 1000 ;
 		lag += elapsedTime;
 		
 		t.reset();
 
 		// Physics loop to only tick 50 times per seconds
-		while (lag >= 0.02)
+		while (lag >= FixedTimeStep)
 		{
-			game->PhysTick(0.02);
-			lag -= 0.02;
+			game->PhysTick(FixedTimeStep);
+			lag -= FixedTimeStep;
 		}
 		
 		game->Tick( elapsedTime );
@@ -423,18 +420,9 @@ int main( int argc, char **argv )
 		SDL_Event event;
 		while (SDL_PollEvent( &event )) 
 		{
-			switch (event.type)
+			if (event.type == SDL_QUIT)
 			{
-			case SDL_QUIT:
-				exitapp = 1;
-				break;
-			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE) 
-				{
-					exitapp = 1;
-					// find other keys here: http://sdl.beuc.net/sdl.wiki/SDLKey
-				}
-				break;
+				game->SetExitApp(1);
 			}
 		}
 
@@ -442,9 +430,6 @@ int main( int argc, char **argv )
 	}
 	game->Shutdown();
 
-	if (controller) {
-		SDL_GameControllerClose(controller);
-	}
 #ifdef ADVANCEDGL
 	SDL_GL_DeleteContext(glContext);
 #endif
