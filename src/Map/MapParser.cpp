@@ -1,4 +1,6 @@
 ﻿#include "MapParser.h"
+#include "../src/Engine/Object.h"
+
 
 MapParser* MapParser::instance = nullptr;
 
@@ -6,15 +8,15 @@ MapParser::MapParser()
 {
 }
 
-bool MapParser::Load(const std::string& level)
+void MapParser::Load(const int index, World* world)
 {
-    const auto source = "assets/map/" + level + ".tmx";
-    return Parse(level, source);
+    const auto source = "assets/map/" + std::to_string(index) + ".tmx";
+    Parse(index, source, world);
 }
 
 void MapParser::Clean()
 {
-    std::map<std::string, GameMap*>::iterator it;
+    std::map<int, GameMap*>::iterator it;
     for (it = maps.begin(); it != maps.end(); it++)
     {
         it->second = nullptr;
@@ -22,7 +24,7 @@ void MapParser::Clean()
     maps.clear();
 }
 
-bool MapParser::Parse(const std::string& mapID, const std::string& source)
+void MapParser::Parse(const int mapID, const std::string& source, World* world)
 {
     TiXmlDocument xmlDoc;
     xmlDoc.LoadFile(source);
@@ -30,7 +32,7 @@ bool MapParser::Parse(const std::string& mapID, const std::string& source)
     if (xmlDoc.Error())
     {
         printf("Failed to load: %s\n", source.c_str());
-        return false;
+        return;
     }
 
     TiXmlElement* root = xmlDoc.RootElement();
@@ -56,13 +58,21 @@ bool MapParser::Parse(const std::string& mapID, const std::string& source)
     {
         if (e->Value() == std::string("layer"))
         {
-            TileLayer* tilelayer = ParseTileLayer(e, tileSets, ts, rc, cc);
-            gameMap->mapLayers.push_back(tilelayer);
+            TileLayer* tileLayer = ParseTileLayer(e, tileSets, ts, rc, cc);
+            gameMap->mapLayers.push_back(tileLayer);
+        }
+    }
+
+    for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
+    {
+        if (e->Value() == std::string("objectgroup"))
+        {
+            ObjectLayer* objectLayer = ParseObjectLayer(e, world);
+            gameMap->mapLayers.push_back(objectLayer);
         }
     }
 
     maps[mapID] = gameMap;
-    return true;
 }
 
 TileSet MapParser::ParseTileSet(TiXmlElement* xmlTileSet)
@@ -133,4 +143,35 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& 
     }
 
     return new TileLayer(collidable ,tileSize, rowCount, colCount, tileMap, tileSets);
+}
+
+ObjectLayer* MapParser::ParseObjectLayer(TiXmlElement* xmlLayer, World* world)
+{
+    ObjectLayer* layer = new ObjectLayer();
+    const auto child = xmlLayer->FirstChildElement();
+    
+    for (TiXmlElement* e = child; e!= nullptr; e = e->NextSiblingElement())
+    {
+        if (e->Value() == std::string("object"))
+        {
+            int x, y, size, type;
+            e->Attribute("x", &x);
+            e->Attribute("y", &y);
+            e->Attribute("width", &size);
+
+            if (e->FirstChildElement()->Value() == std::string("properties"))
+            {
+                // Get the property
+                TiXmlElement* temp = e->FirstChildElement()->FirstChildElement();
+                temp->Attribute("value", &type);
+            }
+
+            Object* object = new Object(vec2(x,y), vec2(size,size), world, static_cast<Type>(type));
+            
+            layer->AddObject(object);
+        }
+    }
+    
+    
+    return layer;
 }

@@ -1,6 +1,7 @@
 C:\DEV\CPP\BUAS\src\Animation\Animation.cpp;C:\DEV\CPP\BUAS\Debug\Animation.obj
 C:\DEV\CPP\BUAS\src\Animation\AnimationSystem.cpp;C:\DEV\CPP\BUAS\Debug\AnimationSystem.obj
 C:\DEV\CPP\BUAS\src\Engine\Actor.cpp;C:\DEV\CPP\BUAS\Debug\Actor.obj
+C:\DEV\CPP\BUAS\src\Engine\Object.cpp;C:\DEV\CPP\BUAS\Debug\Object.obj
 C:\DEV\CPP\BUAS\src\Engine\Collision.cpp;C:\DEV\CPP\BUAS\Debug\Collision.obj
 C:\DEV\CPP\BUAS\src\Engine\Game\Button.cpp;C:\DEV\CPP\BUAS\Debug\Button.obj
 C:\DEV\CPP\BUAS\src\Engine\Game\game.cpp;C:\DEV\CPP\BUAS\Debug\game.obj
@@ -12,6 +13,7 @@ C:\DEV\CPP\BUAS\src\Engine\Solid.cpp;C:\DEV\CPP\BUAS\Debug\Solid.obj
 C:\DEV\CPP\BUAS\src\Engine\surface.cpp;C:\DEV\CPP\BUAS\Debug\surface.obj
 C:\DEV\CPP\BUAS\src\Engine\template.cpp;C:\DEV\CPP\BUAS\Debug\template.obj
 C:\DEV\CPP\BUAS\src\Map\MapParser.cpp;C:\DEV\CPP\BUAS\Debug\MapParser.obj
+C:\DEV\CPP\BUAS\src\Map\ObjectLayer.cpp;C:\DEV\CPP\BUAS\Debug\ObjectLayer.obj
 C:\DEV\CPP\BUAS\src\Map\TileLayer.cpp;C:\DEV\CPP\BUAS\Debug\TileLayer.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinystr.cpp;C:\DEV\CPP\BUAS\Debug\tinystr.obj
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxml.cpp;C:\DEV\CPP\BUAS\Debug\tinyxml.obj

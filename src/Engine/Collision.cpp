@@ -6,6 +6,7 @@
 #include "Solid.h"
 #include "../Map/World.h"
 #include "../Map/GameMap.h"
+#include "Object.h"
 
 // This collision class is made to extend the functionality of the SDL_Intersect functions by adding normal detection and offset.
 // These functions work with the SDL collision functions because they are pretty robust and good enough for my needs,
@@ -44,7 +45,7 @@ bool Collision::RectIntersect(const SDL_Rect* a, const SDL_Rect* b, Tmpl8::vec2&
     return false; 
 }
 
-bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::vec2& normal, World* world)
+bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::vec2& normal, const World* world)
 {
     // Create a new SDL_Rect with the same properties as the a rect
     auto aWithOffset = *a;
@@ -54,15 +55,16 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::v
         
     const auto map = world->GetMap();
     std::vector<Solid*> allSolids;
-        
+    std::vector<Object*> allObjects;
+    
     for (const auto layer : map->GetMapLayers())
     {
         if (layer->GetIsCollidable())
         {
             allSolids = layer->GetCollisionTiles();
         }
-    }        
-        
+    }
+    
     // Check for all the solids in the level if there was a collision
     for (const auto solid : allSolids)
     {
@@ -100,4 +102,28 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::v
     // no collision, so false and no normal are returned
     normal = Tmpl8::vec2::Zero();
     return false; 
+}
+
+Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
+{
+    const auto map = world->GetMap();
+    std::vector<Object*> allObjects;
+    
+    for (const auto layer : map->GetMapLayers())
+    {
+        if (layer->GetIsObjectLayer())
+        {
+            allObjects = layer->GetObjectTiles();
+        }
+    }
+
+    for (const auto collectable : allObjects)
+    {
+        if (!SDL_HasIntersection(a, &collectable->GetCollider()->GetHitBox())) continue;
+
+        if (collectable->GetType() >= PLAYEREND)
+            return collectable;
+    }
+
+    return nullptr;
 }

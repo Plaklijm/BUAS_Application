@@ -58,7 +58,7 @@ private:
 
     //bool isFacingRight;
 public:
-    Player(InputManager* input, World* world);
+    Player(vec2 startPos, InputManager* input, World* world);
     ~Player();
 
     void Update(float dt);

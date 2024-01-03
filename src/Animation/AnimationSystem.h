@@ -4,16 +4,14 @@
 
 #include "Animation.h"
 
-enum AnimationName : int;
-
 class AnimationSystem
 {
 public:
     AnimationSystem(float animRate);
 
-    void AddAnim(AnimationName id, std::unique_ptr<Animation> animation);
+    void AddAnim(int id, std::unique_ptr<Animation> animation);
     void Update();
-    void SetCurrentAnim(AnimationName id);
+    void SetCurrentAnim(int id);
 
     const Tmpl8::Sprite& GetMasterSprite() const;
     void Render(Tmpl8::Surface* screen, float x, float y, bool flip);
@@ -21,6 +19,6 @@ public:
 private:
     float animationRate;
     int frameToPlay;
-    std::map<AnimationName, std::unique_ptr<Animation>> animations;
-    AnimationName currentAnimID;
+    std::map<int, std::unique_ptr<Animation>> animations;
+    int currentAnimID;
 };

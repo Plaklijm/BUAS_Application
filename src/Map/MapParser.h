@@ -3,26 +3,28 @@
 #include <map>
 #include <string>
 #include "GameMap.h"
+#include "ObjectLayer.h"
 #include "TileLayer.h"
 #include "tinyxml/tinyxml.h"
 
 class MapParser
 {
 public:
-    bool Load(const std::string& level);
+    void Load(const int index, class World* world);
     void Clean();
 
-    GameMap* GetMap(const std::string& id) { return maps[id]; }
+    GameMap* GetMap(const int id) { return maps[id]; }
     static MapParser* GetInstance() { return instance = (instance != nullptr)? instance : new MapParser(); }
 
 private:
-    bool Parse(const std::string& mapID, const std::string& source);
+    void Parse(const int mapID, const std::string& source, class World* world);
     static TileSet ParseTileSet(TiXmlElement* xmlTileSet);
     static TileLayer* ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& tileSets, int tileSize, int rowCount, int colCount);
+    static ObjectLayer* ParseObjectLayer(TiXmlElement* xmlLayer, class World* world);
     
 private:
     MapParser();
     static MapParser* instance;
 
-    std::map<std::string, GameMap*> maps;
+    std::map<int, GameMap*> maps;
 };

@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include <string>
 
 namespace Tmpl8
 {
@@ -7,6 +6,7 @@ namespace Tmpl8
 }
 
 class GameMap;
+class Object;
 
 class World
 {
@@ -15,8 +15,10 @@ public:
     GameMap* GetMap() const;
 
     World() = default;
-    void LoadMap(const std::string& level);
+    void LoadMap(const int index);
     void RenderMap(Tmpl8::Surface* surface) const;
+
+    void Collect(const Object* obj) const;
 private:
 
     GameMap* currentLevel;

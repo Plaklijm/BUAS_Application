@@ -5,7 +5,7 @@ AnimationSystem::AnimationSystem(float animRate) : animationRate(animRate), fram
 }
 
 // first time using the new pointer system, Wanted to give it a shot for sometime and thought maybe could be handy here
-void AnimationSystem::AddAnim(AnimationName id, std::unique_ptr<Animation> animation)
+void AnimationSystem::AddAnim(int id, std::unique_ptr<Animation> animation)
 {
     if (animations.empty())
         currentAnimID = id;
@@ -17,7 +17,7 @@ void AnimationSystem::Update()
     animations[currentAnimID]->UpdateAnimation();
 }
 
-void AnimationSystem::SetCurrentAnim(AnimationName id)
+void AnimationSystem::SetCurrentAnim(int id)
 {
     if (currentAnimID != id)
     {

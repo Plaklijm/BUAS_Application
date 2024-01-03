@@ -20,7 +20,7 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
-	//Sprite testSprite = Sprite(new Surface(), 1);
+	//Sprite testSprite = Sprite(new Surface(), 18);
 	void Game::Init(bool fullscreen, float windowX, float windowY)
 	{
 		game_input = InputManager::Instance();

@@ -30,7 +30,6 @@ using TileMap = std::vector<std::vector<int> >;
 class TileLayer : public Layer
 {
 public:
-    void CalculateSpriteData();
     TileLayer(bool collidable, int tileSize, int rowCount, int colCount, TileMap tileMap, const TileSetList& tileSetList);
 
     void Render(Tmpl8::Surface* screen) override;
@@ -39,6 +38,7 @@ public:
     TileMap GetTileMap() const      { return tileMap; }
 private:
     void SetupCollisionLayer();
+    void CalculateSpriteData();
     
     int                             tileSize;
     int                             rowCount;

@@ -96,7 +96,7 @@ void MainMenuState::ExitGame()
 
 void MainMenuState::StartGame()
 {
-    gameRef->ChangeState(new PlayState());
+    gameRef->ChangeState(PlayState::Instance());
 }
 
 

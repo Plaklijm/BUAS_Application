@@ -9,7 +9,7 @@
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
 
-Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40), world)
+Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPos, vec2(28,40), world)
 {
     stats = new PlayerStats();
 
@@ -28,6 +28,7 @@ Player::Player(InputManager* input, World* world) : Actor(vec2(32,0), vec2(28,40
     velocityAccumulator = {0, 0};
     //gravity = {0, .981f};
     canDoubleJump = true;
+    flipHorizontally = false;
 }
 
 Player::~Player()

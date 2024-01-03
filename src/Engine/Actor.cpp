@@ -1,6 +1,4 @@
 ﻿#include "Actor.h"
-
-#include "BoxCollider.h"
 #include "Collision.h"
 
 template <typename T> int sgn(T val) {
