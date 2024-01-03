@@ -1,10 +1,12 @@
 ﻿#include "Animation.h"
 
-Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop) :
+Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop, bool buffer) :
     sprite(sprite),
     loop(loop),
+    buffer(buffer),
     animationRate(animRate),
-    currentFrameIndex(0)
+    currentFrameIndex(0),
+    isRunning(true)
 {
     
 }
@@ -20,7 +22,11 @@ void Animation::UpdateAnimation()
             if (loop)
                 currentFrameIndex = 0;
             else
+            {
                 currentFrameIndex = sprite->Frames() -1;
+                if (buffer)
+                    isRunning = false;
+            }
         }
         timer.reset();
     }
@@ -32,6 +38,7 @@ void Animation::OnAnimationChange()
     // Reset animation
     timer.reset();
     currentFrameIndex = 0;
+    isRunning = true;
 }
 
 void Animation::RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const

@@ -240,6 +240,7 @@
     <Content Include="assets\map\planet3.png" />
     <Content Include="assets\map\planet4.png" />
     <Content Include="assets\map\planet5.png" />
+    <Content Include="assets\map\Space Background.png" />
     <Content Include="assets\mill.tga" />
     <Content Include="assets\minigun.tga" />
     <Content Include="assets\missile.tga" />
@@ -372,6 +373,7 @@
     <ClCompile Include="src\Engine\Solid.cpp" />
     <ClCompile Include="src\Engine\surface.cpp" />
     <ClCompile Include="src\Engine\template.cpp" />
+    <ClCompile Include="src\Map\ImageLayer.cpp" />
     <ClCompile Include="src\Map\MapParser.cpp" />
     <ClCompile Include="src\Map\ObjectLayer.cpp" />
     <ClCompile Include="src\Map\TileLayer.cpp" />
@@ -401,6 +403,7 @@
     <ClInclude Include="src\Engine\surface.h" />
     <ClInclude Include="src\Engine\template.h" />
     <ClInclude Include="src\Map\GameMap.h" />
+    <ClInclude Include="src\Map\ImageLayer.h" />
     <ClInclude Include="src\Map\Layer.h" />
     <ClInclude Include="src\Map\MapParser.h" />
     <ClInclude Include="src\Map\ObjectLayer.h" />

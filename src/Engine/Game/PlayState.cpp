@@ -6,6 +6,7 @@
 #include "../../Map/GameMap.h"
 #include "../src/Engine/Object.h"
 #include "../src/Player/player.h"
+#include "../src/Player/PlayerInventory.h"
 #include "../src/Map/World.h"
 #include "../src/Engine/InputManager.h"
 
@@ -19,6 +20,9 @@ void PlayState::Init(Tmpl8::Game* game)
     levelIndex = 1;
     InitializeWorld();
 
+    // One is created at the start of the playstate, this isn't done in the player
+    // Because when the player respawns a new player is created
+    inv = new PlayerInventory();
 
     gameRef->SetIsPlaying(true);
 }
@@ -46,7 +50,6 @@ void PlayState::Update(float deltaTime)
         player = nullptr;
         player = new Player(playerStartPos, InputManager::Instance(), world);
     }
-    
 }
 
 void PlayState::PhysUpdate(float pDeltaTime)
@@ -59,12 +62,18 @@ void PlayState::PhysUpdate(float pDeltaTime)
         switch (obj->GetType())
         {
         case PLAYEREND:
-            levelIndex++;
-            world->LoadMap(levelIndex);
-            InitializeWorld();
+            if (inv->HasCollectedAll(amountNeeded))
+            {
+                levelIndex++;
+                world->LoadMap(levelIndex);
+                InitializeWorld();
+                inv->Reset();
+            }
             break;
         case COLLECTABLE:
             world->Collect(obj);
+            inv->AddCollected();
+            player->Collect();
             break;
         default:
             break;
@@ -88,7 +97,10 @@ void PlayState::InitializeWorld()
     for (const auto layer : world->GetMap()->GetMapLayers())
     {
         if (layer->GetIsObjectLayer())
+        {
             allObjects = layer->GetObjectTiles();
+            amountNeeded = layer->GetCollectableCount();
+        }
     }
 
     char* sources[5] = {
@@ -117,6 +129,6 @@ void PlayState::InitializeWorld()
             break;
         }
     }
-
+    
     player = new Player(playerStartPos, InputManager::Instance(), world);
 }

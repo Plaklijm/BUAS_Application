@@ -17,10 +17,15 @@ void AnimationSystem::Update()
     animations[currentAnimID]->UpdateAnimation();
 }
 
+// TODO Add animation buffer, so for example if you want to play an animation only if the previous has finished, do it here
 void AnimationSystem::SetCurrentAnim(int id)
 {
     if (currentAnimID != id)
     {
+        if (animations[currentAnimID]->IsRunning())
+        {
+        }
+        
         currentAnimID = id;
         animations[currentAnimID]->OnAnimationChange();
     }

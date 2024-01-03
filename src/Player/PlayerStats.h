@@ -12,7 +12,8 @@ enum AnimationName
     RUN,
     IDLE,
     JUMP,
-    DOUBLEJUMP
+    DOUBLEJUMP,
+    COLLECT
 };
 
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS

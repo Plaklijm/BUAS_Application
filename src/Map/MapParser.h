@@ -7,6 +7,8 @@
 #include "TileLayer.h"
 #include "tinyxml/tinyxml.h"
 
+class ImageLayer;
+
 class MapParser
 {
 public:
@@ -21,6 +23,7 @@ private:
     static TileSet ParseTileSet(TiXmlElement* xmlTileSet);
     static TileLayer* ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& tileSets, int tileSize, int rowCount, int colCount);
     static ObjectLayer* ParseObjectLayer(TiXmlElement* xmlLayer, class World* world);
+    static ImageLayer* ParseImageLayer(TiXmlElement* xmlElement);
     
 private:
     MapParser();

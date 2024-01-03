@@ -20,6 +20,7 @@ public:
     bool GetIsObjectLayer() const                           { return objectLayer; }
     std::vector<class Solid*> GetCollisionTiles() const     { return collisionTiles; }
     std::vector<class Object*> GetObjectTiles() const       { return objectTiles; }
+    int GetCollectableCount() const                         { return collectableCount; }
     
     // Bit ugly but was the only place to put this function (I only have references to this class, not the derived one)
     void RemoveObject(const Object* obj);

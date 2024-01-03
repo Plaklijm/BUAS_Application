@@ -12,6 +12,7 @@ C:\DEV\CPP\BUAS\src\Engine\InputManager.cpp;C:\DEV\CPP\BUAS\Debug\InputManager.o
 C:\DEV\CPP\BUAS\src\Engine\Solid.cpp;C:\DEV\CPP\BUAS\Debug\Solid.obj
 C:\DEV\CPP\BUAS\src\Engine\surface.cpp;C:\DEV\CPP\BUAS\Debug\surface.obj
 C:\DEV\CPP\BUAS\src\Engine\template.cpp;C:\DEV\CPP\BUAS\Debug\template.obj
+C:\DEV\CPP\BUAS\src\Map\ImageLayer.cpp;C:\DEV\CPP\BUAS\Debug\ImageLayer.obj
 C:\DEV\CPP\BUAS\src\Map\MapParser.cpp;C:\DEV\CPP\BUAS\Debug\MapParser.obj
 C:\DEV\CPP\BUAS\src\Map\ObjectLayer.cpp;C:\DEV\CPP\BUAS\Debug\ObjectLayer.obj
 C:\DEV\CPP\BUAS\src\Map\TileLayer.cpp;C:\DEV\CPP\BUAS\Debug\TileLayer.obj
@@ -21,3 +22,4 @@ C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlerror.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmler
 C:\DEV\CPP\BUAS\src\Map\tinyxml\tinyxmlparser.cpp;C:\DEV\CPP\BUAS\Debug\tinyxmlparser.obj
 C:\DEV\CPP\BUAS\src\Map\World.cpp;C:\DEV\CPP\BUAS\Debug\World.obj
 C:\DEV\CPP\BUAS\src\Player\player.cpp;C:\DEV\CPP\BUAS\Debug\player.obj
+C:\DEV\CPP\BUAS\src\Player\PlayerInventory.cpp;C:\DEV\CPP\BUAS\Debug\PlayerInventory.obj

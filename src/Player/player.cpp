@@ -22,6 +22,7 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
     anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
     anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate(), false));
+    anim->AddAnim(COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false, true));
 
     anim->SetCurrentAnim(IDLE);
     //sprite->SetFrame(0);
@@ -123,6 +124,11 @@ void Player::RenderPlayer(Surface* screen)
     screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
 
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
+}
+
+void Player::Collect() const
+{
+    anim->SetCurrentAnim(COLLECT);
 }
 
 

@@ -66,6 +66,7 @@ public:
     void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
 
+    void Collect() const;
 private:
     void HandleAnimations();
     

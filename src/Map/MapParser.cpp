@@ -1,4 +1,6 @@
 ﻿#include "MapParser.h"
+
+#include "ImageLayer.h"
 #include "../src/Engine/Object.h"
 
 
@@ -54,6 +56,16 @@ void MapParser::Parse(const int mapID, const std::string& source, World* world)
     }
 
     auto* gameMap = new GameMap();
+
+    for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
+    {
+        if (e->Value() == std::string("imagelayer"))
+        {
+            ImageLayer* imageLayer = ParseImageLayer(e);
+            gameMap->mapLayers.push_back(imageLayer);
+        }
+    }
+
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
         if (e->Value() == std::string("layer"))
@@ -174,4 +186,16 @@ ObjectLayer* MapParser::ParseObjectLayer(TiXmlElement* xmlLayer, World* world)
     
     
     return layer;
+}
+
+ImageLayer* MapParser::ParseImageLayer(TiXmlElement* xmlElement)
+{
+    const auto image = xmlElement->FirstChildElement();
+    std::string img = image->Attribute("source");
+
+    std::string source = "assets/map/" + img;
+    char *csource = new char[source.length() + 1];
+    strcpy(csource, source.c_str());
+    
+    return new ImageLayer(csource);
 }

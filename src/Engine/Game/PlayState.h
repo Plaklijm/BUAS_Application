@@ -25,8 +25,10 @@ private:
     
     class Player* player;
     class World* world;
+    class PlayerInventory* inv;
 
     Tmpl8::vec2 playerStartPos;
 
     int levelIndex;
+    int amountNeeded;
 };
