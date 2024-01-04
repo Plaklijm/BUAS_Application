@@ -57,6 +57,7 @@ void MapParser::Parse(const int mapID, const std::string& source, World* world)
 
     auto* gameMap = new GameMap();
 
+    // TODO combine into one for loop
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
         if (e->Value() == std::string("imagelayer"))

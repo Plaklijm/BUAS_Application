@@ -6,6 +6,8 @@
 #include "../Engine/BoxCollider.h"
 #include "../Engine/InputManager.h"
 #include "PlayerStats.h"
+#include "../Map/GameMap.h"
+#include "../Engine/Object.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
 
@@ -16,20 +18,24 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     pInput = input;
 
     // Initialize Animation
-    anim = new AnimationSystem(stats->GetAnimRate());
+    anim = new AnimationSystem();
     anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
     anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
     anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
     anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate(), false));
-    anim->AddAnim(COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false, true));
-
-    anim->SetCurrentAnim(IDLE);
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .5f, false));
+    anim->AddAnim(COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
+    anim->AddAnim(PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
+    
+    currentAnimState = IDLE;
+    anim->SetCurrentAnim(currentAnimState);
     //sprite->SetFrame(0);
     velocityAccumulator = {0, 0};
     //gravity = {0, .981f};
     canDoubleJump = true;
     flipHorizontally = false;
+    isJumping = 0;
+    collect = false;
 }
 
 Player::~Player()
@@ -44,6 +50,7 @@ int currentFrame;
 int currentAnimFrameCount;
 
 bool dead = false;
+float collectTimer = 5;
 void Player::Update(float dt)
 {
     time += dt;
@@ -53,8 +60,7 @@ void Player::Update(float dt)
     right = pInput->KeyPressed(SDL_SCANCODE_D);
     // Set the horizontal input to -1 if left 1 if right and 0 if both left and right are pressed
     horizontalInput = right - left;
-
-
+    
     // TODO: Fix controller input and add Axis support for left right and crouch
     jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);
     jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);
@@ -70,7 +76,7 @@ void Player::Update(float dt)
         flipHorizontally = false;
     }
     
-    if (sprintPressed)
+    if (sprintPressed || isPushingObj || isPullingObj)
         maxSpeedX = stats->GetWalkSpeed();
     else
         maxSpeedX = stats->GetSprintSpeed();
@@ -81,41 +87,105 @@ void Player::Update(float dt)
         timeJumpWasPressed = time;
     }
 
-    if (GetCollisionNormal().y > 0)
-    {
+    if (GetCollisionNormalY().y > 0)
+    {   
         grounded = true;
         coyoteUsable = true;
         bufferedJumpUsable = true;
         endedJumpEarly = false;
         canDoubleJump = false;
+        isJumping = false;
     }
-    else if (GetCollisionNormal().y < 0)
+    else if (GetCollisionNormalY().y < 0)
     {
         // If you hit an ceiling zero out the velocity
         velocityAccumulator.y = 0;
+        grounded = false;
     }
     else
     {
         grounded = false;
         frameLeftGrounded = time;
     }
+
+    if (collect)
+    {
+        collectTimer -= dt;
+        if (collectTimer < 0)
+        {
+            collectTimer = 5;
+            collect = false;
+        }
+    }
+    
+    HandleAnimations();
     
     anim->Update();
 }
 
 void Player::UpdatePhysics(float dt)
 {
-    HandleAnimations();
     CalculateGravity(dt);
     HandleJump();
     CalculateDirectionalMovement(dt);
+    HandlePushObj();
     ApplyMovement();
 }
 
 void Player::HandleAnimations()
 {
-    if (grounded && !horizontalInput)
-        anim->SetCurrentAnim(IDLE);
+    // Set the correct animation according to the current state of the game
+    if (isJumping > 0)
+    {
+        if (isJumping == 1)
+            currentAnimState = JUMP;
+        else
+            currentAnimState = DOUBLEJUMP;
+    }
+    else
+    {
+        // Make sure the correct animation is played, so when we walk against a wall it will be idle etc
+        if (velocity.x != 0)
+        {
+            if (GetIsPushing())
+                currentAnimState = PUSH;
+            else if (abs(GetCollisionNormalX().x) == 0)
+            {
+                if (abs(GetCollisionNormalX().y) == 0)
+                    currentAnimState = sprintPressed ? WALK : RUN;
+                else
+                    currentAnimState = IDLE;
+            }
+            else
+                currentAnimState = IDLE;
+        }
+        else
+            currentAnimState = IDLE;
+    }
+
+    if (collect)
+    {
+        currentAnimState = COLLECT;
+    }
+    
+    anim->SetCurrentAnim(currentAnimState);
+}
+
+void Player::HandlePushObj()
+{
+    if (GetIsPushing())
+    {
+        const auto obj = GetPushAbleObject();
+        if (obj->GetType() == PUSHABLE)
+        {
+            printf("HI\n");
+            isPushingObj = true;
+            obj->MoveX(velocity.x, true);
+            return;
+        }
+    }
+
+    isPushingObj = false;
 }
 
 void Player::RenderPlayer(Surface* screen)
@@ -126,9 +196,9 @@ void Player::RenderPlayer(Surface* screen)
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
 
-void Player::Collect() const
+void Player::Collect()
 {
-    anim->SetCurrentAnim(COLLECT);
+    collect = true;
 }
 
 
@@ -179,7 +249,7 @@ void Player::HandleJump()
         coyoteUsable = false;
         
         // perform actual jump
-        anim->SetCurrentAnim(canDoubleJump ? DOUBLEJUMP : JUMP);
+        isJumping = canDoubleJump ? 2 : 1;
         canDoubleJump = !canDoubleJump;
         velocityAccumulator.y = canDoubleJump ? stats->GetJumpForce() : stats->GetDoubleJumpForce();
     }
@@ -215,6 +285,6 @@ void Player::CalculateDirectionalMovement(float dt)
 void Player::ApplyMovement()
 {
     velocity = velocityAccumulator;
-    MoveX(velocity.x);
+    MoveX(velocity.x, false);
     MoveY(velocity.y);
 }

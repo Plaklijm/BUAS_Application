@@ -1,7 +1,9 @@
 ﻿#pragma once
 
+#include "PlayerStats.h"
 #include "../Engine/Actor.h"
 #include "../Engine/template.h"
+#include "../Engine/surface.h"
 
 class InputManager;
 class AnimationSystem;
@@ -33,7 +35,6 @@ private:
     bool                        jumpDown{};
     bool                        jumpHeld{};
     bool                        sprintPressed{};
-    bool                        crouchPressed{};
     bool                        left{};
     bool                        right{};
 
@@ -45,17 +46,19 @@ private:
     bool                        flipHorizontally;
     bool                        grounded{};
     
-    bool                        isCrouched{};
-    float                       oldCrouchPosition{};
-
-    
     bool                        jumpToConsume{};
     bool                        bufferedJumpUsable{};
     bool                        endedJumpEarly{};
     bool                        coyoteUsable{};
     bool                        canDoubleJump{};
     float                       timeJumpWasPressed{};
+    bool                        collect;
 
+    bool                        isPushingObj{};
+    bool                        isPullingObj{};
+    AnimationName               currentAnimState;
+
+    int                         isJumping;
     //bool isFacingRight;
 public:
     Player(vec2 startPos, InputManager* input, World* world);
@@ -66,9 +69,11 @@ public:
     void UpdatePhysics(float dt);
     void RenderPlayer(Surface* screen);
 
-    void Collect() const;
+    void Collect();
 private:
     void HandleAnimations();
+
+    void HandlePushObj();
     
     void CalculateGravity(float dt);
     void HandleJump();

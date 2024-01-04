@@ -1,12 +1,11 @@
 ﻿#include "Object.h"
 
-#include "surface.h"
-
-Object::Object(vec2 position, vec2 size, World* world, Type type) : Tmpl8::Actor(position, size, world), type(type)
+Object::Object(vec2 position, vec2 size, World* world, Type type) : Actor(position, size, world), type(type)
 {
     sprite = nullptr;
     
 }
+
 
 void Object::Update(float dt)
 {

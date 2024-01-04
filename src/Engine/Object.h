@@ -1,5 +1,7 @@
 ﻿#pragma once
-#include "../src/Engine/Actor.h"
+#include "Actor.h"
+#include "surface.h"
+
 
 namespace Tmpl8
 {
@@ -11,12 +13,13 @@ enum Type
     PLAYERSTART = 0,
     PLAYEREND,
     COLLECTABLE,
+    PUSHABLE
 };
 
 class Object : public Actor
 {
 public:
-    Object(vec2 position, vec2 size, World* world, Type type);
+    Object(vec2 position, vec2 size, class World* world, Type type);
     
     void Update(float dt);
     

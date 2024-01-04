@@ -1,8 +1,9 @@
 ﻿#pragma once
 #include "template.h"
-#include "../Map/World.h"
 #include "BoxCollider.h"
+#include "../Map/World.h"
 
+class Solid;
 using namespace Tmpl8;
 
 /**
@@ -11,33 +12,37 @@ using namespace Tmpl8;
  * Some elements are directly copied like the way movement is handled in the MoveX and MoveY functions
  * This was also a handy guideline because the plan from the beginning was to make something inspired by the celeste Movement
  */
-namespace Tmpl8
-{
 class Actor
 {
 protected:
-    void MoveX(float amount);
-    void MoveY(float amount);
     
-    World* world;
+    class World* world;
 public:
+    void MoveX(float amount, bool onlySolids);
+    void MoveY(float amount);
+
     Actor(vec2 position, vec2 size, class World* world);
 
     vec2 GetPosition() const            { return position; }
     BoxCollider* GetCollider() const    { return hitBox; }
-    vec2 GetCollisionNormal() const     { return collisionNormal; }
-    
+    vec2 GetCollisionNormalX() const    { return collisionNormalX; }
+    vec2 GetCollisionNormalY() const    { return collisionNormalY; }
+    bool GetIsPushing() const           { return isPushing; }
+    Object* GetPushAbleObject() const   { return pushableObject; }
 private:
     void OnCollideX();
     void OnCollideY();
-    
+        
     float xRemainder{};
     float yRemainder{};
     
     vec2 position = vec2::Zero();
-    vec2 collisionNormal = vec2::Zero();
+    vec2 collisionNormalX = vec2::Zero();
+    vec2 collisionNormalY = vec2::Zero();
     int collectableType = 0;
+    bool isPushing{};
+    Object* pushableObject = nullptr;
     BoxCollider* hitBox;
 };
-    
-}
+
+

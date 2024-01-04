@@ -284,85 +284,12 @@
     <Content Include="assets\ui\sprites\Save.png" />
     <Content Include="assets\ui\sprites\Settings.png" />
     <Content Include="assets\ui\sprites\Start.png" />
+    <Content Include="tmpl_2019-08_x64_debug.exe" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.cpp" />
     <ClCompile Include="src\Animation\AnimationSystem.cpp" />
     <ClCompile Include="src\Engine\Actor.cpp" />
-    <ClCompile Include="src\Engine\Object.cpp">
-      <AssemblerOutput>NoListing</AssemblerOutput>
-      <AssemblerListingLocation>Debug\</AssemblerListingLocation>
-      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
-      <BrowseInformation>false</BrowseInformation>
-      <BrowseInformationFile>Debug\</BrowseInformationFile>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <CompileAs>Default</CompileAs>
-      <ConformanceMode>Default</ConformanceMode>
-      <DiagnosticsFormat>Column</DiagnosticsFormat>
-      <DisableLanguageExtensions>false</DisableLanguageExtensions>
-      <ErrorReporting>Prompt</ErrorReporting>
-      <ExpandAttributedSource>false</ExpandAttributedSource>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <EnableASAN>false</EnableASAN>
-      <EnableFuzzer>false</EnableFuzzer>
-      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
-      <GenerateModuleDependencies>false</GenerateModuleDependencies>
-      <GenerateSourceDependencies>false</GenerateSourceDependencies>
-      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <IntrinsicFunctions>false</IntrinsicFunctions>
-      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <LanguageStandard>Default</LanguageStandard>
-      <LanguageStandard_C>Default</LanguageStandard_C>
-      <MinimalRebuild>false</MinimalRebuild>
-      <ModuleDependenciesFile>Debug\</ModuleDependenciesFile>
-      <ModuleOutputFile>Debug\</ModuleOutputFile>
-      <OmitDefaultLibName>false</OmitDefaultLibName>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-      <WholeProgramOptimization>false</WholeProgramOptimization>
-      <Optimization>Disabled</Optimization>
-      <ObjectFileName>Debug\</ObjectFileName>
-      <CallingConvention>Cdecl</CallingConvention>
-      <ProgramDataBaseFileName>Debug\vc143.pdb</ProgramDataBaseFileName>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>Debug\tmpl_2019-08_x64_debug.pch</PrecompiledHeaderOutputFile>
-      <PreprocessToFile>false</PreprocessToFile>
-      <PreprocessKeepComments>false</PreprocessKeepComments>
-      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
-      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
-      <ShowIncludes>false</ShowIncludes>
-      <SourceDependenciesFile>Debug\</SourceDependenciesFile>
-      <SuppressStartupBanner>true</SuppressStartupBanner>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
-      <SmallerTypeCheck>false</SmallerTypeCheck>
-      <SpectreMitigation>false</SpectreMitigation>
-      <StructMemberAlignment>Default</StructMemberAlignment>
-      <SupportJustMyCode>false</SupportJustMyCode>
-      <TrackerLogDirectory>Debug\tmpl_2019-08.tlog\</TrackerLogDirectory>
-      <TranslateIncludes>false</TranslateIncludes>
-      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
-      <TreatWarningAsError>false</TreatWarningAsError>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <UseFullPaths>true</UseFullPaths>
-      <WarningLevel>Level3</WarningLevel>
-      <XMLDocumentationFileName>Debug\</XMLDocumentationFileName>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <IntelJCCErratum>false</IntelJCCErratum>
-      <BuildStlModules>false</BuildStlModules>
-      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
-      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
-      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
-      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
-      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;</PreprocessorDefinitions>
-      <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
     <ClCompile Include="src\Engine\Collision.cpp" />
     <ClCompile Include="src\Engine\Game\Button.cpp" />
     <ClCompile Include="src\Engine\Game\game.cpp" />
@@ -370,6 +297,7 @@
     <ClCompile Include="src\Engine\Game\PauseState.cpp" />
     <ClCompile Include="src\Engine\Game\PlayState.cpp" />
     <ClCompile Include="src\Engine\InputManager.cpp" />
+    <ClCompile Include="src\Engine\Object.cpp" />
     <ClCompile Include="src\Engine\Solid.cpp" />
     <ClCompile Include="src\Engine\surface.cpp" />
     <ClCompile Include="src\Engine\template.cpp" />
@@ -390,7 +318,6 @@
     <ClInclude Include="src\Animation\AnimationSystem.h" />
     <ClInclude Include="src\Engine\Actor.h" />
     <ClInclude Include="src\Engine\BoxCollider.h" />
-    <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Collision.h" />
     <ClInclude Include="src\Engine\Game\Button.h" />
     <ClInclude Include="src\Engine\Game\game.h" />
@@ -399,6 +326,7 @@
     <ClInclude Include="src\Engine\Game\PlayState.h" />
     <ClInclude Include="src\Engine\Game\State.h" />
     <ClInclude Include="src\Engine\InputManager.h" />
+    <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Solid.h" />
     <ClInclude Include="src\Engine\surface.h" />
     <ClInclude Include="src\Engine\template.h" />

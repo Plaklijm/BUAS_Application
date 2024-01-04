@@ -13,7 +13,9 @@ enum AnimationName
     IDLE,
     JUMP,
     DOUBLEJUMP,
-    COLLECT
+    COLLECT,
+    PUSH,
+    PULL
 };
 
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS
@@ -39,18 +41,18 @@ public:
 private:
     // Statistics of the player movement
     // TODO: Figure out the variable amount of each one
-    float           maxFallSpeed        { 17.5f };
-    float           walkSpeed           { 3.f };
-    float           sprintSpeed         { 6.25f };
-    float           acceleration        { 80.f };
-    float           fallAcceleration    { 85.f };
+    float           maxFallSpeed        { 16.5f };
+    float           walkSpeed           { 2.f };
+    float           sprintSpeed         { 5.f };
+    float           acceleration        { 60.f };
+    float           fallAcceleration    { 60.f };
     float           groundFriction      { 50.f };
     float           airFriction         { 20.f };
-    float           jumpForce           { -18.f };
-    float           doubleJumpForce     { -15.f };
+    float           jumpForce           { -14.f };
+    float           doubleJumpForce     { -12.f };
     float           coyoteTime          { .15f };
     float           jumpBuffer          { .15f };
 
-    float           animRate            { 75.f };
+    float           animRate            { 90.f };
     float           spriteOffset        { 10.f };
 };

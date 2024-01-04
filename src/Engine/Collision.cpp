@@ -11,7 +11,7 @@
 // This collision class is made to extend the functionality of the SDL_Intersect functions by adding normal detection and offset.
 // These functions work with the SDL collision functions because they are pretty robust and good enough for my needs,
 // therefore I didn't see the necessity to write my own collision functions if they are already provided.
-bool Collision::RectIntersect(const SDL_Rect* a, const SDL_Rect* b, Tmpl8::vec2& normal)
+bool Collision::RectIntersect(const SDL_Rect* a, const SDL_Rect* b, vec2& normal)
 {
     // temporary variable to calculate the direction with
     SDL_Rect result{};
@@ -45,14 +45,14 @@ bool Collision::RectIntersect(const SDL_Rect* a, const SDL_Rect* b, Tmpl8::vec2&
     return false; 
 }
 
-bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::vec2& normal, const World* world)
+bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world)
 {
     // Create a new SDL_Rect with the same properties as the a rect
     auto aWithOffset = *a;
     // Add the given offset to the rect
     aWithOffset.x += static_cast<int>(aOffset.x);
     aWithOffset.y += static_cast<int>(aOffset.y);
-        
+
     const auto map = world->GetMap();
     std::vector<Solid*> allSolids;
     std::vector<Object*> allObjects;
@@ -62,9 +62,11 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::v
         if (layer->GetIsCollidable())
         {
             allSolids = layer->GetCollisionTiles();
+            break;
         }
     }
     
+    vec2 accumulatedNormal = vec2::Zero();
     // Check for all the solids in the level if there was a collision
     for (const auto solid : allSolids)
     {
@@ -73,35 +75,55 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, Tmpl8::vec2 aOffset, Tmpl8::v
         SDL_Rect result{};
         // if no intersection has occured skip calculation of normal
         if(!SDL_IntersectRect(&aWithOffset, &solid->GetCollider()->GetHitBox(), &result)) continue;
-            
+        
         // Collision has occurred, now to determine the collision normal
         const auto dx = a->x + a->w / 2 - (result.x + result.w / 2);
         const auto dy = a->y + a->h / 2 - (result.y + result.h / 2);
 
         // Check if the collision is more horizontal or more vertical
+        // Add to the collision normal (this means we can get the composite, so if you are colliding left and down)
+        // BUG: when colliding with the top half of the player it wil register as vec2::Up(), im not entirely sure why this happens
+        // BUG: but I solved it with separating the X and Y normals in solo variables. Isn't ideal but i only need bottom half collision anyway
         if (abs(dx) > abs(dy))
         {
             // Horizontal collision
-            if (dx > 0) 
-                normal = vec2::Right();
-            else 
-                normal = vec2::Left();
+            accumulatedNormal += (dx > 0) ? vec2::Right() : vec2::Left();
         }
         else
         {
             // Vertical collision
-            if (dy > 0)
-                normal = vec2::Down();
-            else
-                normal = vec2::Up();
+            accumulatedNormal += (dy > 0) ? vec2::Down() : vec2::Up();
         }
+
         
+        normal = accumulatedNormal;
         return true;
     }
 
     // no collision, so false and no normal are returned
-    normal = Tmpl8::vec2::Zero();
+    normal = vec2::Zero();
     return false; 
+}
+
+// OVERLOADED VERSION OF THE NORMAL ONE WHERE WE HANDLE THE ISPUSHING BOOL
+bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world, bool& isPushing, Object*& pushAbleObject)
+{
+    auto aWithOffset = *a;
+    // Add the given offset to the rect
+    aWithOffset.x += static_cast<int>(aOffset.x);
+    aWithOffset.y += static_cast<int>(aOffset.y);
+    
+    isPushing = false;
+
+    // using the offset to prevent the player from getting stuck (the offset rect gets calculated again in the other func tho)
+    pushAbleObject = RectIntersectObjects(&aWithOffset, world);
+    if (pushAbleObject != nullptr && pushAbleObject->GetType() == PUSHABLE)
+    {
+        isPushing = true;
+        return true;
+    }
+
+    return RectIntersectAt(a, aOffset, normal, world);
 }
 
 Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
@@ -114,6 +136,7 @@ Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
         if (layer->GetIsObjectLayer())
         {
             allObjects = layer->GetObjectTiles();
+            break;
         }
     }
 

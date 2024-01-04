@@ -1,6 +1,6 @@
 ﻿#include "AnimationSystem.h"
 
-AnimationSystem::AnimationSystem(float animRate) : animationRate(animRate), frameToPlay(0), currentAnimID()
+AnimationSystem::AnimationSystem() : currentAnimID()
 {
 }
 
