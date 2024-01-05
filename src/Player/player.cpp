@@ -20,23 +20,25 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
 
     // Initialize Animation
     anim = new AnimationSystem();
-    anim->AddAnim(IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
-    anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
-    anim->AddAnim(COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
-    anim->AddAnim(PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
-    
-    currentAnimState = IDLE;
+    anim->AddAnim(a_IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(a_WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(a_RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(a_JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
+    anim->AddAnim(a_DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
+    anim->AddAnim(a_COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
+    anim->AddAnim(a_PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
+
+    currentAnimState = a_IDLE;
     anim->SetCurrentAnim(currentAnimState);
-    //sprite->SetFrame(0);
+
+    // Initialize variables    
     velocityAccumulator = {0, 0};
-    //gravity = {0, .981f};
     canDoubleJump = true;
     flipHorizontally = false;
     isJumping = 0;
     collect = false;
+    stepTimer.reset();
+    stepInterval = 400.f;
 }
 
 Player::~Player()
@@ -119,6 +121,15 @@ void Player::Update(float dt)
         }
     }
     
+    if (grounded)
+    {
+        if (stepTimer.elapsed() > stepInterval && abs(horizontalInput) > 0)
+        {
+            stepTimer.reset();
+            SoundManager::Instance()->PlaySound(s_WALK);
+        }  
+    }
+    
     HandleAnimations();
     
     anim->Update();
@@ -139,34 +150,41 @@ void Player::HandleAnimations()
     if (isJumping > 0)
     {
         if (isJumping == 1)
-            currentAnimState = JUMP;
+            currentAnimState = a_JUMP;
         else
-            currentAnimState = DOUBLEJUMP;
+            currentAnimState = a_DOUBLEJUMP;
     }
     else
     {
         // Make sure the correct animation is played, so when we walk against a wall it will be idle etc
+        // Because the wall hit etc is already calculated here I also use it to stop the player from playing any stepsounds
         if (velocity.x != 0)
         {
             if (GetIsPushing())
-                currentAnimState = PUSH;
+                currentAnimState = a_PUSH;
             else if (abs(GetCollisionNormalX().x) == 0)
             {
                 if (abs(GetCollisionNormalX().y) == 0)
-                    currentAnimState = sprintPressed ? WALK : RUN;
+                    currentAnimState = sprintPressed ? a_WALK : a_RUN;
                 else
-                    currentAnimState = IDLE;
+                {
+                    currentAnimState = a_IDLE;
+                    stepTimer.reset();
+                }
             }
             else
-                currentAnimState = IDLE;
+            {
+                currentAnimState = a_IDLE;
+                stepTimer.reset();
+            }
         }
         else
-            currentAnimState = IDLE;
+            currentAnimState = a_IDLE;
     }
 
     if (collect)
     {
-        currentAnimState = COLLECT;
+        currentAnimState = a_COLLECT;
     }
     
     anim->SetCurrentAnim(currentAnimState);
@@ -199,8 +217,8 @@ void Player::RenderPlayer(Surface* screen)
 
 void Player::Collect()
 {
+    SoundManager::Instance()->PlaySound(s_COLLECT);
     collect = true;
-    SoundManager::Instance()->PlaySound(1);
 }
 
 
@@ -251,6 +269,7 @@ void Player::HandleJump()
         coyoteUsable = false;
         
         // perform actual jump
+        SoundManager::Instance()->PlaySound(canDoubleJump? s_DOUBLEJUMP : s_JUMP);
         isJumping = canDoubleJump ? 2 : 1;
         canDoubleJump = !canDoubleJump;
         velocityAccumulator.y = canDoubleJump ? stats->GetJumpForce() : stats->GetDoubleJumpForce();

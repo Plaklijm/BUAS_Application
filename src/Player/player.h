@@ -59,6 +59,9 @@ private:
     AnimationName               currentAnimState;
 
     int                         isJumping;
+
+    timer                       stepTimer;
+    float                       stepInterval;
     //bool isFacingRight;
 public:
     Player(vec2 startPos, InputManager* input, World* world);
