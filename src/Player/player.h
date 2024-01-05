@@ -35,8 +35,7 @@ private:
     bool                        jumpDown{};
     bool                        jumpHeld{};
     bool                        sprintPressed{};
-    bool                        left{};
-    bool                        right{};
+    bool                        moveObjectPressed{};
 
     // movement variables
     vec2                        velocityAccumulator;

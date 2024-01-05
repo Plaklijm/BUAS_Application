@@ -75,7 +75,8 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, c
         SDL_Rect result{};
         // if no intersection has occured skip calculation of normal
         if(!SDL_IntersectRect(&aWithOffset, &solid->GetCollider()->GetHitBox(), &result)) continue;
-        
+
+        // TODO HELPER FUNCTION THAT CALCULATES THE NORMAL
         // Collision has occurred, now to determine the collision normal
         const auto dx = a->x + a->w / 2 - (result.x + result.w / 2);
         const auto dy = a->y + a->h / 2 - (result.y + result.h / 2);
@@ -105,27 +106,6 @@ bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, c
     return false; 
 }
 
-// OVERLOADED VERSION OF THE NORMAL ONE WHERE WE HANDLE THE ISPUSHING BOOL
-bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world, bool& isPushing, Object*& pushAbleObject)
-{
-    auto aWithOffset = *a;
-    // Add the given offset to the rect
-    aWithOffset.x += static_cast<int>(aOffset.x);
-    aWithOffset.y += static_cast<int>(aOffset.y);
-    
-    isPushing = false;
-
-    // using the offset to prevent the player from getting stuck (the offset rect gets calculated again in the other func tho)
-    pushAbleObject = RectIntersectObjects(&aWithOffset, world);
-    if (pushAbleObject != nullptr && pushAbleObject->GetType() == PUSHABLE)
-    {
-        isPushing = true;
-        return true;
-    }
-
-    return RectIntersectAt(a, aOffset, normal, world);
-}
-
 Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
 {
     const auto map = world->GetMap();
@@ -148,5 +128,55 @@ Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
             return collectable;
     }
 
+    return nullptr;
+}
+
+// OVERLOADED VERSION WITH AND OFFSET & COLLISION NORMAL PARAM
+Object* Collision::RectIntersectObjects(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world)
+{
+    auto aWithOffset = *a;
+    aWithOffset.x += static_cast<int>(aOffset.x);
+    aWithOffset.y += static_cast<int>(aOffset.y);
+    
+    const auto map = world->GetMap();
+    std::vector<Object*> allObjects;
+    
+    for (const auto layer : map->GetMapLayers())
+    {
+        if (layer->GetIsObjectLayer())
+        {
+            allObjects = layer->GetObjectTiles();
+            break;
+        }
+    }
+    
+    vec2 accumulatedNormal = vec2::Zero();
+    for (const auto collectable : allObjects)
+    {
+        SDL_Rect result{};
+        if (!SDL_IntersectRect(&aWithOffset, &collectable->GetCollider()->GetHitBox(), &result)) continue;
+
+        const auto dx = a->x + a->w / 2 - (result.x + result.w / 2);
+        const auto dy = a->y + a->h / 2 - (result.y + result.h / 2);
+        
+        if (abs(dx) > abs(dy))
+        {
+            // Horizontal collision
+            accumulatedNormal += (dx > 0) ? vec2::Right() : vec2::Left();
+        }
+        else
+        {
+            // Vertical collision
+            accumulatedNormal += (dy > 0) ? vec2::Down() : vec2::Up();
+        }
+        
+        if (collectable->GetType() >= PLAYEREND)
+        {
+            normal = accumulatedNormal;
+            return collectable;
+        }
+    }
+    
+    normal = vec2::Zero();
     return nullptr;
 }

@@ -2,6 +2,7 @@
 #include "template.h"
 #include "BoxCollider.h"
 #include "../Map/World.h"
+#include "Collision.h"
 
 class Solid;
 using namespace Tmpl8;
@@ -18,7 +19,7 @@ protected:
     
     class World* world;
 public:
-    void MoveX(float amount, bool onlySolids);
+    void MoveX(float amount, bool ignoreObjects);
     void MoveY(float amount);
 
     Actor(vec2 position, vec2 size, class World* world);
@@ -27,8 +28,7 @@ public:
     BoxCollider* GetCollider() const    { return hitBox; }
     vec2 GetCollisionNormalX() const    { return collisionNormalX; }
     vec2 GetCollisionNormalY() const    { return collisionNormalY; }
-    bool GetIsPushing() const           { return isPushing; }
-    Object* GetPushAbleObject() const   { return pushableObject; }
+
 private:
     void OnCollideX();
     void OnCollideY();
@@ -40,8 +40,6 @@ private:
     vec2 collisionNormalX = vec2::Zero();
     vec2 collisionNormalY = vec2::Zero();
     int collectableType = 0;
-    bool isPushing{};
-    Object* pushableObject = nullptr;
     BoxCollider* hitBox;
 };
 

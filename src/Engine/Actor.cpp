@@ -1,6 +1,6 @@
 ﻿#include "Actor.h"
-#include "Collision.h"
 
+#include "Object.h"
 
 Actor::Actor(vec2 position, vec2 size, World* world) : world(world), position(position),
                                                        hitBox(new BoxCollider(position, size))
@@ -8,7 +8,7 @@ Actor::Actor(vec2 position, vec2 size, World* world) : world(world), position(po
 }
 
 // Ill explain the guts in this function, but the same applies to the MoveY function
-void Actor::MoveX(float amount, bool onlySolids)
+void Actor::MoveX(float amount, bool ignoreObjects)
 {
     // Actors dont have the concept of velocity, acceleration etc, so a movement amount is passed in
     // The movement amount is put into a collector variable, the fractional remainders get carried to the next frame
@@ -25,44 +25,30 @@ void Actor::MoveX(float amount, bool onlySolids)
         // Move the actor
         while (move != 0)
         {
-            if (!onlySolids)
+            if (!ignoreObjects)
             {
-                // check if the next pixel is free to move at with the isPushing (only need to check the isPushing in the X direction)
-                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),collisionNormalX, world, isPushing, pushableObject))
-                {
-                    // There is no solid in the way that would prevent us from moving there.
-                    // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
-                    position.x += sign;
-                    move -= sign;
-                    hitBox->SetPosition(position);
-                }
-                // the next pixel is a solid so we halt the movement
-                else
+                const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), vec2(sign, 0), collisionNormalX, world);
+                if (obj != nullptr && obj->GetType() == PUSHABLE)
                 {
                     OnCollideX();
                     break;
                 }
             }
+            // check if the next pixel is free to move at with the isPushing (only need to check the isPushing in the X direction)
+            if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),collisionNormalX, world))
+            {
+                // There is no solid in the way that would prevent us from moving there.
+                // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
+                position.x += sign;
+                move -= sign;
+                hitBox->SetPosition(position);
+            }
+            // the next pixel is a solid so we halt the movement
             else
             {
-                // check if the next pixel is free to move at with the isPushing (only need to check the isPushing in the X direction)
-                if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),collisionNormalX, world, isPushing, pushableObject))
-                {
-                    // There is no solid in the way that would prevent us from moving there.
-                    // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
-                    position.x += sign;
-                    move -= sign;
-                    hitBox->SetPosition(position);
-                }
-                // the next pixel is a solid so we halt the movement
-                else
-                {
-                    OnCollideX();
-                    break;
-                }
+                OnCollideX();
+                break;
             }
-
-
         }
     }
 }
@@ -77,6 +63,12 @@ void Actor::MoveY(float amount)
         int sign = sgn(move);
         while (move != 0)
         {
+            const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), vec2(0, sign), collisionNormalY, world);
+            if (obj != nullptr && obj->GetType() == PUSHABLE)
+            {
+                OnCollideY();
+                break;
+            }
             // check if the next pixel is free to move at
             if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(0, sign),collisionNormalY, world))
             {

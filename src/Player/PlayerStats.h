@@ -12,7 +12,8 @@ enum AnimationName
     a_JUMP,
     a_DOUBLEJUMP,
     a_COLLECT,
-    a_PUSH
+    a_PUSH,
+    a_PULL
 };
 
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS

@@ -5,7 +5,6 @@
 
 #include "MainMenuState.h"
 #include "PauseState.h"
-#include "PlayState.h"
 #include "../SoundManager.h"
 #include "../src/Engine/InputManager.h"
 #include "../surface.h"
@@ -91,19 +90,19 @@ namespace Tmpl8
 		// clear the graphics window
 		screen->Clear(0);
 		
-		// log the current FPS
-		std::string fps = "Current FPS: " + std::to_string(1.0f / dt);
-		char *cfps = new char[fps.length() + 1];
-		strcpy(cfps, fps.c_str());
-		screen->Print(cfps, 2, 2, 0xffffff);
-		delete [] cfps;
-		
 		// Render
 		for (const auto state : states)
 		{
 			// Renders all states, done this way to display the game world behind the pauseMenu state
 			state->Render(screen);
 		}
+
+		// log the current FPS
+		std::string fps = "Current FPS: " + std::to_string(1.0f / dt);
+		char *cfps = new char[fps.length() + 1];
+		strcpy(cfps, fps.c_str());
+		screen->Print(cfps, 2, 2, 0xffffff);
+		delete [] cfps;
 	}
 
 	void Game::ChangeState(State* state)

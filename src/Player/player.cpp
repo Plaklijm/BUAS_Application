@@ -11,7 +11,7 @@
 #include "../Engine/SoundManager.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
-
+SDL_Rect pushCol;
 Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPos, vec2(28,40), world)
 {
     stats = new PlayerStats();
@@ -27,7 +27,8 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     anim->AddAnim(a_DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
     anim->AddAnim(a_COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
     anim->AddAnim(a_PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
-
+    anim->AddAnim(a_PULL, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pull.png"), 6), stats->GetAnimRate()));
+    
     currentAnimState = a_IDLE;
     anim->SetCurrentAnim(currentAnimState);
 
@@ -39,6 +40,10 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     collect = false;
     stepTimer.reset();
     stepInterval = 400.f;
+    pushCol.w = 48;
+    pushCol.h = 20;
+    isPushingObj = false;
+    isPullingObj = false;
 }
 
 Player::~Player()
@@ -56,11 +61,12 @@ bool dead = false;
 float collectTimer = .3f;
 void Player::Update(float dt)
 {
+    // TODO: Fix this update method PLS :D
     time += dt;
 
     // Handle input
-    left = pInput->KeyPressed(SDL_SCANCODE_A);
-    right = pInput->KeyPressed(SDL_SCANCODE_D);
+    const auto left = pInput->KeyPressed(SDL_SCANCODE_A);
+    const auto right = pInput->KeyPressed(SDL_SCANCODE_D);
     // Set the horizontal input to -1 if left 1 if right and 0 if both left and right are pressed
     horizontalInput = right - left;
     
@@ -69,15 +75,8 @@ void Player::Update(float dt)
     jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);
 
     sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);
-    
-    if (left)
-    {
-        flipHorizontally = true;
-    }
-    else if (right)
-    {
-        flipHorizontally = false;
-    }
+
+    moveObjectPressed = pInput->KeyPressed(SDL_SCANCODE_E);
     
     if (sprintPressed || isPushingObj || isPullingObj)
         maxSpeedX = stats->GetWalkSpeed();
@@ -130,13 +129,14 @@ void Player::Update(float dt)
         }  
     }
     
-    HandleAnimations();
+
     
     anim->Update();
 }
 
 void Player::UpdatePhysics(float dt)
 {
+    HandleAnimations();
     CalculateGravity(dt);
     HandleJump();
     CalculateDirectionalMovement(dt);
@@ -146,6 +146,11 @@ void Player::UpdatePhysics(float dt)
 
 void Player::HandleAnimations()
 {
+    if (horizontalInput < 0 && (!isPushingObj || !isPullingObj))
+        flipHorizontally = true;
+    if (horizontalInput > 0 && (!isPushingObj || !isPullingObj))
+        flipHorizontally = false;
+    
     // Set the correct animation according to the current state of the game
     if (isJumping > 0)
     {
@@ -160,9 +165,7 @@ void Player::HandleAnimations()
         // Because the wall hit etc is already calculated here I also use it to stop the player from playing any stepsounds
         if (velocity.x != 0)
         {
-            if (GetIsPushing())
-                currentAnimState = a_PUSH;
-            else if (abs(GetCollisionNormalX().x) == 0)
+            if (abs(GetCollisionNormalX().x) == 0)
             {
                 if (abs(GetCollisionNormalX().y) == 0)
                     currentAnimState = sprintPressed ? a_WALK : a_RUN;
@@ -186,25 +189,68 @@ void Player::HandleAnimations()
     {
         currentAnimState = a_COLLECT;
     }
+
+    if (isPushingObj)
+    {
+        currentAnimState = a_PUSH;
+    }
+    else if (isPullingObj)
+    {
+        currentAnimState = a_PULL;
+    }
     
     anim->SetCurrentAnim(currentAnimState);
 }
 
+
 void Player::HandlePushObj()
 {
-    if (GetIsPushing())
+    // TODO CLEANUP FUNCTION
+    vec2 normal;
+    // using the offset to prevent the player from getting stuck (the offset rect gets calculated again in the other func tho)
+    const auto pushAbleObject = Collision::RectIntersectObjects(&pushCol, vec2(0,0), normal, world);
+    if (pushAbleObject != nullptr && pushAbleObject->GetType() == PUSHABLE)
     {
-        const auto obj = GetPushAbleObject();
-        if (obj->GetType() == PUSHABLE)
+        if (moveObjectPressed && abs(horizontalInput) > 0)
         {
-            printf("HI\n");
-            isPushingObj = true;
-            obj->MoveX(velocity.x, true);
+            printf("%f\n", normal.x);
+            if (normal.x > 0)
+            {
+                if (horizontalInput < 0)
+                {
+                    isPushingObj = true;
+                    isPullingObj = false;
+                }
+                else if (horizontalInput > 0)
+                {
+                    isPullingObj = true;
+                    isPushingObj = false;
+                }
+
+                flipHorizontally = true;
+            }
+            if (normal.x < 0)
+            {
+                if (horizontalInput < 0)
+                {
+                    isPullingObj = true;
+                    isPushingObj = false;
+                }
+                else if (horizontalInput > 0)
+                {
+                    isPushingObj = true;
+                    isPullingObj = false;
+                }
+                flipHorizontally = false;
+            }
+
+            pushAbleObject->MoveX(velocity.x, true);
             return;
         }
     }
-
+    
     isPushingObj = false;
+    isPullingObj = false;
 }
 
 void Player::RenderPlayer(Surface* screen)
@@ -212,6 +258,9 @@ void Player::RenderPlayer(Surface* screen)
     const auto b1 = GetCollider()->GetHitBox();
     screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
 
+    const auto b2 = pushCol;
+    screen->Box(b2.x, b2.y, b2.x + b2.w, b2.y + b2.h, 0xffffff);
+    
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
 
@@ -308,4 +357,6 @@ void Player::ApplyMovement()
     velocity = velocityAccumulator;
     MoveX(velocity.x, false);
     MoveY(velocity.y);
+    pushCol.x = GetPosition().x - stats->GetSpriteOffset();
+    pushCol.y = GetPosition().y + stats->GetSpriteOffset();
 }
