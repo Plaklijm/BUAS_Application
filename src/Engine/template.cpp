@@ -10,7 +10,7 @@
 #pragma warning (disable : 4311) // pointer truncation from HANDLE to long
 #endif
 
-#define FULLSCREEN
+//#define FULLSCREEN
 //#define ADVANCEDGL
 
 
@@ -312,7 +312,7 @@ int main( int argc, char **argv )
 		return 1;
 #endif
 	printf( "application started.\n" );
-	SDL_Init( SDL_INIT_EVERYTHING );
+	SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO );
 
 #ifdef ADVANCEDGL
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);

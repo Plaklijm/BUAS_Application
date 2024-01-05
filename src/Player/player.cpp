@@ -8,6 +8,7 @@
 #include "PlayerStats.h"
 #include "../Map/GameMap.h"
 #include "../Engine/Object.h"
+#include "../Engine/SoundManager.h"
 
 // https://www.myphysicslab.com/engine2D/rigid-body-en.html
 
@@ -23,7 +24,7 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     anim->AddAnim(WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
     anim->AddAnim(RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
     anim->AddAnim(JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .5f, false));
+    anim->AddAnim(DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
     anim->AddAnim(COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
     anim->AddAnim(PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
     
@@ -50,7 +51,7 @@ int currentFrame;
 int currentAnimFrameCount;
 
 bool dead = false;
-float collectTimer = 5;
+float collectTimer = .3f;
 void Player::Update(float dt)
 {
     time += dt;
@@ -113,7 +114,7 @@ void Player::Update(float dt)
         collectTimer -= dt;
         if (collectTimer < 0)
         {
-            collectTimer = 5;
+            collectTimer = .3f;
             collect = false;
         }
     }
@@ -199,6 +200,7 @@ void Player::RenderPlayer(Surface* screen)
 void Player::Collect()
 {
     collect = true;
+    SoundManager::Instance()->PlaySound(1);
 }
 
 

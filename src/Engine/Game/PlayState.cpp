@@ -9,6 +9,7 @@
 #include "../src/Player/PlayerInventory.h"
 #include "../src/Map/World.h"
 #include "../src/Engine/InputManager.h"
+#include "../src/Engine/SoundManager.h"
 
 PlayState PlayState::playState;
 
@@ -25,6 +26,8 @@ void PlayState::Init(Tmpl8::Game* game)
     inv = new PlayerInventory();
 
     gameRef->SetIsPlaying(true);
+
+    SoundManager::Instance()->PlaySound(0);
 }
 
 void PlayState::Exit()

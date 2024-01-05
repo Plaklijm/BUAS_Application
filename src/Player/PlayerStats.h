@@ -1,9 +1,7 @@
 ﻿#pragma once
-#include <map>
 
 // Hardcoded stats of the player. These values never change and need to be set before compiling the game
 // This is done this way to clean up the player class and to have a clear distinction between 'hard' values and 'soft' values
-
 
 // ANIMATION
 enum AnimationName
@@ -45,7 +43,7 @@ private:
     float           walkSpeed           { 2.f };
     float           sprintSpeed         { 5.f };
     float           acceleration        { 60.f };
-    float           fallAcceleration    { 60.f };
+    float           fallAcceleration    { 55.f };
     float           groundFriction      { 50.f };
     float           airFriction         { 20.f };
     float           jumpForce           { -14.f };

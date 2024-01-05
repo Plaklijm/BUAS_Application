@@ -89,9 +89,14 @@
     <property name="Type" type="int" value="0"/>
    </properties>
   </object>
+  <object id="16" x="192" y="352" width="32" height="32">
+   <properties>
+    <property name="Type" type="int" value="2"/>
+   </properties>
+  </object>
   <object id="17" x="320" y="320" width="32" height="32">
    <properties>
-    <property name="Type" type="int" value="3"/>
+    <property name="Type" type="int" value="2"/>
    </properties>
   </object>
  </objectgroup>

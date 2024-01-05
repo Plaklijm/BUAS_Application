@@ -266,6 +266,7 @@
     <Content Include="assets\player\sprites\p_WallSlide.png" />
     <Content Include="assets\smoke.tga" />
     <Content Include="assets\sniper.tga" />
+    <Content Include="assets\stranger-things-124008.wav" />
     <Content Include="assets\target.tga" />
     <Content Include="assets\turret.tga" />
     <Content Include="assets\ui\sounds\Abstract1.wav" />
@@ -299,6 +300,8 @@
     <ClCompile Include="src\Engine\InputManager.cpp" />
     <ClCompile Include="src\Engine\Object.cpp" />
     <ClCompile Include="src\Engine\Solid.cpp" />
+    <ClCompile Include="src\Engine\Sound.cpp" />
+    <ClCompile Include="src\Engine\SoundManager.cpp" />
     <ClCompile Include="src\Engine\surface.cpp" />
     <ClCompile Include="src\Engine\template.cpp" />
     <ClCompile Include="src\Map\ImageLayer.cpp" />
@@ -328,6 +331,8 @@
     <ClInclude Include="src\Engine\InputManager.h" />
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Solid.h" />
+    <ClInclude Include="src\Engine\Sound.h" />
+    <ClInclude Include="src\Engine\SoundManager.h" />
     <ClInclude Include="src\Engine\surface.h" />
     <ClInclude Include="src\Engine\template.h" />
     <ClInclude Include="src\Map\GameMap.h" />

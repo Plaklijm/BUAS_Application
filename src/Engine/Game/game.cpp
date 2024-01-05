@@ -6,6 +6,7 @@
 #include "MainMenuState.h"
 #include "PauseState.h"
 #include "PlayState.h"
+#include "../SoundManager.h"
 #include "../src/Engine/InputManager.h"
 #include "../surface.h"
 
@@ -23,8 +24,11 @@ namespace Tmpl8
 	//Sprite testSprite = Sprite(new Surface(), 18);
 	void Game::Init(bool fullscreen, float windowX, float windowY)
 	{
-		game_input = InputManager::Instance();
-		game_input->SetWindowParams(fullscreen, windowX, windowY);
+		gameInput = InputManager::Instance();
+		gameInput->SetWindowParams(fullscreen, windowX, windowY);
+
+		soundManager = SoundManager::Instance();
+		
 		ChangeState(MainMenuState::Instance());
 	}
 	
@@ -42,7 +46,10 @@ namespace Tmpl8
 
 		//Cleanup the input manager
 		InputManager::Release();
-		game_input = nullptr;
+		gameInput = nullptr;
+
+		SoundManager::Release();
+		soundManager = nullptr;
 	}
 	
 	// -----------------------------------------------------------
@@ -51,7 +58,7 @@ namespace Tmpl8
 	float dt;
 	void Game::Tick(float deltaTime)
 	{
-		game_input->Update();
+		gameInput->Update();
 		
 		// Only for logging the FPS
 		dt = deltaTime;
@@ -59,17 +66,17 @@ namespace Tmpl8
 		// Update the current state
 		states.back()->Update(deltaTime);
 
-		if (game_input->KeyDown(SDL_SCANCODE_ESCAPE) && isPlaying)
+		if (gameInput->KeyDown(SDL_SCANCODE_ESCAPE) && isPlaying)
 		{
 			PushState(PauseState::Instance());
 		}
-		else if (game_input->KeyDown(SDL_SCANCODE_ESCAPE) && isPaused)
+		else if (gameInput->KeyDown(SDL_SCANCODE_ESCAPE) && isPaused)
 		{
 			PopState();
 		}
 
 		// Update the game input, it will be read from the states but this will keep it up to date
-		game_input->UpdatePrevInput();
+		gameInput->UpdatePrevInput();
 	}
 	
 	void Game::PhysTick(float physDeltaTime) const

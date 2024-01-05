@@ -4,6 +4,7 @@
 #include "State.h"
 
 
+class SoundManager;
 class InputManager;
 
 namespace Tmpl8 {
@@ -48,7 +49,8 @@ private:
 	std::vector<State*> states;
 	
 	Surface* screen;
-	InputManager* game_input = nullptr;
+	InputManager* gameInput = nullptr;
+	SoundManager* soundManager = nullptr;
 
 };
 
