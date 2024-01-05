@@ -1,8 +1,8 @@
 ﻿#include "SoundManager.h"
 
 #include <cstdio>
-
 #include "Sound.h"
+
 
 SoundManager* SoundManager::instance = nullptr;
 
@@ -20,9 +20,15 @@ void SoundManager::Release()
     instance = nullptr;
 }
 
+void SoundManager::Cleanup() const
+{
+    SDL_CloseAudioDevice(fxDevice);
+}
+
 SoundManager::SoundManager()
 {
     SetupDevice();
+    SetupFX();
 }
 
 void SoundManager::SetupDevice()
@@ -31,38 +37,30 @@ void SoundManager::SetupDevice()
     audioSpec.freq = 44100;
     audioSpec.format = AUDIO_S16;
     audioSpec.channels = 2;
-    audioSpec. samples = 4096;
-    
-    device = SDL_OpenAudioDevice(nullptr, 0, &audioSpec, nullptr, 0);
-    if (device == 0)
-    {
-        printf("Sound device error: %s", SDL_GetError());
-    }
+    audioSpec.samples = 4096;
+
+    // Open 2 channels using the same device parameters, one for the music and one for the FX
+    fxDevice = SDL_OpenAudioDevice(nullptr, 0, &audioSpec, nullptr, 0);
+    if (fxDevice == 0)
+        printf("FX device error: %s", SDL_GetError());
 }
 
-Sound* testSound = new Sound("assets/player/sounds/Retro10.wav");
-Sound* testSoundMusic = new Sound("assets/stranger-things-124008.wav");
-void SoundManager::PlaySound(int id) const
+void SoundManager::SetupFX()
 {
-    if (id == 1)
-    {
-        testSound->PlaySound(device);
-    }
-    else
-    {
-        testSoundMusic->PlaySound(device);
-    }
-    
+    sounds.emplace(s_CLICK, new Sound("assets/ui/sounds/Select.wav"));
+    sounds.emplace(s_WALK, new Sound("assets/player/sounds/Step.wav"));
+    sounds.emplace(s_COLLECT, new Sound("assets/player/sounds/Collect.wav"));
+    sounds.emplace(s_JUMP, new Sound("assets/player/sounds/Jump.wav"));
+    sounds.emplace(s_DOUBLEJUMP, new Sound("assets/player/sounds/DoubleJump.wav"));
+    sounds.emplace(s_LEVELFINISH, new Sound("assets/player/sounds/LevelEnd.wav"));
 }
 
-void SoundManager::StopSound(int id) const
+void SoundManager::PlaySound(SoundType id)
 {
-    if (id == 1)
-    {
-        testSound->StopSound(device);
-    }
-    else
-    {
-        testSoundMusic->StopSound(device);
-    }
+    sounds[id]->PlaySound(fxDevice);
+}
+
+void SoundManager::StopSound(SoundType id)
+{
+    sounds[id]->StopSound(fxDevice);
 }

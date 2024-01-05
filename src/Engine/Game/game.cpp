@@ -48,6 +48,7 @@ namespace Tmpl8
 		InputManager::Release();
 		gameInput = nullptr;
 
+		SoundManager::Instance()->Cleanup();
 		SoundManager::Release();
 		soundManager = nullptr;
 	}
@@ -74,7 +75,7 @@ namespace Tmpl8
 		{
 			PopState();
 		}
-
+		
 		// Update the game input, it will be read from the states but this will keep it up to date
 		gameInput->UpdatePrevInput();
 	}

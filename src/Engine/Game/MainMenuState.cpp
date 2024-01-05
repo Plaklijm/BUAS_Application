@@ -16,18 +16,16 @@ void MainMenuState::Init(Tmpl8::Game* game)
     // Set reference to the game
     State::Init(game);
     
-
     // Initialize background sprite
+    
     // Initialize buttons
     playButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Start.png"), 1), Tmpl8::vec2(335, 100));
-    optionsButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Options.png"), 1), Tmpl8::vec2(335, 175));
     creditButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Credits.png"), 1), Tmpl8::vec2(335, 250));
     quitButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Quit.png"), 1), Tmpl8::vec2(335, 325));
 }
 
 void MainMenuState::Exit()
-{
-    // delete everything
+{ 
 }
 
 void MainMenuState::Pause()
@@ -51,11 +49,6 @@ void MainMenuState::Update(float deltaTime)
         const std::function<void()> functionPtr = [this] { StartGame(); };
         playButton->OnPressed(functionPtr);
     }
-    if (optionsButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
-    {
-        const std::function<void()> functionPtr = [this] { Options(); };
-        optionsButton->OnPressed(functionPtr);
-    }
     if (creditButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
     {
         const std::function<void()> functionPtr = [this] { Credit(); };
@@ -75,14 +68,8 @@ void MainMenuState::PhysUpdate(float pDeltaTime)
 void MainMenuState::Render(Tmpl8::Surface* screen)
 {
     playButton->DisplayButton(screen);
-    optionsButton->DisplayButton(screen);
     creditButton->DisplayButton(screen);
     quitButton->DisplayButton(screen);
-}
-
-
-void MainMenuState::Options()
-{
 }
 
 void MainMenuState::Credit()

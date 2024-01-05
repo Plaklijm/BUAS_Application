@@ -19,10 +19,8 @@ private:
     static PauseState pauseState;
 
     void ContinueGame();
-    void Options();
     void BackToMenu();
     
     Button* continueButton;
-    Button* optionsButton;
     Button* mainMenuButton;
 };

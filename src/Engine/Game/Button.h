@@ -14,7 +14,7 @@ class Button
 public:
     Button(Tmpl8::Sprite* buttonSprite, Tmpl8::vec2 position);
     
-    bool IsHovered(SDL_Point point);
+    bool IsHovered(SDL_Point point) const;
     void OnPressed(const std::function<void()>& function);
 
     void DisplayButton(Tmpl8::Surface* screen) const;

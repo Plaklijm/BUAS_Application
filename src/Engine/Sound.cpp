@@ -15,7 +15,7 @@ Sound::~Sound()
 
 void Sound::PlaySound(const SDL_AudioDeviceID device) const
 {
-    int status = SDL_QueueAudio(device, waveStart, waveLength);
+    SDL_QueueAudio(device, waveStart, waveLength);
     SDL_PauseAudioDevice(device, 0);
 }
 

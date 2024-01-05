@@ -22,12 +22,10 @@ private:
     static MainMenuState mainMenuState;
     
     void StartGame();
-    void Options();
     void Credit();
     void ExitGame();
     
     Button* playButton;
-    Button* optionsButton;
     Button* creditButton;
     Button* quitButton;
 };

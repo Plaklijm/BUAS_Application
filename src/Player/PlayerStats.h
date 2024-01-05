@@ -6,14 +6,13 @@
 // ANIMATION
 enum AnimationName
 {
-    WALK = 0,
-    RUN,
-    IDLE,
-    JUMP,
-    DOUBLEJUMP,
-    COLLECT,
-    PUSH,
-    PULL
+    a_WALK = 0,
+    a_RUN,
+    a_IDLE,
+    a_JUMP,
+    a_DOUBLEJUMP,
+    a_COLLECT,
+    a_PUSH
 };
 
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS
