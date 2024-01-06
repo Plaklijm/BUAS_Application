@@ -22,13 +22,14 @@ void AnimationSystem::SetCurrentAnim(int id)
 {
     if (currentAnimID != id)
     {
-        if (animations[currentAnimID]->IsRunning())
-        {
-        }
-        
         currentAnimID = id;
         animations[currentAnimID]->OnAnimationChange();
     }
+}
+
+bool AnimationSystem::IsAnimFinished(int id)
+{
+    return animations[id]->IsAnimFinished();
 }
 
 void AnimationSystem::Render(Tmpl8::Surface* screen, float x, float y, bool flip)

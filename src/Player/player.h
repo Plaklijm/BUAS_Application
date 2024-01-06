@@ -44,6 +44,7 @@ private:
     float                       maxSpeedX;
     bool                        flipHorizontally;
     bool                        grounded{};
+    bool                        landed{};
     
     bool                        jumpToConsume{};
     bool                        bufferedJumpUsable{};

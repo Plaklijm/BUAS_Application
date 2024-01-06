@@ -28,6 +28,7 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     anim->AddAnim(a_COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
     anim->AddAnim(a_PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
     anim->AddAnim(a_PULL, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pull.png"), 6), stats->GetAnimRate()));
+    anim->AddAnim(a_LAND, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Land.png"), 4), stats->GetAnimRate() * .5f, false));
     
     currentAnimState = a_IDLE;
     anim->SetCurrentAnim(currentAnimState);
@@ -40,7 +41,7 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     collect = false;
     stepTimer.reset();
     stepInterval = 400.f;
-    pushCol.w = 48;
+    pushCol.w = 42;
     pushCol.h = 20;
     isPushingObj = false;
     isPullingObj = false;
@@ -88,9 +89,14 @@ void Player::Update(float dt)
         jumpToConsume = true;
         timeJumpWasPressed = time;
     }
-
-    if (GetCollisionNormalY().y > 0)
-    {   
+    
+    else if (GetCollisionNormalY().y > 0)
+    {
+        if (velocity.y > 15.5f || isJumping)
+        {
+            printf("%f\n", velocity.y);
+            landed = true;
+        }
         grounded = true;
         coyoteUsable = true;
         bufferedJumpUsable = true;
@@ -103,9 +109,12 @@ void Player::Update(float dt)
         // If you hit an ceiling zero out the velocity
         velocityAccumulator.y = 0;
         grounded = false;
+        landed = false;
+        landed = false;
     }
     else
     {
+        landed = false;
         grounded = false;
         frameLeftGrounded = time;
     }
@@ -128,10 +137,6 @@ void Player::Update(float dt)
             SoundManager::Instance()->PlaySound(s_WALK);
         }  
     }
-    
-
-    
-    anim->Update();
 }
 
 void Player::UpdatePhysics(float dt)
@@ -199,7 +204,19 @@ void Player::HandleAnimations()
         currentAnimState = a_PULL;
     }
     
+    if (landed)
+    {
+        currentAnimState = a_LAND;
+    }
+
     anim->SetCurrentAnim(currentAnimState);
+    
+    anim->Update();
+
+    if (anim->IsAnimFinished(a_LAND))
+    {
+        landed = false;
+    }
 }
 
 
@@ -243,8 +260,7 @@ void Player::HandlePushObj()
                 }
                 flipHorizontally = false;
             }
-
-            pushAbleObject->MoveX(velocity.x, true);
+            pushAbleObject->MoveX(velocity.x, true, this);
             return;
         }
     }
@@ -255,11 +271,11 @@ void Player::HandlePushObj()
 
 void Player::RenderPlayer(Surface* screen)
 {
-    const auto b1 = GetCollider()->GetHitBox();
+    /*const auto b1 = GetCollider()->GetHitBox();
     screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
 
     const auto b2 = pushCol;
-    screen->Box(b2.x, b2.y, b2.x + b2.w, b2.y + b2.h, 0xffffff);
+    screen->Box(b2.x, b2.y, b2.x + b2.w, b2.y + b2.h, 0xffffff);*/
     
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
@@ -355,8 +371,8 @@ void Player::CalculateDirectionalMovement(float dt)
 void Player::ApplyMovement()
 {
     velocity = velocityAccumulator;
-    MoveX(velocity.x, false);
+    MoveX(velocity.x);
     MoveY(velocity.y);
-    pushCol.x = GetPosition().x - stats->GetSpriteOffset();
+    pushCol.x = GetPosition().x - 2 - stats->GetSpriteOffset()/2;
     pushCol.y = GetPosition().y + stats->GetSpriteOffset();
 }

@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include "MainMenuState.h"
+#include "PlayState.h"
 #include "../surface.h"
 #include "../template.h"
 #include "../InputManager.h"
@@ -12,8 +13,9 @@ void PauseState::Init(Tmpl8::Game* game)
 {
     State::Init(game);
     gameRef->SetIsPaused(true);
-    continueButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Continue.png"), 1), Tmpl8::vec2(100, 100));
-    mainMenuButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/MainMenu.png"), 1), Tmpl8::vec2(100, 250));
+    continueButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Continue.png"), 2), Tmpl8::vec2(100, 100));
+    restartButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Restart.png"), 2), Tmpl8::vec2(100, 175));
+    mainMenuButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/MainMenu.png"), 2), Tmpl8::vec2(100, 250));
 }
 
 void PauseState::Exit()
@@ -42,6 +44,11 @@ void PauseState::Update(float deltaTime)
         const std::function<void()> functionPtr = [this] { ContinueGame(); };
         continueButton->OnPressed(functionPtr);
     }
+    if (restartButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
+    {
+        const std::function<void()> functionPtr = [this] { RestartLevel(); };
+        restartButton->OnPressed(functionPtr);
+    }
     if (mainMenuButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
     {
         const std::function<void()> functionPtr = [this] { BackToMenu(); };
@@ -53,11 +60,17 @@ void PauseState::Render(Tmpl8::Surface* screen)
 {
     continueButton->DisplayButton(screen);
     mainMenuButton->DisplayButton(screen);
+    restartButton->DisplayButton(screen);
 }
 
 void PauseState::ContinueGame()
 {
     gameRef->PopState();
+}
+
+void PauseState::RestartLevel()
+{
+    PlayState::Instance()->InitializeWorld();
 }
 
 void PauseState::BackToMenu()

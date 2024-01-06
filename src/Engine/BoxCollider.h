@@ -23,6 +23,7 @@ public:
     }
     
     SDL_Rect GetHitBox() const { return hitBox; }
+
 private:
     // Why make a whole new rectangle class and collision when SDL supports it out of the box? :)
     SDL_Rect hitBox;

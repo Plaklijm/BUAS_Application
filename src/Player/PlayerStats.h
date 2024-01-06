@@ -13,7 +13,8 @@ enum AnimationName
     a_DOUBLEJUMP,
     a_COLLECT,
     a_PUSH,
-    a_PULL
+    a_PULL,
+    a_LAND
 };
 
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS
@@ -43,11 +44,11 @@ private:
     float           walkSpeed           { 2.f };
     float           sprintSpeed         { 5.f };
     float           acceleration        { 60.f };
-    float           fallAcceleration    { 55.f };
+    float           fallAcceleration    { 45.f };
     float           groundFriction      { 50.f };
-    float           airFriction         { 20.f };
-    float           jumpForce           { -14.f };
-    float           doubleJumpForce     { -12.f };
+    float           airFriction         { 30.f };
+    float           jumpForce           { -11.f };
+    float           doubleJumpForce     { -10.f };
     float           coyoteTime          { .15f };
     float           jumpBuffer          { .15f };
 

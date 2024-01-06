@@ -13,4 +13,6 @@ public:
     void Update() override;
 
     void AddObject(Object* obj);
+
+private:
 };

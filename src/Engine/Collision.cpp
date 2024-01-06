@@ -45,13 +45,53 @@ bool Collision::RectIntersect(const SDL_Rect* a, const SDL_Rect* b, vec2& normal
     return false; 
 }
 
-bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world)
+bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 offset, const SDL_Rect* b, vec2& normal)
 {
     // Create a new SDL_Rect with the same properties as the a rect
     auto aWithOffset = *a;
     // Add the given offset to the rect
-    aWithOffset.x += static_cast<int>(aOffset.x);
-    aWithOffset.y += static_cast<int>(aOffset.y);
+    aWithOffset.x += static_cast<int>(offset.x);
+    aWithOffset.y += static_cast<int>(offset.y);
+    
+    // temporary variable to calculate the direction with
+    SDL_Rect result{};
+    if(SDL_IntersectRect(&aWithOffset, b, &result))
+    {
+        // Collision has occurred, now to determine the collision normal
+        const auto dx = a->x + a->w / 2 - (result.x + result.w / 2);
+        const auto dy = a->y + a->h / 2 - (result.y + result.h / 2);
+
+        // Check if the collision is more horizontal or vertical
+        if (abs(dx) > abs(dy))
+        {
+            // Horizontal collision
+            if (dx > 0) 
+                normal = vec2::Right();
+            else 
+                normal = vec2::Left();
+        }
+        else
+        {
+            // Vertical collision
+            if (dy > 0)
+                normal = vec2::Down();
+            else
+                normal = vec2::Up();
+        }
+        
+        return true;
+    }
+    normal = vec2::Zero();
+    return false; 
+}
+
+bool Collision::RectIntersectAt(const SDL_Rect* a, vec2 offset, vec2& normal, const World* world)
+{
+    // Create a new SDL_Rect with the same properties as the a rect
+    auto aWithOffset = *a;
+    // Add the given offset to the rect
+    aWithOffset.x += static_cast<int>(offset.x);
+    aWithOffset.y += static_cast<int>(offset.y);
 
     const auto map = world->GetMap();
     std::vector<Solid*> allSolids;
@@ -132,11 +172,11 @@ Object* Collision::RectIntersectObjects(const SDL_Rect* a, const World* world)
 }
 
 // OVERLOADED VERSION WITH AND OFFSET & COLLISION NORMAL PARAM
-Object* Collision::RectIntersectObjects(const SDL_Rect* a, vec2 aOffset, vec2& normal, const World* world)
+Object* Collision::RectIntersectObjects(const SDL_Rect* a, vec2 offset, vec2& normal, const World* world)
 {
     auto aWithOffset = *a;
-    aWithOffset.x += static_cast<int>(aOffset.x);
-    aWithOffset.y += static_cast<int>(aOffset.y);
+    aWithOffset.x += static_cast<int>(offset.x);
+    aWithOffset.y += static_cast<int>(offset.y);
     
     const auto map = world->GetMap();
     std::vector<Object*> allObjects;

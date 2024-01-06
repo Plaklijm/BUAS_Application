@@ -13,14 +13,14 @@ class World;
 class MapParser
 {
 public:
-    void Load(const int index, World* world);
+    bool Load(const int index, World* world);
     void Clean();
 
     GameMap* GetMap(const int id) { return maps[id]; }
     static MapParser* GetInstance() { return instance = (instance != nullptr)? instance : new MapParser(); }
 
 private:
-    void Parse(const int mapID, const std::string& source, World* world);
+    bool Parse(const int mapID, const std::string& source, World* world);
     static TileSet ParseTileSet(TiXmlElement* xmlTileSet);
     static TileLayer* ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& tileSets, int tileSize, int rowCount, int colCount);
     static ObjectLayer* ParseObjectLayer(TiXmlElement* xmlLayer, World* world);

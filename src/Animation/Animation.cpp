@@ -1,12 +1,11 @@
 ﻿#include "Animation.h"
 
-Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop, bool buffer) :
+Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop) :
     sprite(sprite),
     loop(loop),
-    buffer(buffer),
     animationRate(animRate),
     currentFrameIndex(0),
-    isRunning(true)
+    hasFinished(true)
 {
     
 }
@@ -20,12 +19,14 @@ void Animation::UpdateAnimation()
         {
             // Handle looping, so when its enabled it sets the index to start over again, otherwise stay at the last frame
             if (loop)
+            {
                 currentFrameIndex = 0;
+                hasFinished = false;
+            }
             else
             {
                 currentFrameIndex = sprite->Frames() -1;
-                if (buffer)
-                    isRunning = false;
+                hasFinished = true;
             }
         }
         timer.reset();
@@ -38,7 +39,7 @@ void Animation::OnAnimationChange()
     // Reset animation
     timer.reset();
     currentFrameIndex = 0;
-    isRunning = true;
+    hasFinished = false;
 }
 
 void Animation::RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const

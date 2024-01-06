@@ -8,7 +8,7 @@ Actor::Actor(vec2 position, vec2 size, World* world) : world(world), position(po
 }
 
 // Ill explain the guts in this function, but the same applies to the MoveY function
-void Actor::MoveX(float amount, bool ignoreObjects)
+void Actor::MoveX(float amount, bool ignoreObjects, const Actor* playerRef)
 {
     // Actors dont have the concept of velocity, acceleration etc, so a movement amount is passed in
     // The movement amount is put into a collector variable, the fractional remainders get carried to the next frame
@@ -29,6 +29,14 @@ void Actor::MoveX(float amount, bool ignoreObjects)
             {
                 const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), vec2(sign, 0), collisionNormalX, world);
                 if (obj != nullptr && obj->GetType() == PUSHABLE)
+                {
+                    OnCollideX();
+                    break;
+                }
+            }
+            if (playerRef != nullptr)
+            {
+                if (Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0), &playerRef->GetCollider()->GetHitBox(), collisionNormalX))
                 {
                     OnCollideX();
                     break;

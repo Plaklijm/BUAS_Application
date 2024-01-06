@@ -11,8 +11,8 @@
 #include <cstdlib>
 #include <cstdio>
 
-constexpr int ScreenWidth = 854;
-constexpr int ScreenHeight = 480;
+constexpr int ScreenWidth = 960;
+constexpr int ScreenHeight = 540;
 
 constexpr float FixedTimeStep = 1.f/50;
 

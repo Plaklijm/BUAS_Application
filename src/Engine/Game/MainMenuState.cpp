@@ -19,9 +19,9 @@ void MainMenuState::Init(Tmpl8::Game* game)
     // Initialize background sprite
     
     // Initialize buttons
-    playButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Start.png"), 1), Tmpl8::vec2(335, 100));
-    creditButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Credits.png"), 1), Tmpl8::vec2(335, 250));
-    quitButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Quit.png"), 1), Tmpl8::vec2(335, 325));
+    playButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Start.png"), 2), Tmpl8::vec2(335, 100));
+    creditButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Credits.png"), 2), Tmpl8::vec2(335, 250));
+    quitButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Quit.png"), 2), Tmpl8::vec2(335, 325));
 }
 
 void MainMenuState::Exit()

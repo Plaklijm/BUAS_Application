@@ -10,10 +10,10 @@ MapParser::MapParser()
 {
 }
 
-void MapParser::Load(const int index, World* world)
+bool MapParser::Load(const int index, World* world)
 {
     const auto source = "assets/map/" + std::to_string(index) + ".tmx";
-    Parse(index, source, world);
+    return Parse(index, source, world);
 }
 
 void MapParser::Clean()
@@ -26,7 +26,7 @@ void MapParser::Clean()
     maps.clear();
 }
 
-void MapParser::Parse(const int mapID, const std::string& source, World* world)
+bool MapParser::Parse(const int mapID, const std::string& source, World* world)
 {
     TiXmlDocument xmlDoc;
     xmlDoc.LoadFile(source);
@@ -34,7 +34,7 @@ void MapParser::Parse(const int mapID, const std::string& source, World* world)
     if (xmlDoc.Error())
     {
         printf("Failed to load: %s\n", source.c_str());
-        return;
+        return false;
     }
 
     TiXmlElement* root = xmlDoc.RootElement();
@@ -86,6 +86,7 @@ void MapParser::Parse(const int mapID, const std::string& source, World* world)
     }
 
     maps[mapID] = gameMap;
+    return true;
 }
 
 TileSet MapParser::ParseTileSet(TiXmlElement* xmlTileSet)

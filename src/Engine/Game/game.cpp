@@ -1,7 +1,6 @@
 #include "game.h"
 
 #include <string>
-#include <fstream>
 
 #include "MainMenuState.h"
 #include "PauseState.h"

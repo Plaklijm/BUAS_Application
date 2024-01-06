@@ -5,20 +5,19 @@
 class Animation
 {
 public:
-    Animation(Tmpl8::Sprite* sprite, float animRate, bool loop = true, bool buffer = false);
+    Animation(Tmpl8::Sprite* sprite, float animRate, bool loop = true);
 
     void UpdateAnimation();
     void OnAnimationChange();
     void RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const;
 
-    bool IsRunning() const { return isRunning; }
+    bool IsAnimFinished() const { return hasFinished; }
 private:
     Tmpl8::timer timer;
     Tmpl8::Sprite* sprite;
     bool loop;
-    bool buffer;
     float animationRate;
     unsigned int currentFrameIndex;
 
-    bool isRunning;
+    bool hasFinished;
 };

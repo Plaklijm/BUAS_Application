@@ -13,8 +13,8 @@ void ObjectLayer::Render(Tmpl8::Surface* screen)
     for (const auto object : objectTiles)
     {
         object->Render(screen);
-        const auto b1 = object->GetCollider()->GetHitBox();
-        screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
+        /*const auto b1 = object->GetCollider()->GetHitBox();
+        screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);*/
     }
 }
 

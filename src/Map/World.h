@@ -15,7 +15,7 @@ public:
     GameMap* GetMap() const;
 
     World() = default;
-    void LoadMap(const int index);
+    bool LoadMap(const int index);
     void RenderMap(Tmpl8::Surface* surface) const;
 
     void Collect(const Object* obj) const;

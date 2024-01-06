@@ -1,6 +1,7 @@
 ﻿#include "PlayState.h"
 
 #include "game.h"
+#include "MainMenuState.h"
 #include "../Collision.h"
 #include "../SoundManager.h"
 #include "../surface.h"
@@ -11,25 +12,29 @@
 #include "../src/Map/World.h"
 #include "../src/Engine/InputManager.h"
 
+
 PlayState PlayState::playState;
 
 
 void PlayState::Init(Tmpl8::Game* game)
 {
     State::Init(game);
-
-    levelIndex = 1;
+    
+    world = new World();
+    levelIndex = 0;
     InitializeWorld();
 
     // One is created at the start of the playstate, this isn't done in the player
     // Because when the player respawns a new player is created
     inv = new PlayerInventory();
 
+    
     gameRef->SetIsPlaying(true);
 }
 
 void PlayState::Exit()
 {
+    gameRef->SetIsPlaying(false);
 }
 
 void PlayState::Pause()
@@ -55,7 +60,7 @@ void PlayState::Update(float deltaTime)
 void PlayState::PhysUpdate(float pDeltaTime)
 {
     player->UpdatePhysics(pDeltaTime);
-
+    
     const auto obj = Collision::RectIntersectObjects(&player->GetCollider()->GetHitBox(), world);
     if (obj != nullptr)
     {
@@ -80,6 +85,7 @@ void PlayState::PhysUpdate(float pDeltaTime)
             break;
         }
     }
+    
 }
 
 void PlayState::Render(Tmpl8::Surface* screen)
@@ -90,8 +96,11 @@ void PlayState::Render(Tmpl8::Surface* screen)
 
 void PlayState::InitializeWorld()
 {
-    world = new World();
-    world->LoadMap(levelIndex);
+    if (!world->LoadMap(levelIndex))
+    {
+        gameRef->ChangeState(MainMenuState::Instance());
+        return;
+    }
     
     std::vector<Object*> allObjects;
     
@@ -125,6 +134,9 @@ void PlayState::InitializeWorld()
             break;
         case COLLECTABLE:
             object->SetSprite(new Sprite(new Surface(sources[rand() % 5]), 1));
+            break;
+        case PUSHABLE:
+            object->SetSprite(new Sprite(new Surface("assets/map/Pushable.png"), 1));
             break;
         default:
             break;

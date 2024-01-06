@@ -13,11 +13,22 @@ Button::Button(Tmpl8::Sprite* buttonSprite, Tmpl8::vec2 position) : button(SDL_R
     button.h = buttonSprite->GetHeight();
 }
 
-bool Button::IsHovered(SDL_Point point) const
+
+bool Button::IsHovered(SDL_Point point)
 {
     if (SDL_PointInRect(&point, &button))
+    {
+        if (playOneShot)
+        {
+            buttonSprite->SetFrame(1);
+            SoundManager::Instance()->PlaySound(s_CLICK);
+            playOneShot = false;
+        }
         return true;
+    }
 
+    buttonSprite->SetFrame(0);
+    playOneShot = true;
     return false;
 }
 

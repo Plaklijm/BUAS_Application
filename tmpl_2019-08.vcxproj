@@ -226,44 +226,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\map\1.tmx" />
-    <Content Include="assets\map\2.tmx" />
+    <Content Include="assets\map\lunar1b_tileset_compact_grey_terrain.png" />
+    <Content Include="assets\map\planet1.png" />
+    <Content Include="assets\map\planet5.png" />
     <Content Include="assets\map\playerEnd.png" />
     <Content Include="assets\map\lunar1b_tileset_singlefile_fixed.png" />
-    <Content Include="assets\map\planet1.png" />
     <Content Include="assets\map\planet2.png" />
     <Content Include="assets\map\planet3.png" />
     <Content Include="assets\map\planet4.png" />
-    <Content Include="assets\map\planet5.png" />
-    <Content Include="assets\map\Space Background.png" />
+    <Content Include="assets\map\Pushable.png" />
     <Content Include="assets\player\sounds\Jump.wav" />
     <Content Include="assets\player\sounds\Step.wav" />
-    <Content Include="assets\player\sprites\p_ClimbBack.png" />
     <Content Include="assets\player\sprites\p_DoubleJump.png" />
     <Content Include="assets\player\sprites\p_Idle.png" />
     <Content Include="assets\player\sprites\p_Jump.png" />
     <Content Include="assets\player\sprites\p_Land.png" />
-    <Content Include="assets\player\sprites\p_LedgeClimb.png" />
     <Content Include="assets\player\sprites\p_Pickup.png" />
     <Content Include="assets\player\sprites\p_Pull.png" />
     <Content Include="assets\player\sprites\p_Push.png" />
     <Content Include="assets\player\sprites\p_Run.png" />
     <Content Include="assets\player\sprites\p_Walk.png" />
-    <Content Include="assets\player\sprites\p_WallLand.png" />
-    <Content Include="assets\player\sprites\p_WallSlide.png" />
-    <Content Include="assets\ui\sprites\Back.png" />
     <Content Include="assets\ui\sprites\Continue.png" />
     <Content Include="assets\ui\sprites\Credits.png" />
-    <Content Include="assets\ui\sprites\Delete.png" />
-    <Content Include="assets\ui\sprites\Exit.png" />
     <Content Include="assets\ui\sprites\MainMenu.png" />
-    <Content Include="assets\ui\sprites\NewGame.png" />
-    <Content Include="assets\ui\sprites\Options.png" />
     <Content Include="assets\ui\sprites\Quit.png" />
     <Content Include="assets\ui\sprites\Restart.png" />
-    <Content Include="assets\ui\sprites\Resume.png" />
-    <Content Include="assets\ui\sprites\Save.png" />
-    <Content Include="assets\ui\sprites\Settings.png" />
-    <Content Include="assets\ui\sprites\Start.png" />
     <Content Include="tmpl_2019-08_x64_debug.exe" />
   </ItemGroup>
   <ItemGroup>

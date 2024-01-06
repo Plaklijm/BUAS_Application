@@ -19,7 +19,7 @@ protected:
     
     class World* world;
 public:
-    void MoveX(float amount, bool ignoreObjects);
+    void MoveX(float amount, bool ignoreObjects = false, const Actor* playerRef = nullptr);
     void MoveY(float amount);
 
     Actor(vec2 position, vec2 size, class World* world);
@@ -39,7 +39,7 @@ private:
     vec2 position = vec2::Zero();
     vec2 collisionNormalX = vec2::Zero();
     vec2 collisionNormalY = vec2::Zero();
-    int collectableType = 0;
+    
     BoxCollider* hitBox;
 };
 

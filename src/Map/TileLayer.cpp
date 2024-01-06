@@ -23,10 +23,9 @@ TileLayer::TileLayer(bool collidable, int tileSize, int rowCount, int colCount, 
     SetupCollisionLayer();
     CalculateSpriteData();
 }
-
+int oldValue = 0;
 void TileLayer::Render(Tmpl8::Surface* screen)
 {
-    // The rendering of a lot of sprites is very costly (I switched to ADVANCEDGL rendering in the template and gained ~15-20 FPS) 
     for (const auto tile : tiles)
     {
         // If i created a new sprite for each one it was a lot more costly on performance, so this way only 1 sprite is loaded
@@ -34,24 +33,19 @@ void TileLayer::Render(Tmpl8::Surface* screen)
         tile.sprite->SetFrame(static_cast<float>(tile.frame));
         tile.sprite->Draw(screen, tile.posX, tile.posY);
 
-        // Disclaimer, I made this and after I did I came across the cpp fast track 11 for the Tiles so I didn't know about
+        // Disclaimer, I made this and only after I did I came across the cpp fast track 11 for the Tiles so I didn't know about
         // the way they did it there, so the solution I came up with was putting the tileset as an sprite (but dumb but yeah)
         // it maybe isn't the most elegant of solutions but it works good enough to get the job done
         // https://www.3dgep.com/cpp-fast-track-11-tiles/ <-- tbh I don't really understand
         // what's happening with the buffers etc tho so I guess its fine. at least I understand my way xD
-        // debug only
-        std::string temp = std::to_string(tile.frame);
-        char* cTemp = new char[temp.length() + 1];
-        strcpy(cTemp, temp.c_str());
-        screen->Print(cTemp, tile.posX + 16, tile.posY + 16, (255 << 16) + (237 << 8));
     }
-
-    // debug only
-    for (const auto tile : collisionTiles)
+    
+    /*
+    for (const auto& collisionTile : collisionTiles)
     {
-        const auto b1 = tile->GetCollider()->GetHitBox();
+        const auto b1 = collisionTile->GetCollider()->GetHitBox();
         screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
-    }
+    }*/
 }
 
 

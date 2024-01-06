@@ -2,10 +2,15 @@
 
 #include "MapParser.h"
 
-void World::LoadMap(const int index)
+bool World::LoadMap(const int index)
 {
-    MapParser::GetInstance()->Load(index, this);
+    if (!MapParser::GetInstance()->Load(index, this))
+    {
+        return false;
+    }
+    
     currentLevel = MapParser::GetInstance()->GetMap(index);
+    return true;
 }
 
 void World::RenderMap(Tmpl8::Surface* surface) const
