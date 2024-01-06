@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="17" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="19">
+ <tileset firstgid="1" name="BaseSet" tilewidth="32" tileheight="32" tilecount="96" columns="96">
+  <image source="lunar1b_tileset_singlefile_fixed.png" width="3072" height="32"/>
+  <wangsets>
+   <wangset name="Terrain" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="1" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="2" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="3" wangid="0,0,0,0,0,1,0,0"/>
+    <wangtile tileid="4" wangid="0,1,0,1,0,0,0,0"/>
+    <wangtile tileid="5" wangid="0,1,0,1,0,1,0,1"/>
+    <wangtile tileid="6" wangid="0,0,0,0,0,1,0,1"/>
+    <wangtile tileid="7" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="8" wangid="0,1,0,0,0,0,0,1"/>
+    <wangtile tileid="9" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="54" wangid="0,1,0,0,0,1,0,1"/>
+    <wangtile tileid="55" wangid="0,0,0,1,0,1,0,1"/>
+    <wangtile tileid="57" wangid="0,1,0,1,0,1,0,0"/>
+    <wangtile tileid="95" wangid="0,1,0,1,0,0,0,1"/>
+   </wangset>
+   <wangset name="Planet1" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="21" wangid="0,1,0,1,0,0,0,0"/>
+    <wangtile tileid="22" wangid="0,1,0,1,0,1,0,1"/>
+    <wangtile tileid="23" wangid="0,0,0,0,0,1,0,1"/>
+    <wangtile tileid="27" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="28" wangid="0,1,0,0,0,0,0,1"/>
+    <wangtile tileid="29" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="33" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="34" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="35" wangid="0,0,0,0,0,1,0,0"/>
+   </wangset>
+   <wangset name="Planet2" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="24" wangid="0,1,0,1,0,0,0,0"/>
+    <wangtile tileid="25" wangid="0,1,0,1,0,1,0,1"/>
+    <wangtile tileid="26" wangid="0,0,0,0,0,1,0,1"/>
+    <wangtile tileid="30" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="31" wangid="0,1,0,0,0,0,0,1"/>
+    <wangtile tileid="32" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="36" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="37" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="38" wangid="0,0,0,0,0,1,0,0"/>
+   </wangset>
+   <wangset name="PlatformEarth" type="edge" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="12" wangid="0,0,1,0,0,0,0,0"/>
+    <wangtile tileid="13" wangid="0,0,1,0,0,0,1,0"/>
+    <wangtile tileid="14" wangid="0,0,0,0,0,0,1,0"/>
+   </wangset>
+   <wangset name="PlatformWalkWay" type="edge" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="49" wangid="0,0,1,0,0,0,0,0"/>
+    <wangtile tileid="50" wangid="0,0,1,0,0,0,1,0"/>
+    <wangtile tileid="51" wangid="0,0,0,0,0,0,1,0"/>
+    <wangtile tileid="52" wangid="0,0,1,0,0,0,1,0"/>
+   </wangset>
+   <wangset name="AntennaTop" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="39" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="40" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="43" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="44" wangid="0,0,0,0,0,1,0,0"/>
+   </wangset>
+   <wangset name="AntennaBottom" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="41" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="42" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="45" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="46" wangid="0,0,0,0,0,1,0,0"/>
+   </wangset>
+   <wangset name="Transformer" type="edge" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="80" wangid="0,0,1,0,0,0,0,0"/>
+    <wangtile tileid="81" wangid="0,0,1,0,0,0,1,0"/>
+    <wangtile tileid="82" wangid="0,0,0,0,0,0,1,0"/>
+   </wangset>
+  </wangsets>
+ </tileset>
+ <tileset firstgid="97" name="TerrainOnlySet" tilewidth="32" tileheight="32" tilecount="29" columns="29">
+  <image source="lunar1b_tileset_compact_grey_terrain.png" width="928" height="32"/>
+  <wangsets>
+   <wangset name="Unnamed Set" type="corner" tile="-1">
+    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>
+    <wangtile tileid="0" wangid="0,0,0,1,0,0,0,0"/>
+    <wangtile tileid="1" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="2" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="3" wangid="0,0,0,1,0,1,0,0"/>
+    <wangtile tileid="4" wangid="0,0,0,0,0,1,0,0"/>
+    <wangtile tileid="5" wangid="0,1,0,1,0,0,0,1"/>
+    <wangtile tileid="6" wangid="0,1,0,0,0,1,0,1"/>
+    <wangtile tileid="7" wangid="0,1,0,1,0,1,0,0"/>
+    <wangtile tileid="12" wangid="0,1,0,1,0,1,0,1"/>
+    <wangtile tileid="14" wangid="0,1,0,1,0,1,0,0"/>
+    <wangtile tileid="15" wangid="0,0,0,1,0,1,0,1"/>
+    <wangtile tileid="21" wangid="0,1,0,1,0,0,0,0"/>
+    <wangtile tileid="22" wangid="0,0,0,0,0,1,0,1"/>
+    <wangtile tileid="23" wangid="0,1,0,1,0,0,0,0"/>
+    <wangtile tileid="24" wangid="0,0,0,0,0,1,0,1"/>
+    <wangtile tileid="25" wangid="0,1,0,0,0,0,0,0"/>
+    <wangtile tileid="26" wangid="0,1,0,0,0,0,0,1"/>
+    <wangtile tileid="27" wangid="0,0,0,0,0,0,0,1"/>
+    <wangtile tileid="28" wangid="0,0,0,1,0,1,0,1"/>
+   </wangset>
+  </wangsets>
+ </tileset>
+ <imagelayer id="11" name="ImageBackGround">
+  <image source="back3.png" width="960" height="540"/>
+ </imagelayer>
+ <objectgroup id="10" name="Objects">
+  <object id="14" x="864" y="224" width="64" height="64">
+   <properties>
+    <property name="Type" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="15" x="33" y="407" width="40" height="40">
+   <properties>
+    <property name="Type" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="16" x="640" y="416" width="32" height="32">
+   <properties>
+    <property name="Type" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="17" x="575" y="400" width="48" height="48">
+   <properties>
+    <property name="Type" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="18" x="640" y="256" width="32" height="32">
+   <properties>
+    <property name="Type" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer id="9" name="TileBackGround" width="30" height="17">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+38,39,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+26,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+32,33,0,0,0,61,0,0,0,0,0,0,0,0,0,61,0,0,0,0,0,0,65,0,0,63,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,62,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,65,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,65,0,0,0,0,0,0,0,0,0,0,0,81,82,83,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,44,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,62,0,0,0,40,41,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,46,47,0,0,0,0,44,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,66,67,68,69,70,42,43,0,0,0,0,40,41,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="1" name="Playable" class="Collidable" width="30" height="17">
+  <properties>
+   <property name="Collision" type="int" value="1"/>
+  </properties>
+  <data encoding="csv">
+6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,97,99,98,100,98,98,98,99,98,100,100,98,101,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,122,123,123,123,102,109,103,123,102,103,123,102,119,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,122,102,125,101,120,125,100,104,112,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,122,102,112,104,109,103,123,123,
+6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,122,102,109,109,112,99,101,
+97,99,99,99,100,100,99,100,100,98,98,99,98,98,100,99,98,99,98,98,100,98,99,100,104,109,109,109,109,125,
+120,109,109,109,109,109,103,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,123,102,109,109,109,
+122,123,123,123,123,123,124,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,120,109,109,109
+</data>
+ </layer>
+</map>
