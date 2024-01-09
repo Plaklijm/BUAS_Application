@@ -1,13 +1,13 @@
 #pragma once
 #include <vector>
+#include "../InputManager.h"
+#include "../SoundManager.h"
 
-#include "State.h"
-
-
-class SoundManager;
-class InputManager;
+class State;
 
 namespace Tmpl8 {
+	
+class Surface;
 
 class Game
 {
@@ -20,32 +20,23 @@ public:
 	void Shutdown();
 	
 	void Tick( float deltaTime );
-	void PhysTick(float physDeltaTime) const; // sounds like visstick
+	void PhysTick(float physDeltaTime) const; // sounds like visstick :)
 	void Render() const;
 
 	void ChangeState(State* state);
 	void PushState(State* state);
 	void PopState();
 
+	// Moved in here to have control over it in the gameStates
 	int GetExitApp() const {
 		return exitApp;
 	}
 	void SetExitApp(int i) {
 		exitApp = i;
 	}
-	void SetIsPlaying(bool i) {
-		isPlaying = i;
-	}
-	void SetIsPaused(bool i) {
-		isPaused = i;
-	}
-	
+		
 private:
 	int exitApp;
-
-	bool isPlaying;
-	bool isPaused;
-	
 	std::vector<State*> states;
 	
 	Surface* screen;

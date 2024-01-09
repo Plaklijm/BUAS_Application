@@ -22,6 +22,7 @@ void InputManager::Release()
 
 void InputManager::SetWindowParams(bool fullscreen, float windowX, float windowY)
 {
+    // Sets the window parameters based on the resolution of the screen, (needs to be done in order to correctly handle mouse pos)
     this->fullscreen = fullscreen;
     this->windowX = windowX;
     this->windowY = windowY;
@@ -43,6 +44,8 @@ InputManager::~InputManager()
 // -----------------------------------------------------------
 // Keyboard Events
 // -----------------------------------------------------------
+
+// You are implemented key functions >:(
 bool InputManager::KeyDown(SDL_Scancode scanCode) const
 {
     return !prevKeyboardState[scanCode] && keyboardState[scanCode];

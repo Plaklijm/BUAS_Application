@@ -94,7 +94,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\;src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -123,7 +123,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\;src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -155,7 +155,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\;src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -192,7 +192,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib;lib\OpenGL;lib\SDL2-2.28.5\include;lib\freeimage\inc\;src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -235,6 +235,7 @@
     <Content Include="assets\map\planet3.png" />
     <Content Include="assets\map\planet4.png" />
     <Content Include="assets\map\Pushable.png" />
+    <Content Include="assets\player\sounds\Death.wav" />
     <Content Include="assets\player\sounds\Jump.wav" />
     <Content Include="assets\player\sounds\Step.wav" />
     <Content Include="assets\player\sprites\p_DoubleJump.png" />
@@ -246,6 +247,7 @@
     <Content Include="assets\player\sprites\p_Push.png" />
     <Content Include="assets\player\sprites\p_Run.png" />
     <Content Include="assets\player\sprites\p_Walk.png" />
+    <Content Include="assets\ui\sprites\Back.png" />
     <Content Include="assets\ui\sprites\Continue.png" />
     <Content Include="assets\ui\sprites\Credits.png" />
     <Content Include="assets\ui\sprites\MainMenu.png" />
@@ -293,7 +295,7 @@
     <ClInclude Include="src\Engine\Game\MainMenuState.h" />
     <ClInclude Include="src\Engine\Game\PauseState.h" />
     <ClInclude Include="src\Engine\Game\PlayState.h" />
-    <ClInclude Include="src\Engine\Game\State.h" />
+    <ClInclude Include="src\Engine\Game\GameState.h" />
     <ClInclude Include="src\Engine\InputManager.h" />
     <ClInclude Include="src\Engine\Object.h" />
     <ClInclude Include="src\Engine\Solid.h" />

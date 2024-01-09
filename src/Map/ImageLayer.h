@@ -6,6 +6,7 @@ namespace Tmpl8
     class Sprite;
 }
 
+// Exactly what it says, just a layer that displays an image
 class ImageLayer : public Layer
 {
 public:

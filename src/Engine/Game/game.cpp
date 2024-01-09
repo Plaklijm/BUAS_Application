@@ -4,22 +4,17 @@
 
 #include "MainMenuState.h"
 #include "PauseState.h"
-#include "../SoundManager.h"
-#include "../src/Engine/InputManager.h"
 #include "../surface.h"
 
 namespace Tmpl8
 {
 	Game::Game() : exitApp(0)
 	{
-		isPlaying = false;
-		isPaused = false;
 	}
 
 	// -----------------------------------------------------------
 	// Initialize the application
 	// -----------------------------------------------------------
-	//Sprite testSprite = Sprite(new Surface(), 18);
 	void Game::Init(bool fullscreen, float windowX, float windowY)
 	{
 		gameInput = InputManager::Instance();
@@ -46,6 +41,7 @@ namespace Tmpl8
 		InputManager::Release();
 		gameInput = nullptr;
 
+		//Cleanup the sound system
 		SoundManager::Instance()->Cleanup();
 		SoundManager::Release();
 		soundManager = nullptr;
@@ -64,15 +60,6 @@ namespace Tmpl8
 
 		// Update the current state
 		states.back()->Update(deltaTime);
-
-		if (gameInput->KeyDown(SDL_SCANCODE_ESCAPE) && isPlaying)
-		{
-			PushState(PauseState::Instance());
-		}
-		else if (gameInput->KeyDown(SDL_SCANCODE_ESCAPE) && isPaused)
-		{
-			PopState();
-		}
 		
 		// Update the game input, it will be read from the states but this will keep it up to date
 		gameInput->UpdatePrevInput();
@@ -121,12 +108,6 @@ namespace Tmpl8
 	// pushes a state onto the current one
 	void Game::PushState(State* state)
 	{
-		// Pause the current active state
-		if (!states.empty())
-		{
-			states.back()->Pause();
-		}
-
 		// Push the new state and initialize it
 		states.push_back(state);
 		states.back()->Init(this);
@@ -139,12 +120,6 @@ namespace Tmpl8
 			// Exit from the back state
 			states.back()->Exit();
 			states.pop_back();
-		}
-
-		if (!states.empty())
-		{
-			// Resume old state
-			states.back()->Continue();
 		}
 	}
 }

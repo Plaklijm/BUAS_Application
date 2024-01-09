@@ -1,6 +1,6 @@
 ﻿#include "MainMenuState.h"
 
-#include <SDL.h>
+#include <SDL_mouse.h>
 
 #include "Button.h"
 #include "game.h"
@@ -19,21 +19,11 @@ void MainMenuState::Init(Tmpl8::Game* game)
     // Initialize background sprite
     
     // Initialize buttons
-    playButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Start.png"), 2), Tmpl8::vec2(335, 100));
-    creditButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Credits.png"), 2), Tmpl8::vec2(335, 250));
-    quitButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Quit.png"), 2), Tmpl8::vec2(335, 325));
-}
-
-void MainMenuState::Exit()
-{ 
-}
-
-void MainMenuState::Pause()
-{
-}
-
-void MainMenuState::Continue()
-{
+    playButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Start.png"), 2), Tmpl8::vec2(384, 175));
+    creditButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Credits.png"), 2), Tmpl8::vec2(384, 250));
+    quitButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Quit.png"), 2), Tmpl8::vec2(384, 325));
+    backButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Back.png"), 2), Tmpl8::vec2(384, 400));
+    SDL_ShowCursor(1);
 }
 
 void MainMenuState::Update(float deltaTime)
@@ -43,51 +33,83 @@ void MainMenuState::Update(float deltaTime)
     // Create a point to compare to the RECT of the button
     mousePoint.x = InputManager::Instance()->MousePos().x;
     mousePoint.y = InputManager::Instance()->MousePos().y;
-    
-    if (playButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
-    {
-        const std::function<void()> functionPtr = [this] { StartGame(); };
-        playButton->OnPressed(functionPtr);
-    }
-    if (creditButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
-    {
-        const std::function<void()> functionPtr = [this] { Credit(); };
-        creditButton->OnPressed(functionPtr);
-    }
-    if (quitButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
-    {
-        const std::function<void()> functionPtr = [this] { ExitGame(); };
-        quitButton->OnPressed(functionPtr);
-    }
-}
 
-void MainMenuState::PhysUpdate(float pDeltaTime)
-{
+    if (!showCredits)
+    {
+        if (playButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
+        {
+            const std::function<void()> functionPtr = [this] { StartGame(); };
+            playButton->OnPressed(functionPtr);
+        }
+        if (creditButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
+        {
+            const std::function<void()> functionPtr = [this] { Credit(); };
+            creditButton->OnPressed(functionPtr);
+        }
+        if (quitButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
+        {
+            const std::function<void()> functionPtr = [this] { ExitGame(); };
+            quitButton->OnPressed(functionPtr);
+        }
+    }
+    else
+    {
+        if (backButton->IsHovered(mousePoint) && InputManager::Instance()->MouseButtonDown(InputManager::LEFT))
+        {
+            const std::function<void()> functionPtr = [this] { Back(); };
+            backButton->OnPressed(functionPtr);
+        }
+    }
 }
 
 void MainMenuState::Render(Tmpl8::Surface* screen)
 {
-    playButton->DisplayButton(screen);
-    creditButton->DisplayButton(screen);
-    quitButton->DisplayButton(screen);
+    if (!showCredits)
+    {
+        playButton->DisplayButton(screen);
+        creditButton->DisplayButton(screen);
+        quitButton->DisplayButton(screen);
+    }
+    else
+    {
+        screen->Print("Game Made By:", 394, 150, 0xffffff);
+        screen->Print("Michiel van den Broek", 374, 165, 0xffffff);
+
+        screen->Print("Game Made For:", 394, 195, 0xffffff);
+        screen->Print("BUAS", 420, 210, 0xffffff);
+
+        screen->Print("Game Made In:", 394, 240, 0xffffff);
+        screen->Print("Cpp", 425, 255, 0xffffff);
+        screen->Print("Using the BUAS Template", 368, 265, 0xffffff);
+        screen->Print("JetBrains Rider", 386, 275, 0xffffff);
+        
+        screen->Print("Assets By:", 400, 305, 0xffffff);
+        screen->Print("Rumblecade - Lunar Surface 1-B", 358, 320, 0xffffff);
+        screen->Print("ZeggyGames - 2d Pixelart Character", 358, 330, 0xffffff);
+        screen->Print("Deep-Fold - Pixel Space Generator", 364, 340, 0xffffff);
+        screen->Print("Penusbmic - Pixel UI", 364, 350, 0xffffff);
+        
+        backButton->DisplayButton(screen);
+    }
 }
 
 void MainMenuState::Credit()
 {
+    showCredits = true;
+    
 }
 
-void MainMenuState::ExitGame()
+void MainMenuState::Back()
+{
+    showCredits = false;
+}
+
+void MainMenuState::ExitGame() const
 {
     gameRef->SetExitApp(1);
 }
 
-void MainMenuState::StartGame()
+void MainMenuState::StartGame() const
 {
     gameRef->ChangeState(PlayState::Instance());
 }
-
-
-
-// Create button class which contains atleast a SDL_RECT and a sprite, Logic will be made in here
-// Functions with Hover, and Click will work on the SDL_PointInRect
-// Also create a MenuStats struct (like the player stats) that will contain everything there is to know about the sizing etc

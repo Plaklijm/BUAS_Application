@@ -330,6 +330,7 @@ int main( int argc, char **argv )
 	ShowCursor( false );
 #else
 #ifdef FULLSCREEN
+	// (This is just for some experimenting I did)
 	// Create a window according to the resolution of the screen it will be rendered at
 	// Needs to be done in order to (otherwise SDL will do some weird stuff and will not display correctly)
 	SDL_DisplayMode currentDisplayMode;
@@ -355,8 +356,6 @@ int main( int argc, char **argv )
 	// So this way i can render a smaller window size at higher resolutions
 	SDL_RenderSetLogicalSize(renderer, ScreenWidth, ScreenHeight);
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-	// Scale the mouse also according to the render logical size
-	//SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SCALING, "0");
 
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif

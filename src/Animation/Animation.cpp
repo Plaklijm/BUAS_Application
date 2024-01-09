@@ -7,7 +7,6 @@ Animation::Animation(Tmpl8::Sprite* sprite, float animRate, bool loop) :
     currentFrameIndex(0),
     hasFinished(true)
 {
-    
 }
 
 void Animation::UpdateAnimation()

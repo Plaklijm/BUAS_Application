@@ -11,6 +11,7 @@ public:
     void OnAnimationChange();
     void RenderAnimation(Tmpl8::Surface* screen, float x, float y, bool flip) const;
 
+    // Returns true if the animation has finished playing
     bool IsAnimFinished() const { return hasFinished; }
 private:
     Tmpl8::timer timer;

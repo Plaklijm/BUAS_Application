@@ -20,11 +20,13 @@ enum AnimationName
 // GENERAL STATS AND ALL THE GETTERS AND SETTERS
 struct PlayerStats
 {
+    // OOEHF Looks nice :>              Learned this technique from the source of Doom III and got stuck with it ever since   
 public:
-    // getters
+    // Getters
     float GetMaxFallSpeed() const       { return maxFallSpeed; }
     float GetWalkSpeed() const          { return walkSpeed; }
     float GetSprintSpeed() const        { return sprintSpeed; }
+    float GetPushPullSpeed() const      { return pushPullSpeed; }
     float GetAcceleration() const       { return acceleration; }
     float GetFallAcceleration() const   { return fallAcceleration; }
     float GetGroundFriction() const     { return groundFriction; }
@@ -39,10 +41,11 @@ public:
 
 private:
     // Statistics of the player movement
-    // TODO: Figure out the variable amount of each one
+    // If you want to change how the player behaves/feels these are the only values you'd have to change
     float           maxFallSpeed        { 16.5f };
     float           walkSpeed           { 2.f };
     float           sprintSpeed         { 5.f };
+    float           pushPullSpeed       { 1.f };
     float           acceleration        { 60.f };
     float           fallAcceleration    { 45.f };
     float           groundFriction      { 50.f };

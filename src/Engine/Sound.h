@@ -2,6 +2,8 @@
 #include <SDL_audio.h>
 #include <string>
 
+// See SoundManager.h for more explanation 
+
 class Sound
 {
 public:

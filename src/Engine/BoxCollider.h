@@ -3,13 +3,11 @@
 #include <SDL_rect.h>
 #include "template.h"
 
-using namespace Tmpl8;
-
 struct BoxCollider
 {
 public:
     BoxCollider() = default;
-    BoxCollider(const vec2 position, const vec2 size) {
+    BoxCollider(const Tmpl8::vec2 position, const Tmpl8::vec2 size) {
         hitBox.x = static_cast<int>(position.x);
         hitBox.y = static_cast<int>(position.y);
         hitBox.w = static_cast<int>(size.x);
@@ -17,7 +15,7 @@ public:
     }
     ~BoxCollider() = default; 
     
-    void SetPosition(const vec2 position) {
+    void SetPosition(const Tmpl8::vec2 position) {
         hitBox.x = static_cast<int>(position.x);
         hitBox.y = static_cast<int>(position.y);
     }

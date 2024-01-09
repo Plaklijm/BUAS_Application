@@ -1,8 +1,9 @@
 ﻿#include "Actor.h"
 
 #include "Object.h"
+#include "Collision.h"
 
-Actor::Actor(vec2 position, vec2 size, World* world) : world(world), position(position),
+Actor::Actor(Tmpl8::vec2 position, Tmpl8::vec2 size, World* world) : world(world), position(position),
                                                        hitBox(new BoxCollider(position, size))
 {
 }
@@ -21,29 +22,31 @@ void Actor::MoveX(float amount, bool ignoreObjects, const Actor* playerRef)
         // subtract the amount we will move from the remainder
         xRemainder -= move;
         // sign the move variable 
-        const auto sign = sgn(move);
+        const auto sign = Tmpl8::sgn(move);
         // Move the actor
         while (move != 0)
         {
+            // If we need to ignore the objects in the scene (only implemented for the pushable objects (this could be a lot neater)) 
             if (!ignoreObjects)
             {
-                const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), vec2(sign, 0), collisionNormalX, world);
+                const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), Tmpl8::vec2(sign, 0), collisionNormalX, world);
                 if (obj != nullptr && obj->GetType() == PUSHABLE)
                 {
                     OnCollideX();
                     break;
                 }
             }
+            // Same here but then if we need to ignore the player or not
             if (playerRef != nullptr)
             {
-                if (Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0), &playerRef->GetCollider()->GetHitBox(), collisionNormalX))
+                if (Collision::RectIntersectAt(&hitBox->GetHitBox(), Tmpl8::vec2(sign, 0), &playerRef->GetCollider()->GetHitBox(), collisionNormalX))
                 {
                     OnCollideX();
                     break;
                 }
             }
             // check if the next pixel is free to move at with the isPushing (only need to check the isPushing in the X direction)
-            if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(sign, 0),collisionNormalX, world))
+            if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), Tmpl8::vec2(sign, 0),collisionNormalX, world))
             {
                 // There is no solid in the way that would prevent us from moving there.
                 // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
@@ -61,6 +64,7 @@ void Actor::MoveX(float amount, bool ignoreObjects, const Actor* playerRef)
     }
 }
 
+// Bit simpler version of the MoveX function
 void Actor::MoveY(float amount)
 {
     yRemainder += amount;
@@ -68,25 +72,21 @@ void Actor::MoveY(float amount)
     if (move != 0)
     {
         yRemainder -= move;
-        int sign = sgn(move);
+        int sign = Tmpl8::sgn(move);
         while (move != 0)
         {
-            const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), vec2(0, sign), collisionNormalY, world);
+            const auto obj = Collision::RectIntersectObjects(&hitBox->GetHitBox(), Tmpl8::vec2(0, sign), collisionNormalY, world);
             if (obj != nullptr && obj->GetType() == PUSHABLE)
             {
                 OnCollideY();
                 break;
             }
-            // check if the next pixel is free to move at
-            if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), vec2(0, sign),collisionNormalY, world))
+            if (!Collision::RectIntersectAt(&hitBox->GetHitBox(), Tmpl8::vec2(0, sign),collisionNormalY, world))
             {
-                // There is no solid in the way that would prevent us from moving there.
-                // move the actor by 1 and remove it from the move, so when this hits 0 the amount we wanted to move is accomplished
                 position.y += sign;
                 move -= sign;
                 hitBox->SetPosition(position);
             }
-            // the next pixel is a solid so we halt the movement
             else
             {
                 OnCollideY();
@@ -96,7 +96,7 @@ void Actor::MoveY(float amount)
     }
 }
 
-
+// Collision events
 void Actor::OnCollideX()
 {
     xRemainder = 0;

@@ -12,6 +12,7 @@ MapParser::MapParser()
 
 bool MapParser::Load(const int index, World* world)
 {
+    // Loads a new map
     const auto source = "assets/map/" + std::to_string(index) + ".tmx";
     return Parse(index, source, world);
 }
@@ -26,8 +27,10 @@ void MapParser::Clean()
     maps.clear();
 }
 
+// Start parsing it
 bool MapParser::Parse(const int mapID, const std::string& source, World* world)
 {
+    // Load file
     TiXmlDocument xmlDoc;
     xmlDoc.LoadFile(source);
     
@@ -37,6 +40,7 @@ bool MapParser::Parse(const int mapID, const std::string& source, World* world)
         return false;
     }
 
+    // Get an element to start reading from
     TiXmlElement* root = xmlDoc.RootElement();
     int rc, cc, ts = 0;
 
@@ -45,7 +49,7 @@ bool MapParser::Parse(const int mapID, const std::string& source, World* world)
     root->Attribute("height", &cc);
     root->Attribute("tilewidth", &ts);
 
-    // Parse Tilesets
+    // Parse Tilesets, this will give all the sprites that need to be loaded to display all the layers (can be more than 1)
     TileSetList tileSets;
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
@@ -57,7 +61,7 @@ bool MapParser::Parse(const int mapID, const std::string& source, World* world)
 
     auto* gameMap = new GameMap();
 
-    // TODO combine into one for loop
+    // Loop through all the elements, and parse the layers and construct them
     for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
     {
         if (e->Value() == std::string("imagelayer"))
@@ -65,23 +69,15 @@ bool MapParser::Parse(const int mapID, const std::string& source, World* world)
             ImageLayer* imageLayer = ParseImageLayer(e);
             gameMap->mapLayers.push_back(imageLayer);
         }
-    }
-
-    for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
-    {
-        if (e->Value() == std::string("layer"))
-        {
-            TileLayer* tileLayer = ParseTileLayer(e, tileSets, ts, rc, cc);
-            gameMap->mapLayers.push_back(tileLayer);
-        }
-    }
-
-    for (TiXmlElement* e = root->FirstChildElement(); e!= nullptr; e = e->NextSiblingElement())
-    {
-        if (e->Value() == std::string("objectgroup"))
+        else if (e->Value() == std::string("objectgroup"))
         {
             ObjectLayer* objectLayer = ParseObjectLayer(e, world);
             gameMap->mapLayers.push_back(objectLayer);
+        }
+        else if (e->Value() == std::string("layer"))
+        {
+            TileLayer* tileLayer = ParseTileLayer(e, tileSets, ts, rc, cc);
+            gameMap->mapLayers.push_back(tileLayer);
         }
     }
 
@@ -111,10 +107,10 @@ TileLayer* MapParser::ParseTileLayer(TiXmlElement* xmlLayer, const TileSetList& 
 {
     // Set to null as default value;
     bool collidable = false;
-    // Read the layer properties (bit scuffed bit it works)
-    if (xmlLayer->FirstChildElement()->Value() == std::string("properties"))
+    // Read the layer properties (bit scuffed bit it works) (monkey brain again)
+    if (xmlLayer->FirstChildElement()->Value() == std::string("properties")) 
     {
-        // Get the property
+        // Get the property (Bad way to do this, if there are more than 1 property this wont work)
         TiXmlElement* temp = xmlLayer->FirstChildElement()->FirstChildElement();
 
         // Tiny XML doesnt support parsing a boolean so 0 is false anything else is true
@@ -166,6 +162,7 @@ ObjectLayer* MapParser::ParseObjectLayer(TiXmlElement* xmlLayer, World* world)
     
     for (TiXmlElement* e = child; e!= nullptr; e = e->NextSiblingElement())
     {
+        // Add each object to the layer
         if (e->Value() == std::string("object"))
         {
             int x, y, size, type;
@@ -175,12 +172,12 @@ ObjectLayer* MapParser::ParseObjectLayer(TiXmlElement* xmlLayer, World* world)
 
             if (e->FirstChildElement()->Value() == std::string("properties"))
             {
-                // Get the property
-                TiXmlElement* temp = e->FirstChildElement()->FirstChildElement();
+                // Get the property (again bad way)
+                const TiXmlElement* temp = e->FirstChildElement()->FirstChildElement();
                 temp->Attribute("value", &type);
             }
 
-            Object* object = new Object(vec2(x,y), vec2(size,size), world, static_cast<Type>(type));
+            Object* object = new Object(Tmpl8::vec2(x,y), Tmpl8::vec2(size,size), world, static_cast<Type>(type));
             
             layer->AddObject(object);
         }
@@ -193,9 +190,10 @@ ObjectLayer* MapParser::ParseObjectLayer(TiXmlElement* xmlLayer, World* world)
 ImageLayer* MapParser::ParseImageLayer(TiXmlElement* xmlElement)
 {
     const auto image = xmlElement->FirstChildElement();
-    std::string img = image->Attribute("source");
+    const std::string img = image->Attribute("source");
+    const std::string source = "assets/map/" + img;
 
-    std::string source = "assets/map/" + img;
+    // some magic to convert a string to char* 
     char *csource = new char[source.length() + 1];
     strcpy(csource, source.c_str());
     

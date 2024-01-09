@@ -1,23 +1,14 @@
 ﻿#include "Object.h"
+#include "surface.h"
 
-Object::Object(vec2 position, vec2 size, World* world, Type type) : Actor(position, size, world), type(type)
+Object::Object(Tmpl8::vec2 position, Tmpl8::vec2 size, World* world, Type type) : Actor(position, size, world), type(type)
 {
     sprite = nullptr;
     
 }
 
-
-void Object::Update(float dt)
-{
-}
-
-void Object::UpdatePhysics(float dt)
-{
-}
-
-
 float frame = 0;
-void Object::Render(Surface* screen) const
+void Object::Render(Tmpl8::Surface* screen) const
 {
     if (sprite != nullptr)
     {
@@ -38,7 +29,7 @@ void Object::Collect() const
     delete this;
 }
 
-void Object::SetSprite(Sprite* sprite)
+void Object::SetSprite(Tmpl8::Sprite* sprite)
 {
     this->sprite = sprite;
 }

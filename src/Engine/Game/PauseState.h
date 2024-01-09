@@ -1,14 +1,12 @@
 ﻿#pragma once
 #include "Button.h"
-#include "State.h"
+#include "GameState.h"
 
 class PauseState : public State
 {
 public:
     void Init(Tmpl8::Game* game) override;
     void Exit() override;
-    void Pause() override;
-    void Continue() override;
     void Update(float deltaTime) override;
     void Render(Tmpl8::Surface* screen) override;
 
@@ -18,9 +16,9 @@ public:
 private:
     static PauseState pauseState;
 
-    void ContinueGame();
+    void ContinueGame() const;
     void RestartLevel();
-    void BackToMenu();
+    void BackToMenu() const;
     
     Button* continueButton;
     Button* restartButton;

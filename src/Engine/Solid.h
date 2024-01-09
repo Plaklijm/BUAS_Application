@@ -2,17 +2,17 @@
 #include "template.h"
 #include "BoxCollider.h"
 
-using namespace Tmpl8;
-
+// Very small class that handles the static objects in the scene like the world
+// This could also be used for moving platforms etc -> See actor.h for more references
 class Solid
 {
 public:
-    Solid(vec2 position, vec2 size);
+    Solid(Tmpl8::vec2 position, Tmpl8::vec2 size);
 
-    vec2 GetPosition() const { return position; }
+    Tmpl8::vec2 GetPosition() const { return position; }
     BoxCollider* GetCollider() const { return hitBox; }
 
 private:
-    vec2 position = vec2::Zero();
+    Tmpl8::vec2 position = Tmpl8::vec2::Zero();
     BoxCollider* hitBox;
 };

@@ -1,7 +1,5 @@
 ﻿#pragma once
 #include "Actor.h"
-#include "surface.h"
-
 
 namespace Tmpl8
 {
@@ -19,19 +17,19 @@ enum Type
 class Object : public Actor
 {
 public:
-    Object(vec2 position, vec2 size, class World* world, Type type);
+    Object(Tmpl8::vec2 position, Tmpl8::vec2 size, class World* world, Type type);
     
-    void Update(float dt);
+    void Update(float dt) {}
+    void UpdatePhysics(float dt) {}
     
-    void UpdatePhysics(float dt);
-    void Render(Surface* screen) const;
+    void Render(Tmpl8::Surface* screen) const;
 
     void Collect() const;
     
     Type GetType() const { return type; }
 
-    void SetSprite(Sprite* sprite);
+    void SetSprite(Tmpl8::Sprite* sprite);
 private:
-    Sprite* sprite;
+    Tmpl8::Sprite* sprite;
     Type type;
 };  

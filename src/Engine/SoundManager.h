@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <map>
-#include <memory>
 
 #include "SDL2-2.28.5/include/SDL_audio.h"
 
@@ -21,7 +20,8 @@ enum SoundType
     s_COLLECT,
     s_JUMP,
     s_DOUBLEJUMP,
-    s_LEVELFINISH
+    s_LEVELFINISH,
+    s_DEATH
 };
 
 class Sound;
@@ -37,6 +37,7 @@ public:
     
     void PlaySound(SoundType id);
     void StopSound(SoundType id);
+    
 private:
     static SoundManager* instance;
 

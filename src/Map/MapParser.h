@@ -7,6 +7,11 @@
 #include "TileLayer.h"
 #include "tinyxml/tinyxml.h"
 
+// This class reads the complete .TMX file of the TILED map
+// For this i did follow a tutorial series: https://www.youtube.com/watch?v=3DKriWbJJ50&t=431s ep 15/16/17
+// I've never worked with a parser before so i needed some guidance with it
+// I added the ImageLayer and object layer Myself and optimized/changed some parts where I thought that needed it
+
 class ImageLayer;
 class World;
 

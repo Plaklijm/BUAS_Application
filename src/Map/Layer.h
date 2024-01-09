@@ -12,10 +12,9 @@ public:
     // pure virtual, the class that inherits this one MUST implement these functions
     virtual void Render(Tmpl8::Surface* screen) = 0;
     virtual void Update() = 0;
-
-
+    
     // This class got expanded by the needs of the system, this is not the way to do this I think. This class got
-    // clunkier everytime i added some functionality 
+    // clunkier everytime i added some functionality but it works (Developer Monkey Brain)
     bool GetIsCollidable() const                            { return collidable; }
     bool GetIsObjectLayer() const                           { return objectLayer; }
     std::vector<class Solid*> GetCollisionTiles() const     { return collisionTiles; }
@@ -39,4 +38,3 @@ inline void Layer::RemoveObject(const Object* obj)
     if (position != objectTiles.end())
         objectTiles.erase(position);
 }
-

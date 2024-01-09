@@ -3,32 +3,36 @@
 #include <algorithm>
 
 #include "../Animation/AnimationSystem.h"
-#include "../Engine/BoxCollider.h"
 #include "../Engine/InputManager.h"
 #include "PlayerStats.h"
-#include "../Map/GameMap.h"
 #include "../Engine/Object.h"
 #include "../Engine/SoundManager.h"
+#include "Engine/Collision.h"
 
-// https://www.myphysicslab.com/engine2D/rigid-body-en.html
-SDL_Rect pushCol;
-Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPos, vec2(28,40), world)
+// Player class, handles movement calculations etc
+// Would've been a bit neater if put into a statemachine, but seeing how this class evolved over time it isn't/wasn't really
+// ideal, so in the end I decided to stick with this approach, although it got a bit messy the more functionality got added
+
+
+Player::Player(Tmpl8::vec2 startPos, InputManager* input, World* world) :
+    Actor(startPos, Tmpl8::vec2(28,40), world)
 {
     stats = new PlayerStats();
 
     pInput = input;
 
     // Initialize Animation
+    // (I know these are a bit too long to be on a single line, but there is so much going on, its more readable this way)
     anim = new AnimationSystem();
-    anim->AddAnim(a_IDLE, std::make_unique<Animation>(new Sprite(new Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
-    anim->AddAnim(a_WALK, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(a_RUN, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
-    anim->AddAnim(a_JUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
-    anim->AddAnim(a_DOUBLEJUMP, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
-    anim->AddAnim(a_COLLECT, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
-    anim->AddAnim(a_PUSH, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
-    anim->AddAnim(a_PULL, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Pull.png"), 6), stats->GetAnimRate()));
-    anim->AddAnim(a_LAND, std::make_unique<Animation>(new Sprite(new Surface("assets/player/sprites/p_Land.png"), 4), stats->GetAnimRate() * .5f, false));
+    anim->AddAnim(a_IDLE, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/Sprites/p_Idle.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(a_WALK, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Walk.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(a_RUN, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Run.png"), 8), stats->GetAnimRate()));
+    anim->AddAnim(a_JUMP, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Jump.png"), 3), stats->GetAnimRate(), false));
+    anim->AddAnim(a_DOUBLEJUMP, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_DoubleJump.png"), 6), stats->GetAnimRate() * .65f, false));
+    anim->AddAnim(a_COLLECT, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Pickup.png"), 4), stats->GetAnimRate(), false));
+    anim->AddAnim(a_PUSH, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Push.png"), 10), stats->GetAnimRate()));
+    anim->AddAnim(a_PULL, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Pull.png"), 6), stats->GetAnimRate() * 1.25f));
+    anim->AddAnim(a_LAND, std::make_unique<Animation>(new Tmpl8::Sprite(new Tmpl8::Surface("assets/player/sprites/p_Land.png"), 4), stats->GetAnimRate() * .5f, false));
     
     currentAnimState = a_IDLE;
     anim->SetCurrentAnim(currentAnimState);
@@ -37,66 +41,47 @@ Player::Player(vec2 startPos, InputManager* input, World* world) : Actor(startPo
     velocityAccumulator = {0, 0};
     canDoubleJump = true;
     flipHorizontally = false;
-    isJumping = 0;
     collect = false;
     stepTimer.reset();
     stepInterval = 400.f;
-    pushCol.w = 42;
-    pushCol.h = 20;
     isPushingObj = false;
     isPullingObj = false;
-}
+    maxSpeedX = stats->GetWalkSpeed();
 
-Player::~Player()
-{
-    
+    pushCol.w = 42;
+    pushCol.h = 20;
 }
 
 float time;
 float frameLeftGrounded = std::numeric_limits<float>::lowest();
 
-int currentFrame;
-int currentAnimFrameCount;
-
-bool dead = false;
-float collectTimer = .3f;
 void Player::Update(float dt)
 {
-    // TODO: Fix this update method PLS :D
     time += dt;
 
-    // Handle input
-    const auto left = pInput->KeyPressed(SDL_SCANCODE_A);
-    const auto right = pInput->KeyPressed(SDL_SCANCODE_D);
-    // Set the horizontal input to -1 if left 1 if right and 0 if both left and right are pressed
-    horizontalInput = right - left;
-    
-    // TODO: Fix controller input and add Axis support for left right and crouch
-    jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);
-    jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);
+    HandleInput();
+    SetMaxSpeed();
+    SetGrounded();
+}
 
-    sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);
-
-    moveObjectPressed = pInput->KeyPressed(SDL_SCANCODE_E);
-    
-    if (sprintPressed || isPushingObj || isPullingObj)
+#pragma region Update
+void Player::SetMaxSpeed()
+{
+    if (isPushingObj || isPullingObj)
+        maxSpeedX = stats->GetPushPullSpeed();
+    else if (sprintPressed)
         maxSpeedX = stats->GetWalkSpeed();
     else
         maxSpeedX = stats->GetSprintSpeed();
-    
-    if (jumpDown)
-    {
-        jumpToConsume = true;
-        timeJumpWasPressed = time;
-    }
-    
-    else if (GetCollisionNormalY().y > 0)
+}
+
+void Player::SetGrounded()
+{
+    if (GetCollisionNormalY().y > 0)
     {
         if (velocity.y > 15.5f || isJumping)
-        {
-            printf("%f\n", velocity.y);
             landed = true;
-        }
+        
         grounded = true;
         coyoteUsable = true;
         bufferedJumpUsable = true;
@@ -119,16 +104,7 @@ void Player::Update(float dt)
         frameLeftGrounded = time;
     }
 
-    if (collect)
-    {
-        collectTimer -= dt;
-        if (collectTimer < 0)
-        {
-            collectTimer = .3f;
-            collect = false;
-        }
-    }
-    
+    // Just some sound stuff when you are grounded to simulate footsteps (doesn't sound good lol but it's something)
     if (grounded)
     {
         if (stepTimer.elapsed() > stepInterval && abs(horizontalInput) > 0)
@@ -138,6 +114,28 @@ void Player::Update(float dt)
         }  
     }
 }
+
+void Player::HandleInput()
+{
+    const auto left = pInput->KeyPressed(SDL_SCANCODE_A);
+    const auto right = pInput->KeyPressed(SDL_SCANCODE_D);
+    // Set the horizontal input to -1 if left 1 if right and 0 if both left and right are pressed
+    horizontalInput = right - left;
+    
+    jumpDown = pInput->KeyDown(SDL_SCANCODE_SPACE);
+    jumpHeld = pInput->KeyPressed(SDL_SCANCODE_SPACE);
+
+    sprintPressed = pInput->KeyPressed(SDL_SCANCODE_LSHIFT);
+
+    moveObjectPressed = pInput->KeyPressed(SDL_SCANCODE_W);
+    
+    if (jumpDown)
+    {
+        jumpToConsume = true;
+        timeJumpWasPressed = time;
+    }
+}
+#pragma endregion
 
 void Player::UpdatePhysics(float dt)
 {
@@ -151,6 +149,9 @@ void Player::UpdatePhysics(float dt)
 
 void Player::HandleAnimations()
 {
+    // Very bulky but it needs to be like this, A better way to handle this mess would've been a state machine but yeah
+    // that in turn would also make a lot of mess, and to convert everything to a statemachine now would be a nightmare
+    
     if (horizontalInput < 0 && (!isPushingObj || !isPullingObj))
         flipHorizontally = true;
     if (horizontalInput > 0 && (!isPushingObj || !isPullingObj))
@@ -158,28 +159,15 @@ void Player::HandleAnimations()
     
     // Set the correct animation according to the current state of the game
     if (isJumping > 0)
-    {
-        if (isJumping == 1)
-            currentAnimState = a_JUMP;
-        else
-            currentAnimState = a_DOUBLEJUMP;
-    }
-    else
+            currentAnimState = isJumping == 1 ? a_JUMP : a_DOUBLEJUMP;
+    else if (velocity.x != 0)
     {
         // Make sure the correct animation is played, so when we walk against a wall it will be idle etc
         // Because the wall hit etc is already calculated here I also use it to stop the player from playing any stepsounds
-        if (velocity.x != 0)
+        if (abs(GetCollisionNormalX().x) == 0)
         {
-            if (abs(GetCollisionNormalX().x) == 0)
-            {
-                if (abs(GetCollisionNormalX().y) == 0)
-                    currentAnimState = sprintPressed ? a_WALK : a_RUN;
-                else
-                {
-                    currentAnimState = a_IDLE;
-                    stepTimer.reset();
-                }
-            }
+            if (abs(GetCollisionNormalX().y) == 0)
+                currentAnimState = sprintPressed ? a_WALK : a_RUN;
             else
             {
                 currentAnimState = a_IDLE;
@@ -187,50 +175,45 @@ void Player::HandleAnimations()
             }
         }
         else
+        {
             currentAnimState = a_IDLE;
+            stepTimer.reset();
+        }
     }
+    else
+        currentAnimState = a_IDLE;
 
+    // Just some overriding stuff with higher priority than the prev anims
     if (collect)
-    {
         currentAnimState = a_COLLECT;
-    }
-
-    if (isPushingObj)
-    {
+    else if (isPushingObj)
         currentAnimState = a_PUSH;
-    }
     else if (isPullingObj)
-    {
         currentAnimState = a_PULL;
-    }
-    
-    if (landed)
-    {
+    else if (landed)
         currentAnimState = a_LAND;
-    }
 
-    anim->SetCurrentAnim(currentAnimState);
     
+    anim->SetCurrentAnim(currentAnimState);
     anim->Update();
 
+    // Some resetting of variables
     if (anim->IsAnimFinished(a_LAND))
-    {
         landed = false;
-    }
+    if (anim->IsAnimFinished(a_COLLECT))
+        collect = false;
 }
-
 
 void Player::HandlePushObj()
 {
-    // TODO CLEANUP FUNCTION
-    vec2 normal;
+    Tmpl8::vec2 normal;
     // using the offset to prevent the player from getting stuck (the offset rect gets calculated again in the other func tho)
-    const auto pushAbleObject = Collision::RectIntersectObjects(&pushCol, vec2(0,0), normal, world);
+    const auto pushAbleObject = Collision::RectIntersectObjects(&pushCol, Tmpl8::vec2(0,0), normal, world);
     if (pushAbleObject != nullptr && pushAbleObject->GetType() == PUSHABLE)
     {
+        // Check in a scuffed way if the player is pushing or pulling an object based on input and normal hit
         if (moveObjectPressed && abs(horizontalInput) > 0)
         {
-            printf("%f\n", normal.x);
             if (normal.x > 0)
             {
                 if (horizontalInput < 0)
@@ -243,7 +226,6 @@ void Player::HandlePushObj()
                     isPullingObj = true;
                     isPushingObj = false;
                 }
-
                 flipHorizontally = true;
             }
             if (normal.x < 0)
@@ -260,6 +242,7 @@ void Player::HandlePushObj()
                 }
                 flipHorizontally = false;
             }
+            // Move the object
             pushAbleObject->MoveX(velocity.x, true, this);
             return;
         }
@@ -269,14 +252,8 @@ void Player::HandlePushObj()
     isPullingObj = false;
 }
 
-void Player::RenderPlayer(Surface* screen)
+void Player::RenderPlayer(Tmpl8::Surface* screen) const
 {
-    /*const auto b1 = GetCollider()->GetHitBox();
-    screen->Box(b1.x, b1.y, b1.x + b1.w, b1.y + b1.h, 0xffffff);
-
-    const auto b2 = pushCol;
-    screen->Box(b2.x, b2.y, b2.x + b2.w, b2.y + b2.h, 0xffffff);*/
-    
     anim->Render(screen, GetPosition().x - stats->GetSpriteOffset(), GetPosition().y, flipHorizontally);
 }
 
@@ -285,27 +262,6 @@ void Player::Collect()
     SoundManager::Instance()->PlaySound(s_COLLECT);
     collect = true;
 }
-
-
-void Player::CalculateGravity(float dt)
-{
-    if (grounded)// && velocityAccumulator.y <= 0.f)
-    {
-        velocityAccumulator.y = 1.f;
-    }
-    else
-    {
-        auto inAirGravity = stats->GetFallAcceleration();
-        if (endedJumpEarly && velocityAccumulator.y > 0)
-            inAirGravity *= 3;
-        
-        if (abs(stats->GetMaxFallSpeed() - velocityAccumulator.y) <= inAirGravity * dt)
-            velocityAccumulator.y = stats->GetMaxFallSpeed();
-        else
-            velocityAccumulator.y += sgn(stats->GetMaxFallSpeed() - velocityAccumulator.y) * (inAirGravity * dt);
-    }
-}
-
 
 #pragma region Jump
 bool Player::HasBufferedJump() const
@@ -345,10 +301,28 @@ void Player::HandleJump()
 
 #pragma endregion
 
+#pragma region Movement
+void Player::CalculateGravity(float dt)
+{
+    if (grounded)
+    {
+        velocityAccumulator.y = 1.f;
+    }
+    else
+    {
+        auto inAirGravity = stats->GetFallAcceleration();
+        if (endedJumpEarly && velocityAccumulator.y > 0)
+            inAirGravity *= 3;
+        
+        if (abs(stats->GetMaxFallSpeed() - velocityAccumulator.y) <= inAirGravity * dt)
+            velocityAccumulator.y = stats->GetMaxFallSpeed();
+        else
+            velocityAccumulator.y += Tmpl8::sgn(stats->GetMaxFallSpeed() - velocityAccumulator.y) * (inAirGravity * dt);
+    }
+}
 
 void Player::CalculateDirectionalMovement(float dt)
 {
-    // TODO: Fix jittre
     if (horizontalInput == 0.f)
     {
         // Get the appropriate deceleration factor
@@ -357,14 +331,14 @@ void Player::CalculateDirectionalMovement(float dt)
         if (abs(0 - velocityAccumulator.x) <= decel * dt)
             velocityAccumulator.x = 0;
         else
-            velocityAccumulator.x += sgn(0 - velocityAccumulator.x) * (decel * dt);
+            velocityAccumulator.x += Tmpl8::sgn(0 - velocityAccumulator.x) * (decel * dt);
     }
     else
     {
         if (abs((horizontalInput * maxSpeedX) - velocityAccumulator.x) <= stats->GetAcceleration() * dt)
             velocityAccumulator.x = (horizontalInput * maxSpeedX);
         else
-            velocityAccumulator.x += sgn((horizontalInput * maxSpeedX) - velocityAccumulator.x) * (stats->GetAcceleration() * dt);
+            velocityAccumulator.x += Tmpl8::sgn((horizontalInput * maxSpeedX) - velocityAccumulator.x) * (stats->GetAcceleration() * dt);
     }
 }
 
@@ -373,6 +347,8 @@ void Player::ApplyMovement()
     velocity = velocityAccumulator;
     MoveX(velocity.x);
     MoveY(velocity.y);
+    // Just some code to make the collider for chekcing the pushable objects move w the player
     pushCol.x = GetPosition().x - 2 - stats->GetSpriteOffset()/2;
     pushCol.y = GetPosition().y + stats->GetSpriteOffset();
 }
+#pragma endregion

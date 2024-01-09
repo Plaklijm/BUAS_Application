@@ -2,10 +2,8 @@
 #include "template.h"
 #include "BoxCollider.h"
 #include "../Map/World.h"
-#include "Collision.h"
 
 class Solid;
-using namespace Tmpl8;
 
 /**
  * \brief This class is based on the implementation seen in Celeste
@@ -22,12 +20,12 @@ public:
     void MoveX(float amount, bool ignoreObjects = false, const Actor* playerRef = nullptr);
     void MoveY(float amount);
 
-    Actor(vec2 position, vec2 size, class World* world);
+    Actor(Tmpl8::vec2 position, Tmpl8::vec2 size, class World* world);
 
-    vec2 GetPosition() const            { return position; }
-    BoxCollider* GetCollider() const    { return hitBox; }
-    vec2 GetCollisionNormalX() const    { return collisionNormalX; }
-    vec2 GetCollisionNormalY() const    { return collisionNormalY; }
+    Tmpl8::vec2 GetPosition() const             { return position; }
+    BoxCollider* GetCollider() const            { return hitBox; }
+    Tmpl8::vec2 GetCollisionNormalX() const     { return collisionNormalX; }
+    Tmpl8::vec2 GetCollisionNormalY() const     { return collisionNormalY; }
 
 private:
     void OnCollideX();
@@ -36,9 +34,9 @@ private:
     float xRemainder{};
     float yRemainder{};
     
-    vec2 position = vec2::Zero();
-    vec2 collisionNormalX = vec2::Zero();
-    vec2 collisionNormalY = vec2::Zero();
+    Tmpl8::vec2 position = Tmpl8::vec2::Zero();
+    Tmpl8::vec2 collisionNormalX = Tmpl8::vec2::Zero();
+    Tmpl8::vec2 collisionNormalY = Tmpl8::vec2::Zero();
     
     BoxCollider* hitBox;
 };

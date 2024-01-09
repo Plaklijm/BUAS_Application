@@ -3,32 +3,18 @@
 #include "PlayerStats.h"
 #include "../Engine/Actor.h"
 #include "../Engine/template.h"
-#include "../Engine/surface.h"
 
 class InputManager;
 class AnimationSystem;
 
-using namespace Tmpl8;
-
-/*enum anims
-{
-    A_Idle,
-    A_Walk,
-    A_Jump
-};*/
-
 class Player : public Actor
 {
 private:
-    // LOOK FOR A PLACE TO PUT THESE
-    /*unsigned int frame = 0;
-    float animationTime{};
-    float animationSpeed = .1f;*/
-private:
+    // Im pretty proud of how neat this all looks :)
     InputManager*               pInput;
     AnimationSystem*            anim;
 
-    struct PlayerStats*         stats;
+    PlayerStats*                stats;
 
     // Input variables
     float                       horizontalInput{};
@@ -38,8 +24,8 @@ private:
     bool                        moveObjectPressed{};
 
     // movement variables
-    vec2                        velocityAccumulator;
-    vec2                        velocity;
+    Tmpl8::vec2                 velocityAccumulator;
+    Tmpl8::vec2                 velocity;
 
     float                       maxSpeedX;
     bool                        flipHorizontally;
@@ -56,21 +42,26 @@ private:
 
     bool                        isPushingObj{};
     bool                        isPullingObj{};
+    SDL_Rect                    pushCol;
+
     AnimationName               currentAnimState;
 
-    int                         isJumping;
+    int                         isJumping{};
 
-    timer                       stepTimer;
+    Tmpl8::timer                stepTimer;
     float                       stepInterval;
-    //bool isFacingRight;
+    
 public:
-    Player(vec2 startPos, InputManager* input, World* world);
-    ~Player();
+    Player(Tmpl8::vec2 startPos, InputManager* input, World* world);
+    ~Player() = default;
 
+    void SetMaxSpeed();
+    void SetGrounded();
+    void HandleInput();
     void Update(float dt);
     
     void UpdatePhysics(float dt);
-    void RenderPlayer(Surface* screen);
+    void RenderPlayer(Tmpl8::Surface* screen) const;
 
     void Collect();
 private:
@@ -87,5 +78,4 @@ private:
     // Helper functions
     bool HasBufferedJump() const;
     bool CanUseCoyote() const;
-    
 };

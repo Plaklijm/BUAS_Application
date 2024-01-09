@@ -1,8 +1,11 @@
 ﻿#pragma once
-
 #include "Layer.h"
 #include <string>
-#include "../Engine/surface.h"
+
+namespace Tmpl8
+{
+    class Sprite;
+}
 
 class Solid;
 
@@ -19,7 +22,7 @@ struct TileSet
 struct tile
 {
     Tmpl8::Sprite* sprite;
-    int frame;
+    int frameID;
     int posX;
     int posY;
 };
@@ -33,9 +36,10 @@ public:
     TileLayer(bool collidable, int tileSize, int rowCount, int colCount, TileMap tileMap, const TileSetList& tileSetList);
 
     void Render(Tmpl8::Surface* screen) override;
-    void Update() override;
+    void Update() override {}
 
     TileMap GetTileMap() const      { return tileMap; }
+    
 private:
     void SetupCollisionLayer();
     void CalculateSpriteData();

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "State.h"
+#include "GameState.h"
 
 
 class Button;
@@ -8,11 +8,7 @@ class MainMenuState : public State
 {
 public:
     void Init(Tmpl8::Game* game) override;
-    void Exit() override;
-    void Pause() override;
-    void Continue() override;
     void Update(float deltaTime) override;
-    void PhysUpdate(float pDeltaTime) override;
     void Render(Tmpl8::Surface* screen) override;
 
     static MainMenuState* Instance() {
@@ -21,11 +17,15 @@ public:
 private:
     static MainMenuState mainMenuState;
     
-    void StartGame();
+    void StartGame() const;
     void Credit();
-    void ExitGame();
-    
+    void Back();
+    void ExitGame() const;
+
     Button* playButton;
     Button* creditButton;
     Button* quitButton;
+    Button* backButton;
+
+    bool showCredits;
 };

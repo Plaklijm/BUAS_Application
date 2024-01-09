@@ -1,10 +1,11 @@
 ﻿#include "PauseState.h"
 
+#include <SDL_mouse.h>
+
 #include "game.h"
 #include "MainMenuState.h"
 #include "PlayState.h"
 #include "../surface.h"
-#include "../template.h"
 #include "../InputManager.h"
 
 PauseState PauseState::pauseState;
@@ -12,27 +13,27 @@ PauseState PauseState::pauseState;
 void PauseState::Init(Tmpl8::Game* game)
 {
     State::Init(game);
-    gameRef->SetIsPaused(true);
-    continueButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Continue.png"), 2), Tmpl8::vec2(100, 100));
-    restartButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Restart.png"), 2), Tmpl8::vec2(100, 175));
-    mainMenuButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/MainMenu.png"), 2), Tmpl8::vec2(100, 250));
+
+    //
+    continueButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Continue.png"), 2), Tmpl8::vec2(384, 175));
+    restartButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/Restart.png"), 2), Tmpl8::vec2(384, 250));
+    mainMenuButton = new Button(new Tmpl8::Sprite(new Tmpl8::Surface("assets/ui/sprites/MainMenu.png"), 2), Tmpl8::vec2(384, 325));
+    SDL_ShowCursor(1);
 }
 
 void PauseState::Exit()
 {
-    gameRef->SetIsPaused(false);
-}
-
-void PauseState::Pause()
-{
-}
-
-void PauseState::Continue()
-{
+    SDL_ShowCursor(0);
 }
 
 void PauseState::Update(float deltaTime)
 {
+    // Pop this state, we'll return to the playstate
+    if (InputManager::Instance()->KeyDown(SDL_SCANCODE_ESCAPE))
+    {
+        gameRef->PopState();
+    }
+    
     // Check for Button hover && press
     SDL_Point mousePoint;
     // Create a point to compare to the RECT of the button
@@ -63,7 +64,7 @@ void PauseState::Render(Tmpl8::Surface* screen)
     restartButton->DisplayButton(screen);
 }
 
-void PauseState::ContinueGame()
+void PauseState::ContinueGame() const
 {
     gameRef->PopState();
 }
@@ -73,7 +74,7 @@ void PauseState::RestartLevel()
     PlayState::Instance()->InitializeWorld();
 }
 
-void PauseState::BackToMenu()
+void PauseState::BackToMenu() const
 {
     gameRef->ChangeState(MainMenuState::Instance());
 }

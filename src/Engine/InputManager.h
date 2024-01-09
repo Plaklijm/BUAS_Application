@@ -1,12 +1,11 @@
 ﻿#pragma once
 #include <SDL2-2.28.5/include/SDL_keycode.h>
-#include <SDL2-2.28.5/include/SDL_gamecontroller.h>
 
 #include "template.h"
 
-// based on the implementation of https://www.youtube.com/watch?v=YjeIUbzDvDE&list=PLhJr2LOK-xwxQlevIZ97ZABLw72Eu9he7&index=12
+// Mostly based on the implementation of https://www.youtube.com/watch?v=YjeIUbzDvDE&list=PLhJr2LOK-xwxQlevIZ97ZABLw72Eu9he7&index=12
 // Done it this way to have more functions like KeyPressed and to separate out the input handling and not make it event based
-// Added controller support to this system and changed it a little bit to work with my own requirements
+
 class InputManager
 {
 public:
@@ -39,6 +38,7 @@ private:
     int mouseXPos;
     int mouseYPos;
 
+    // Scaled mouse position
     Tmpl8::vec2 actualMousePos;
 
 public:
@@ -46,7 +46,7 @@ public:
     void Update();
     void UpdatePrevInput();
     
-    // Input functions
+    // Input functions (stupid key functions think they aren't implemented)
     bool KeyDown(SDL_Scancode scanCode) const;
     bool KeyPressed(SDL_Scancode scanCode) const;
     bool KeyReleased(SDL_Scancode scanCode) const;

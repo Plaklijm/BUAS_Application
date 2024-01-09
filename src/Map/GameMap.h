@@ -10,6 +10,7 @@ public:
 
     void RenderMap(Tmpl8::Surface* screen) const
     {
+        // Render the layers in the order that they are added
         for (const auto layer : mapLayers) {
             layer->Render(screen);
         }
